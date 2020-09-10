@@ -275,7 +275,6 @@ class MenuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // elevation: 5,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
