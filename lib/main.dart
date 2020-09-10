@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
+// import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'authScreen.dart';
 
 void main() {
   runApp(EntryPage());
   // runApp(OrderPage());
 }
 
-class EntryPage extends StatelessWidget {
+/*class EntryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -87,9 +88,9 @@ class EntryPage extends StatelessWidget {
                       ])),
                     )))));
   }
-}
+}*/
 
-class OrderPage extends StatelessWidget {
+/*class OrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -110,7 +111,7 @@ class OrderPage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               // mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                /*
+                                *//*
                                 new Padding(
                                     child: FlatButton(
                                         splashColor: Colors.white,
@@ -131,7 +132,7 @@ class OrderPage extends StatelessWidget {
                                     // padding: EdgeInsets.fromLTRB(15, 0, 0, 0)
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
                           ),
-                                */
+                                *//*
                                 new Padding(
                                     // padding: EdgeInsets.fromLTRB(59, 8, 0, 0),
                                     padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -269,9 +270,9 @@ class OrderPage extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(15.0) //
             ));
   }
-}
+}*/
 
-class MenuBar extends StatelessWidget {
+/*class MenuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -336,7 +337,7 @@ class MenuBar extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
 /*
 class MyApp extends StatelessWidget {
