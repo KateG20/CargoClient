@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'assignScreen.dart';
 
-class EntryPage extends StatelessWidget {
+class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -9,6 +8,7 @@ class EntryPage extends StatelessWidget {
         title: "MyApp",
         home: Builder(
             builder: (context) => new Material(
+              /*
                 child: new Container(
                     padding: const EdgeInsets.all(30.0),
                     color: Colors.white,
@@ -39,10 +39,6 @@ class EntryPage extends StatelessWidget {
                                   return null;
                                 }
                               },
-                              // keyboardType: TextInputType.emailAddress,
-                              // style: new TextStyle(
-                              // fontFamily: "Poppins",
-                              // ),
                             ),
                             new Padding(padding: EdgeInsets.only(top: 30.0)),
                             new TextFormField(
@@ -70,7 +66,7 @@ class EntryPage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => OrderPage()),
+                                      builder: (context) => RequestPage()),
                                 );
                               },
                               child: Text(
@@ -78,8 +74,25 @@ class EntryPage extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 20.0, color: Colors.lightGreen),
                               ),
-                            )
+                            ),
+                            new Padding(padding: EdgeInsets.only(top: 20.0)),
+                            new FlatButton(
+                              splashColor: Colors.lightGreen.withOpacity(0.5),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RegistrationPage()),
+                                );
+                              },
+                              child: Text(
+                                "Первичная регистрация",
+                                style: TextStyle(
+                                    fontSize: 17.0, color: Colors.white),
+                              ),
+                            ),
                           ])),
-                    )))));
+                    ))
+        */ )));
   }
 }

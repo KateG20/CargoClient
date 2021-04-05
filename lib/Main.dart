@@ -1,6 +1,6 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'authScreen.dart';
+import 'EntryPage.dart';
 
 void main() {
   runApp(EntryPage());

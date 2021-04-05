@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'menuBar.dart';
+import 'MenuBar.dart';
 
-class OrderPage extends StatelessWidget {
+class RequestPage extends StatelessWidget {
   @override
+  // Future<http.Response> fetchAlbum(String id) {
+  //   return http.get('http://localhost:5000/api/trainid?id=\(id)');
+  // }
   Widget build(BuildContext context) {
     return MaterialApp(
       // debugShowCheckedModeBanner: false,
@@ -20,30 +23,7 @@ class OrderPage extends StatelessWidget {
                           padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
                           child: new Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              // mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                /*
-                                new Padding(
-                                    child: FlatButton(
-                                        splashColor: Colors.white,
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EntryPage()),
-                                          );
-                                        },
-                                        child: Text(
-                                          "Выйти",
-                                          style: TextStyle(
-                                              fontSize: 20.0,
-                                              color: Colors.red[900]),
-                                        )),
-                                    // padding: EdgeInsets.fromLTRB(15, 0, 0, 0)
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
-                          ),
-                                */
                                 new Padding(
                                   // padding: EdgeInsets.fromLTRB(59, 8, 0, 0),
                                     padding: EdgeInsets.fromLTRB(15, 0, 0, 0),

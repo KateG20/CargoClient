@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'assignScreen.dart';
-import 'authScreen.dart';
+import 'RequestPage.dart';
+import 'EntryPage.dart';
 
 class MenuBar extends StatelessWidget {
   @override
@@ -15,7 +15,7 @@ class MenuBar extends StatelessWidget {
               style: TextStyle(color: Colors.green[900], fontSize: 30),
             ),
             margin: EdgeInsets.only(bottom: 8),
-            padding: EdgeInsets.all(40),
+            // padding: EdgeInsets.all(40),
             decoration: BoxDecoration(
               color: Colors.lightGreen[100],
               // image: DecorationImage(
@@ -29,7 +29,7 @@ class MenuBar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OrderPage()),
+                MaterialPageRoute(builder: (context) => RequestPage()),
               );
             },
           ),
