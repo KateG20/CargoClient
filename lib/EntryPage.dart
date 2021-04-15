@@ -25,7 +25,7 @@ class _EntryPageState extends State<EntryPage> {
     });
   }
 
-  Widget _getWarning() {
+  Text? _getWarning() {
     return _warningVisible == true ? Text('$_warningText',
       style: new TextStyle(
         // color: Color(0xff9ACD32), fontSize: 25.0),
@@ -93,7 +93,7 @@ class _EntryPageState extends State<EntryPage> {
                                 //fillColor: Colors.green
                               ),
                               validator: (val) {
-                                if (val.length == 0) {
+                                if (val?.length == 0) {
                                   return "Заполните поле \"Логин\"";
                                 } else {
                                   return null;
@@ -119,7 +119,7 @@ class _EntryPageState extends State<EntryPage> {
                                 //fillColor: Colors.green
                               ),
                               validator: (val) {
-                                if (val.length == 0) {
+                                if (val?.length == 0) {
                                   return "Заполните поле \"Пароль\"";
                                 } else {
                                   return null;
@@ -156,7 +156,7 @@ class _EntryPageState extends State<EntryPage> {
                               style: OutlinedButton.styleFrom(
                                 // textStyle: TextStyle(color: Colors.white),
                                   backgroundColor:
-                                  Colors.lightGreen[600].withOpacity(0.8),
+                                  Colors.lightGreen[600]?.withOpacity(0.8),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius:
                                       BorderRadius.all(Radius.circular(15.0)))),
