@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'MenuBar.dart';
 
-class RequestPage extends StatelessWidget {
-  //TODO исправить на Stateful
+class RequestPage extends StatefulWidget {
+  @override
+  _RequestPageState createState() => _RequestPageState();
+}
+
+class _RequestPageState extends State<RequestPage> {
+  int _itemCount = 7;
+
   @override
   // Future<http.Response> fetchAlbum(String id) {
   //   return http.get('http://localhost:5000/api/trainid?id=\(id)');
@@ -20,12 +26,12 @@ class RequestPage extends StatelessWidget {
                   new Container(
                       // header
                       height: 90,
-                      color: Colors.lightGreen[100],
+                      color: Colors.lightGreen[50],
                       child: new Padding(
-                          padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
+                          padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
                           child: new Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // new TextButton(
                                 //   padding
@@ -43,6 +49,17 @@ class RequestPage extends StatelessWidget {
                                 //     padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                                 //     child:
                                 TextButton(
+                                  onPressed: null,
+                                  child: new Text('Новые заявки',
+                                      style: new TextStyle(
+                                          color: Colors.green[800],
+                                          fontSize: 27.0,
+                                          fontWeight: FontWeight.normal)),
+                                  // padding: EdgeInsets.fromLTRB(45, 7, 0, 0)
+                                  // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 20, 6),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -50,37 +67,52 @@ class RequestPage extends StatelessWidget {
                                           builder: (context) => MenuBar()),
                                     );
                                   },
-                                  child: new Text('Меню',
-                                      style: new TextStyle(
-                                          color: Colors.lightGreen[900],
-                                          fontSize: 26.0)),
-                                  // )
+                                  icon: const Icon(Icons.menu_rounded),
+                                  tooltip: 'Menu',
+                                  color: Colors.green[700],
+                                  iconSize: 50,
                                 ),
+
+                                // TextButton(
+                                //   onPressed: () {
+                                //     Navigator.push(
+                                //       context,
+                                //       MaterialPageRoute(
+                                //           builder: (context) => MenuBar()),
+                                //     );
+                                //   },
+                                //   child: new Text('Меню',
+                                //       style: new TextStyle(
+                                //           color: Colors.lightGreen[800],
+                                //           fontSize: 26.0)),
+                                // ),
+
                                 // new Padding(
                                 //     child:
-                                TextButton(
-                                  onPressed: null,
-                                  child: new Text('Заказы',
-                                      style: new TextStyle(
-                                          color: Colors.lightGreen[700],
-                                          fontSize: 27.0)),
-                                  // padding: EdgeInsets.fromLTRB(45, 7, 0, 0)
-                                  // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
-                                ),
-                                TextButton(
-                                  onPressed: null,
-                                  child: new Text('Профиль',
-                                      style: new TextStyle(
-                                          color: Colors.lightGreen[700],
-                                          fontSize: 27.0)),
-                                  // padding: EdgeInsets.fromLTRB(45, 7, 0, 0)
-                                  // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
-                                )
+                                // TextButton(
+                                //   onPressed: null,
+                                //   child: new Text('Заказы',
+                                //       style: new TextStyle(
+                                //           color: Colors.lightGreen[700],
+                                //           fontSize: 27.0)),
+                                //   // padding: EdgeInsets.fromLTRB(45, 7, 0, 0)
+                                //   // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
+                                // ),
+                                // TextButton(
+                                //   onPressed: null,
+                                //   child: new Text('Профиль',
+                                //       style: new TextStyle(
+                                //           color: Colors.lightGreen[700],
+                                //           fontSize: 27.0)),
+                                //   // padding: EdgeInsets.fromLTRB(45, 7, 0, 0)
+                                //   // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
+                                // )
                               ]))),
                   Expanded(
                       child: new ListView.separated(
-                    padding: EdgeInsets.fromLTRB(7, 7, 7, 7),
-                    itemCount: 7, /////// todo тут количество заявок
+                          // scrollDirection: Axis.vertical
+                    padding: EdgeInsets.all(7),
+                    itemCount: _itemCount,
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                           // большой контейнер
@@ -193,7 +225,7 @@ class RequestPage extends StatelessWidget {
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(15.0))),
                                       side: BorderSide(
-                                          color: Colors.orange[200], width: 2),
+                                          color: (Colors.orange[200])!, width: 2),
                                       minimumSize: new Size(150, 30),
                                       backgroundColor: Colors.orange[50]),
                                   onPressed: () {
@@ -253,10 +285,20 @@ class RequestPage extends StatelessWidget {
     return BoxDecoration(
         color: Colors.yellow[100],
         border: Border.all(
-          color: Colors.orange[200],
+          color: (Colors.orange[200])!,
           width: 2,
         ),
         borderRadius: BorderRadius.all(Radius.circular(15.0) //
             ));
   }
+}
+
+class Request {
+  DateTime? date;
+  Duration? duration;
+  int? distance;
+  String? from;
+  String? to;
+
+  Request(this.date, this.duration, this.distance, this.from, this.to);
 }

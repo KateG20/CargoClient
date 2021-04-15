@@ -1,31 +1,59 @@
 import 'package:flutter/material.dart';
-import 'RequestPage.dart';
+
 import 'EntryPage.dart';
+import 'RequestPage.dart';
 
 class MenuBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text(
-              'Меню',
-              style: TextStyle(color: Colors.green[900], fontSize: 30),
-            ),
-            margin: EdgeInsets.only(bottom: 8),
-            // padding: EdgeInsets.all(40),
-            decoration: BoxDecoration(
-              color: Colors.lightGreen[100],
-              // image: DecorationImage(
-              //     fit: BoxFit.fill,
-              //     image: AssetImage('assets/images/cover.jpg'))
-            ),
-          ),
+          FittedBox(
+              fit: BoxFit.none,
+              child: DrawerHeader(
+                child: new Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+                          child: Text(
+                            'Курсач Курсач Курсач!!',
+                            style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(left: 10, bottom: 5, right: 10),
+                          child: Text(
+                            'Номер ТС: Т704СВ199',
+                            style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal),
+                          )),
+                      Padding(
+                          padding: EdgeInsets.only(left: 10, bottom: 5, right: 20),
+                          child: Text(
+                            'Не является представителем компании',
+                            style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal),
+                          )),
+                    ]),
+                // margin: EdgeInsets.only(bottom: 8),
+                // padding: EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                  color: Colors.lightGreen[50],
+                ),
+              )),
           ListTile(
-            leading: Icon(Icons.assignment, size: 30),
-            title: Text('Каталог заявок', style: TextStyle(fontSize: 20)),
+            leading: Icon(Icons.format_list_bulleted_rounded, size: 30),
+            // leading: Icon(Icons.list_rounded, size: 30),
+            title: Text('Новые заявки', style: TextStyle(fontSize: 20)),
             onTap: () {
               Navigator.push(
                 context,
@@ -34,27 +62,22 @@ class MenuBar extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.assignment_turned_in, size: 30),
-            title: Text('Подтвержденные заявки', style: TextStyle(fontSize: 20)),
+            leading: Icon(Icons.settings_backup_restore_rounded, size: 30),
+            title: Text('Заявки на выполнении', style: TextStyle(fontSize: 20)),
             onTap: () => {}, //{Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.backup, size: 30),
+            leading: Icon(Icons.done_outline_rounded, size: 30),
             title: Text('Выполненные заявки', style: TextStyle(fontSize: 20)),
             onTap: () => {}, //{Navigator.of(context).pop()},
           ),
           ListTile(
-            leading: Icon(Icons.settings, size: 30),
+            leading: Icon(Icons.settings_outlined, size: 30),
             title: Text('Настройки', style: TextStyle(fontSize: 20)),
             onTap: () => {}, //{Navigator.of(context).pop()},
           ),
-          // ListTile(
-          //   leading: Icon(Icons.border_color),
-          //   title: Text('Feedback'),
-          //   onTap: () => {Navigator.of(context).pop()},
-          // ),
           ListTile(
-            leading: Icon(Icons.exit_to_app, size: 30),
+            leading: Icon(Icons.exit_to_app_rounded, size: 30),
             title: Text('Выйти', style: TextStyle(fontSize: 20)),
             onTap: () {
               Navigator.push(
