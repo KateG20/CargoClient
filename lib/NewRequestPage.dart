@@ -9,7 +9,6 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
-  int _itemCount = 7;
   var requests = [
     Request(DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ", "Владивосток"),
     Request(DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
@@ -25,24 +24,24 @@ class _RequestPageState extends State<RequestPage> {
         // debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
-            builder: (context) => new Material(
+            builder: (context) => Material(
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
-                    child: new Column(children: <Widget>[
-                  new Container(
+                    child: Column(children: <Widget>[
+                  Container(
                       // header
                       height: 90,
                       color: Colors.lightGreen[50],
-                      child: new Padding(
+                      child: Padding(
                           padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                          child: new Row(
+                          child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextButton(
                                   onPressed: null,
-                                  child: new Text('Новые заявки',
-                                      style: new TextStyle(
+                                  child: Text('Новые заявки',
+                                      style: TextStyle(
                                           color: Colors.green[800],
                                           fontSize: 27.0,
                                           fontWeight: FontWeight.normal)),
@@ -65,7 +64,7 @@ class _RequestPageState extends State<RequestPage> {
                                 ),
                               ]))),
                   Expanded(
-                      child: new ListView.custom(
+                      child: ListView.custom(
                     scrollDirection: Axis.vertical,
                     padding: EdgeInsets.all(7),
                     childrenDelegate: SliverChildBuilderDelegate(
@@ -96,6 +95,11 @@ class Request {
   String? to;
 
   Request(this.date, this.duration, this.distance, this.from, this.to);
+
+  // Request.noted(this.date, this.duration, this.distance, from, to) {
+  //   this.from = "from " + from;
+  //   this.to = "to " + to;
+  // }
 }
 
 class KeepAlive extends StatefulWidget {
@@ -132,7 +136,7 @@ class _KeepAliveState
           color: Colors.lightGreen,
           width: 3,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(15.0) //
+        borderRadius: BorderRadius.all(Radius.circular(12.0) //
             ));
   }
 
@@ -143,7 +147,7 @@ class _KeepAliveState
           color: (Colors.orange[200])!,
           width: 2,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(15.0) //
+        borderRadius: BorderRadius.all(Radius.circular(12.0) //
             ));
   }
 
@@ -151,35 +155,41 @@ class _KeepAliveState
     return Container(
         // большой контейнер
         // колонка - сверху два желтых контейнера, снизу кнопки
-        child: new Column(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-          new Container(
+          Container(
               // два желтых
               height: 170,
               decoration: orderBoxDecoration(),
-              child: new Row(
+              child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    new Padding(
+                    Padding(
                         padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
                         // padding: EdgeInsets.only(top: 15),
-                        child: new Container(
+                        child: Container(
                             // маленький контейнер
                             // контейнер с данными о времени и расстоянии
                             decoration: dataBoxDecoration(),
                             width: 185,
-                            child: new Padding(
+                            child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: new Column(
+                                child: Column(
                                   // колонка с данными
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    new RichText(
+                                    RichText(
                                       text: TextSpan(
-                                          // text: "${_data.date?.day.toString()}.${_data.date?.month.toString()}."
-                                          //     "${_data.date?.year.toString()}", //"09.09.2020",
+                                          text: "когда",
+                                          style: TextStyle(
+                                            color: Colors.green[900]?.withOpacity(0.6),
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
                                           text: "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
                                           // TODO
                                           style: TextStyle(
@@ -187,7 +197,16 @@ class _KeepAliveState
                                             fontSize: 23,
                                           )),
                                     ),
-                                    new RichText(
+                                    Padding(padding: EdgeInsets.only(top: 5)),
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "сколько",
+                                          style: TextStyle(
+                                            color: Colors.green[900]?.withOpacity(0.6),
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                    RichText(
                                       text: TextSpan(
                                           // text: "${_data.duration?.toString()}",
                                           text: "${_printDuration(_data.duration!)}",
@@ -197,7 +216,7 @@ class _KeepAliveState
                                             fontSize: 20,
                                           )),
                                     ),
-                                    new RichText(
+                                    RichText(
                                       text: TextSpan(
                                           text: "${_data.distance?.toString()} км",
                                           // TODO
@@ -208,21 +227,21 @@ class _KeepAliveState
                                     ),
                                   ],
                                 )))),
-                    new Padding(
+                    Padding(
                         padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
                         // padding: EdgeInsets.only(top: 15),
-                        child: new Container(
+                        child: Container(
                             // контейнер с данными о пунктах назначения
                             decoration: dataBoxDecoration(),
                             width: 185,
-                            child: new Padding(
+                            child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: new Column(
+                                child: Column(
                                   // колонка с данными
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    new RichText(
+                                    RichText(
                                       text: TextSpan(
                                           text: "откуда",
                                           style: TextStyle(
@@ -230,7 +249,7 @@ class _KeepAliveState
                                             fontSize: 20,
                                           )),
                                     ),
-                                    new RichText(
+                                    RichText(
                                       text: TextSpan(
                                           text: "${_data.from?.toString()}",
                                           style: TextStyle(
@@ -238,8 +257,8 @@ class _KeepAliveState
                                             fontSize: 23,
                                           )),
                                     ),
-                                    new Padding(padding: EdgeInsets.only(top: 5)),
-                                    new RichText(
+                                    Padding(padding: EdgeInsets.only(top: 5)),
+                                    RichText(
                                       text: TextSpan(
                                           text: "куда",
                                           style: TextStyle(
@@ -247,7 +266,7 @@ class _KeepAliveState
                                             fontSize: 20,
                                           )),
                                     ),
-                                    new RichText(
+                                    RichText(
                                       text: TextSpan(
                                           text: "${_data.to?.toString()}",
                                           style: TextStyle(
@@ -258,20 +277,20 @@ class _KeepAliveState
                                   ],
                                 ))))
                   ])),
-          new Padding(
+          Padding(
               padding: EdgeInsets.only(top: 1, bottom: 10),
-              child: new Row(
+              child: Row(
                 // ряд с двумя кнопками
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  new OutlinedButton(
+                  OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15.0))),
+                                BorderRadius.all(Radius.circular(12.0))),
                         side:
                             BorderSide(color: (Colors.orange[200])!, width: 2),
-                        minimumSize: new Size(150, 30),
+                        minimumSize: Size(150, 30),
                         backgroundColor: Colors.orange[50]),
                     onPressed: () {
                       // TODO
@@ -284,13 +303,13 @@ class _KeepAliveState
                               color: Colors.lightGreen[800], fontSize: 20),
                         )),
                   ),
-                  new OutlinedButton(
+                  OutlinedButton(
                     style: OutlinedButton.styleFrom(
                         shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15.0))),
+                                BorderRadius.all(Radius.circular(12.0))),
                         side: BorderSide(color: Colors.lightGreen, width: 2),
-                        minimumSize: new Size(150, 30),
+                        minimumSize: Size(150, 30),
                         backgroundColor: Colors.lightGreen[50]),
                     onPressed: () {
                       // TODO

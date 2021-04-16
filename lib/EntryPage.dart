@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'RegistrationPage.dart';
-import 'RequestPage.dart';
+import 'NewRequestPage.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -151,7 +151,7 @@ class _EntryPageState extends State<EntryPage> {
                                         color: Colors.lightGreen[600]),
                                   )),
                             ),
-                            new Padding(padding: EdgeInsets.only(top: 10.0)),
+                            // new Padding(padding: EdgeInsets.only(top: 5)),
                             new OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 // textStyle: TextStyle(color: Colors.white),
