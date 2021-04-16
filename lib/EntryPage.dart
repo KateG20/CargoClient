@@ -32,12 +32,6 @@ class _EntryPageState extends State<EntryPage> {
           color: Colors.red,
           fontSize: 18.0),
     ) : null;
-    // return Text('$_warningText',
-    //   style: new TextStyle(
-    //     // color: Color(0xff9ACD32), fontSize: 25.0),
-    //       color: Colors.redAccent,
-    //       fontSize: 18.0),
-    // );
   }
 
   @override
@@ -139,7 +133,7 @@ class _EntryPageState extends State<EntryPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => RequestPage()),
+                                      builder: (context) => NewRequestPage()),
                                 );
                               },
                               child: Padding(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'EntryPage.dart';
 import 'NewRequestPage.dart';
+import 'CurrentRequestPage.dart';
+import 'ArchiveRequestPage.dart';
 
 class MenuBar extends StatelessWidget {
   @override
@@ -71,7 +73,7 @@ class MenuBar extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => RequestPage()),
+                                  builder: (context) => NewRequestPage()),
                             );
                           },
                         ),
@@ -80,13 +82,25 @@ class MenuBar extends StatelessWidget {
                               size: 30),
                           title: Text('Заявки на выполнении',
                               style: TextStyle(fontSize: 20)),
-                          onTap: () => {}, //{Navigator.of(context).pop()},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CurrentRequestPage()),
+                            );
+                          },
                         ),
                         ListTile(
                           leading: Icon(Icons.done_outline_rounded, size: 30),
                           title: Text('Выполненные заявки',
                               style: TextStyle(fontSize: 20)),
-                          onTap: () => {}, //{Navigator.of(context).pop()},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ArchiveRequestPage()),
+                            );
+                          }, //{Navigator.of(context).pop()},
                         ),
                         ListTile(
                           leading: Icon(Icons.settings_outlined, size: 30),

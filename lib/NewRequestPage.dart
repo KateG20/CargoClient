@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'MenuBar.dart';
+import 'Request.dart';
 
-class RequestPage extends StatefulWidget {
+class NewRequestPage extends StatefulWidget {
   @override
-  _RequestPageState createState() => _RequestPageState();
+  _NewRequestPageState createState() => _NewRequestPageState();
 }
 
-class _RequestPageState extends State<RequestPage> {
+class _NewRequestPageState extends State<NewRequestPage> {
   var requests = [
-    Request(DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ", "Владивосток"),
+    Request(DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ",
+        "Владивосток"),
     Request(DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
         "Новосибирск", "ТЛЦ")
   ];
@@ -87,21 +89,6 @@ class _RequestPageState extends State<RequestPage> {
 // there were two BoxDecorators and listItemContainer creation method (now below)
 }
 
-class Request {
-  DateTime? date;
-  Duration? duration;
-  int? distance;
-  String? from;
-  String? to;
-
-  Request(this.date, this.duration, this.distance, this.from, this.to);
-
-  // Request.noted(this.date, this.duration, this.distance, from, to) {
-  //   this.from = "from " + from;
-  //   this.to = "to " + to;
-  // }
-}
-
 class KeepAlive extends StatefulWidget {
   const KeepAlive({
     required Key key,
@@ -114,9 +101,7 @@ class KeepAlive extends StatefulWidget {
   _KeepAliveState createState() => _KeepAliveState(data);
 }
 
-class _KeepAliveState
-    extends State<KeepAlive> // with AutomaticKeepAliveClientMixin
-{
+class _KeepAliveState extends State<KeepAlive> {
   final Request _data;
 
   _KeepAliveState(this._data);
@@ -127,10 +112,10 @@ class _KeepAliveState
   @override
   Widget build(BuildContext context) {
     // super.build(context);
-    return listItemContainer();
+    return requestContainer();
   }
 
-  BoxDecoration orderBoxDecoration() {
+  BoxDecoration requestBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
           color: Colors.lightGreen,
@@ -151,180 +136,175 @@ class _KeepAliveState
             ));
   }
 
-  Widget listItemContainer() {
+  Widget requestContainer() {
     return Container(
         // большой контейнер
         // колонка - сверху два желтых контейнера, снизу кнопки
-        child: Column(
+        child:
+            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      Container(
+          // два желтых
+          height: 170,
+          decoration: requestBoxDecoration(),
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+                // padding: EdgeInsets.only(top: 15),
+                child: Container(
+                    // маленький контейнер
+                    // контейнер с данными о времени и расстоянии
+                    decoration: dataBoxDecoration(),
+                    width: 185,
+                    child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          // колонка с данными
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                  text: "когда",
+                                  style: TextStyle(
+                                    color: Colors.green[900]?.withOpacity(0.6),
+                                    fontSize: 20,
+                                  )),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text:
+                                      "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
+                                  // TODO
+                                  style: TextStyle(
+                                    color: Colors.green[900],
+                                    fontSize: 23,
+                                  )),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            RichText(
+                              text: TextSpan(
+                                  text: "сколько",
+                                  style: TextStyle(
+                                    color: Colors.green[900]?.withOpacity(0.6),
+                                    fontSize: 20,
+                                  )),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  // text: "${_data.duration?.toString()}",
+                                  text: "${_printDuration(_data.duration!)}",
+                                  // TODO
+                                  style: TextStyle(
+                                    color: Colors.green[900],
+                                    fontSize: 20,
+                                  )),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                  text: "${_data.distance?.toString()} км",
+                                  // TODO
+                                  style: TextStyle(
+                                    color: Colors.green[900],
+                                    fontSize: 20,
+                                  )),
+                            ),
+                          ],
+                        )))),
+            Padding(
+                padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+                // padding: EdgeInsets.only(top: 15),
+                child: Container(
+                    // контейнер с данными о пунктах назначения
+                    decoration: dataBoxDecoration(),
+                    width: 185,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        child: Column(
+                          // колонка с данными
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [Text(
+                            "откуда",
+                            style: TextStyle(
+                              color: Colors.green[900]?.withOpacity(0.6),
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                            Text(
+                              "${_data.from?.toString()}",
+                              style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 22,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            Text(
+                              "куда",
+                              style: TextStyle(
+                                color: Colors.green[900]?.withOpacity(0.6),
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              "${_data.to?.toString()}",
+                              style: TextStyle(
+                                color: Colors.green[900],
+                                fontSize: 22,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ))))
+          ])),
+      Padding(
+          padding: EdgeInsets.only(top: 1, bottom: 10),
+          child: Row(
+            // ряд с двумя кнопками
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-          Container(
-              // два желтых
-              height: 170,
-              decoration: orderBoxDecoration(),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-                        // padding: EdgeInsets.only(top: 15),
-                        child: Container(
-                            // маленький контейнер
-                            // контейнер с данными о времени и расстоянии
-                            decoration: dataBoxDecoration(),
-                            width: 185,
-                            child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  // колонка с данными
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "когда",
-                                          style: TextStyle(
-                                            color: Colors.green[900]?.withOpacity(0.6),
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
-                                          // TODO
-                                          style: TextStyle(
-                                            color: Colors.green[900],
-                                            fontSize: 23,
-                                          )),
-                                    ),
-                                    Padding(padding: EdgeInsets.only(top: 5)),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "сколько",
-                                          style: TextStyle(
-                                            color: Colors.green[900]?.withOpacity(0.6),
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          // text: "${_data.duration?.toString()}",
-                                          text: "${_printDuration(_data.duration!)}",
-                                          // TODO
-                                          style: TextStyle(
-                                            color: Colors.green[900],
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "${_data.distance?.toString()} км",
-                                          // TODO
-                                          style: TextStyle(
-                                            color: Colors.green[900],
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                  ],
-                                )))),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-                        // padding: EdgeInsets.only(top: 15),
-                        child: Container(
-                            // контейнер с данными о пунктах назначения
-                            decoration: dataBoxDecoration(),
-                            width: 185,
-                            child: Padding(
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  // колонка с данными
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "откуда",
-                                          style: TextStyle(
-                                            color: Colors.green[900]?.withOpacity(0.6),
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "${_data.from?.toString()}",
-                                          style: TextStyle(
-                                            color: Colors.green[900],
-                                            fontSize: 23,
-                                          )),
-                                    ),
-                                    Padding(padding: EdgeInsets.only(top: 5)),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "куда",
-                                          style: TextStyle(
-                                            color: Colors.green[900]?.withOpacity(0.6),
-                                            fontSize: 20,
-                                          )),
-                                    ),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "${_data.to?.toString()}",
-                                          style: TextStyle(
-                                            color: Colors.green[900],
-                                            fontSize: 23,
-                                          )),
-                                    ),
-                                  ],
-                                ))))
-                  ])),
-          Padding(
-              padding: EdgeInsets.only(top: 1, bottom: 10),
-              child: Row(
-                // ряд с двумя кнопками
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.0))),
-                        side:
-                            BorderSide(color: (Colors.orange[200])!, width: 2),
-                        minimumSize: Size(150, 30),
-                        backgroundColor: Colors.orange[50]),
-                    onPressed: () {
-                      // TODO
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(7),
-                        child: Text(
-                          "Отклонить",
-                          style: TextStyle(
-                              color: Colors.lightGreen[800], fontSize: 20),
-                        )),
-                  ),
-                  OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12.0))),
-                        side: BorderSide(color: Colors.lightGreen, width: 2),
-                        minimumSize: Size(150, 30),
-                        backgroundColor: Colors.lightGreen[50]),
-                    onPressed: () {
-                      // TODO
-                    },
-                    child: Padding(
-                        padding: EdgeInsets.all(7),
-                        child: Text(
-                          "Принять",
-                          style: TextStyle(
-                              color: Colors.lightGreen[800], fontSize: 20),
-                        )),
-                  ),
-                ],
-              ))
-        ]));
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                    primary: Colors.orange,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    side: BorderSide(color: (Colors.orange[200])!, width: 2),
+                    minimumSize: Size(150, 30),
+                    backgroundColor: Colors.orange[50]),
+                onPressed: () {
+                  // TODO
+                },
+                child: Padding(
+                    padding: EdgeInsets.all(7),
+                    child: Text(
+                      "Отклонить",
+                      style: TextStyle(
+                          color: Colors.lightGreen[800], fontSize: 20),
+                    )),
+              ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.lightGreen[800],
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                    side: BorderSide(color: Colors.lightGreen, width: 2),
+                    minimumSize: Size(150, 30),
+                    backgroundColor: Colors.lightGreen[50]),
+                onPressed: () {
+                  // TODO
+                },
+                child: Padding(
+                    padding: EdgeInsets.all(7),
+                    child: Text(
+                      "Принять",
+                      style: TextStyle(
+                          color: Colors.lightGreen[800], fontSize: 20),
+                    )),
+              ),
+            ],
+          ))
+    ]));
   }
 
   String _printDuration(Duration duration) {
