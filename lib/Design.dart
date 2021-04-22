@@ -204,37 +204,46 @@ class Design {
     // return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
-  Widget newRequestRow(Request _data) {
-    return Wrap(
-      alignment: WrapAlignment.spaceEvenly,
-      runAlignment: WrapAlignment.spaceEvenly,
-      spacing: 20,
-      runSpacing: -5,
+  Row newRequestRow(BuildContext context, Request _data) {
+    // return Wrap(
+    //   alignment: WrapAlignment.spaceEvenly,
+    //   runAlignment: WrapAlignment.spaceEvenly,
+    //   spacing: 20,
+    //   runSpacing: -5,
+    //   children: [
+    //     rejectButton(),
+    //     acceptButton(),
+    //     moreInfoIcon(_data),
+    //   ],
+    // );
+    return Row(
+      // ряд с тремя кнопками
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         rejectButton(),
         acceptButton(),
-        moreInfoIcon(_data),
+        moreInfoIcon(context, _data),
       ],
     );
   }
 
-  Row currentRequestRow(Request _data) {
+  Row currentRequestRow(BuildContext context, Request _data) {
     return Row(
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         doneButton(),
-        moreInfoButton(_data),
+        moreInfoIcon(context, _data),
       ],
     );
   }
 
-  Row archiveRequestRow(Request _data) {
+  Row archiveRequestRow(BuildContext context, Request _data) {
     return Row(
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        moreInfoButton(_data),
+        moreInfoIcon(context, _data),
       ],
     );
   }
@@ -281,53 +290,60 @@ class Design {
     );
   }
 
-  OutlinedButton moreInfoButton(Request _data) {
-    return OutlinedButton(
-      style: OutlinedButton.styleFrom(
-          primary: Colors.lightGreen[800],
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12.0))),
-          side: BorderSide(color: Colors.lightGreen, width: 2),
-          minimumSize: Size(150, 30),
-          backgroundColor: Colors.yellow[50]),
-      onPressed: () {
-        SimpleDialog(
-          title: Text('Информация о заявке'),
-          children: [
-            Text('Дата: ${_data.date}'),
-            Text('Протяженность: ${_data.duration}, ${_data.distance}'),
-            Text('Маршрут: ${_data.from} - ${_data.to}'),
-            Text('Вес товара: ${_data.from} - ${_data.to}'), // TODO все поля
-          ],
-        );
-      },
-      child: Padding(
-          padding: EdgeInsets.all(7),
-          child: Text(
-            "Подробнее",
-            style: TextStyle(color: Colors.yellow[800], fontSize: 20),
-          )),
-    );
-  }
+  // OutlinedButton moreInfoButton(BuildContext context, Request _data) {
+  //   return OutlinedButton(
+  //     style: OutlinedButton.styleFrom(
+  //         primary: Colors.lightGreen[800],
+  //         shape: const RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.all(Radius.circular(12.0))),
+  //         side: BorderSide(color: (Colors.lightGreen[800])!, width: 2),
+  //         minimumSize: Size(150, 30),
+  //         backgroundColor: Colors.yellow[50]),
+  //     onPressed: () {
+  //       showDialog(context: context, builder: (BuildContext context) {
+  //         return SimpleDialog(
+  //         title: Text('Информация о заявке'),
+  //         children: [
+  //           Text('Грузоотправитель: ${_data.shipper}'),
+  //           Text('Грузополучатель: ${_data.receiver}'),
+  //           Text('Дата: ${_data.date}'),
+  //           Text('Протяженность: ${_data.duration}, ${_data.distance}'),
+  //           Text('Маршрут: ${_data.from} - ${_data.to}'),
+  //           Text('Вес товара: ${_data.weight}'),
+  //           Text('Описание: ${_data.description}'),
+  //         ],);
+  //       });
+  //     },
+  //     child: Padding(
+  //         padding: EdgeInsets.all(7),
+  //         child: Text(
+  //           "Подробнее",
+  //           style: TextStyle(color: Colors.yellow[800], fontSize: 20),
+  //         )),
+  //   );
+  // }
 
-  IconButton moreInfoIcon(Request _data) {
+  IconButton moreInfoIcon(BuildContext context, Request _data) {
     return IconButton(
-        onPressed: () {
-          SimpleDialog(
+      onPressed: () {
+        showDialog(context: context, builder: (BuildContext context) {
+          return SimpleDialog(
             title: Text('Информация о заявке'),
             children: [
+              Text('Грузоотправитель: ${_data.shipper}'),
+              Text('Грузополучатель: ${_data.receiver}'),
               Text('Дата: ${_data.date}'),
               Text('Протяженность: ${_data.duration}, ${_data.distance}'),
               Text('Маршрут: ${_data.from} - ${_data.to}'),
-              Text('Вес товара: ${_data.from} - ${_data.to}'), // TODO все поля
-            ],
-          );
-        },
-        icon: Icon(Icons.info_outline_rounded),
+              Text('Вес товара: ${_data.weight}'),
+              Text('Описание: ${_data.description}'),
+            ],);
+        });
+      },
+      icon: Icon(Icons.info_outline_rounded),
       tooltip: 'More info',
-      color: Colors.green[700],
+      color: Colors.lightGreen,
       iconSize: 35,
-
     );
   }
 
