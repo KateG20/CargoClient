@@ -6,6 +6,10 @@ import 'CurrentRequestPage.dart';
 import 'ArchiveRequestPage.dart';
 
 class MenuBar extends StatelessWidget {
+  final String name = "Курсач Курсач Курсач";
+  final String autoNumber = "Т704СВ199";
+  final String company = "Не является представителем компании";
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +27,7 @@ class MenuBar extends StatelessWidget {
                               Padding(
                                   padding: EdgeInsets.fromLTRB(10, 40, 10, 20),
                                   child: Text(
-                                    'Курсач Курсач Курсач',
+                                    '$name',
                                     style: TextStyle(
                                         color: Colors.green[900],
                                         fontSize: 25,
@@ -31,11 +35,9 @@ class MenuBar extends StatelessWidget {
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
-                                  // padding: EdgeInsets.only(
-                                  //     left: 10, bottom: 5, right: 10),
                                   padding: EdgeInsets.fromLTRB(10, 0, 10, 5),
                                   child: Text(
-                                    'Номер ТС: Т704СВ199',
+                                    'Номер ТС: $autoNumber',
                                     style: TextStyle(
                                         color: Colors.green[900],
                                         fontSize: 20,
@@ -47,7 +49,7 @@ class MenuBar extends StatelessWidget {
                                   //     left: 10, bottom: 5, right: 20),
                                   padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
                                   child: Text(
-                                    'Не является представителем компании',
+                                    '$company',
                                     style: TextStyle(
                                         color: Colors.green[900],
                                         fontSize: 20,

@@ -155,12 +155,12 @@ class _EntryPageState extends State<EntryPage> {
                                       borderRadius:
                                       BorderRadius.all(Radius.circular(15.0)))),
                               onPressed: () {
-                                warningOn("Not available!");
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //       builder: (context) => RegistrationPage()),
-                                // );
+                                // warningOn("Not available!");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RegistrationPage()),
+                                );
                               },
                               child: Text(
                                 "Первичная регистрация",

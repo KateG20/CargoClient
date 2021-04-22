@@ -1,14 +1,14 @@
 class Request {
+  String? shipper;
+  String? receiver;
   DateTime? date;
   Duration? duration;
   int? distance;
   String? from;
   String? to;
+  int? weight;
+  String? description;
 
-  Request(this.date, this.duration, this.distance, this.from, this.to);
-
-// Request.noted(this.date, this.duration, this.distance, from, to) {
-//   this.from = "from " + from;
-//   this.to = "to " + to;
-// }
+  Request(this.shipper, this.receiver, this.date, this.duration, this.distance,
+      this.from, this.to, this.weight, this.description);
 }
