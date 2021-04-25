@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/MenuBar.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +9,10 @@ import 'Request.dart';
 class Design {
   Container pageHeader(BuildContext context, String text) {
     return Container(
+        decoration: headerBoxDecoration(),
         // header
         height: 90,
-        color: Colors.lightGreen[50],
+        // color: Colors.lightGreen[50],
         child: Padding(
             padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
             child: Row(
@@ -139,7 +141,7 @@ class Design {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              "${_data.from?.toString()}",
+                              "${_data.from}",
                               style: TextStyle(
                                 color: Colors.green[900],
                                 fontSize: 22,
@@ -156,7 +158,7 @@ class Design {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              "${_data.to?.toString()}",
+                              "${_data.to}",
                               style: TextStyle(
                                 color: Colors.green[900],
                                 fontSize: 22,
@@ -170,13 +172,30 @@ class Design {
     ]));
   }
 
+  BoxDecoration headerBoxDecoration() {
+    return BoxDecoration(
+      color: Colors.lightGreen[50],
+      border: Border(bottom: BorderSide(color: Colors.lightGreen, width: 3)),
+      // borderRadius: BorderRadius.all(Radius.circular(12.0)
+    );
+  }
+
+  BoxDecoration menuHeaderBoxDecoration() {
+    return BoxDecoration(
+      border: Border(
+          bottom:
+              BorderSide(color: Colors.brown[900]!.withOpacity(0.3), width: 3)),
+      // borderRadius: BorderRadius.all(Radius.circular(12.0)
+    );
+  }
+
   BoxDecoration requestBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
           color: Colors.lightGreen,
           width: 3,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(12.0) //
+        borderRadius: BorderRadius.all(Radius.circular(12.0)
             ));
   }
 
@@ -187,7 +206,7 @@ class Design {
           color: (Colors.orange[200])!,
           width: 2,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(12.0) //
+        borderRadius: BorderRadius.all(Radius.circular(12.0)
             ));
   }
 
@@ -198,24 +217,9 @@ class Design {
     if (duration.inHours.remainder(60) > 0) res += hours;
     if (duration.inMinutes.remainder(60) > 0) res += minutes;
     return res;
-    // String twoDigits(int n) => n.toString().padLeft(2, "0");
-    // String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    // String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    // return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   Row newRequestRow(BuildContext context, Request _data) {
-    // return Wrap(
-    //   alignment: WrapAlignment.spaceEvenly,
-    //   runAlignment: WrapAlignment.spaceEvenly,
-    //   spacing: 20,
-    //   runSpacing: -5,
-    //   children: [
-    //     rejectButton(),
-    //     acceptButton(),
-    //     moreInfoIcon(_data),
-    //   ],
-    // );
     return Row(
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -229,9 +233,10 @@ class Design {
 
   Row currentRequestRow(BuildContext context, Request _data) {
     return Row(
-      // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        Padding(padding: EdgeInsets.only(right: 50)),
         doneButton(),
         moreInfoIcon(context, _data),
       ],
@@ -240,8 +245,8 @@ class Design {
 
   Row archiveRequestRow(BuildContext context, Request _data) {
     return Row(
-      // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      // crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         moreInfoIcon(context, _data),
       ],
@@ -290,55 +295,42 @@ class Design {
     );
   }
 
-  // OutlinedButton moreInfoButton(BuildContext context, Request _data) {
-  //   return OutlinedButton(
-  //     style: OutlinedButton.styleFrom(
-  //         primary: Colors.lightGreen[800],
-  //         shape: const RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.all(Radius.circular(12.0))),
-  //         side: BorderSide(color: (Colors.lightGreen[800])!, width: 2),
-  //         minimumSize: Size(150, 30),
-  //         backgroundColor: Colors.yellow[50]),
-  //     onPressed: () {
-  //       showDialog(context: context, builder: (BuildContext context) {
-  //         return SimpleDialog(
-  //         title: Text('Информация о заявке'),
-  //         children: [
-  //           Text('Грузоотправитель: ${_data.shipper}'),
-  //           Text('Грузополучатель: ${_data.receiver}'),
-  //           Text('Дата: ${_data.date}'),
-  //           Text('Протяженность: ${_data.duration}, ${_data.distance}'),
-  //           Text('Маршрут: ${_data.from} - ${_data.to}'),
-  //           Text('Вес товара: ${_data.weight}'),
-  //           Text('Описание: ${_data.description}'),
-  //         ],);
-  //       });
-  //     },
-  //     child: Padding(
-  //         padding: EdgeInsets.all(7),
-  //         child: Text(
-  //           "Подробнее",
-  //           style: TextStyle(color: Colors.yellow[800], fontSize: 20),
-  //         )),
-  //   );
-  // }
-
   IconButton moreInfoIcon(BuildContext context, Request _data) {
     return IconButton(
       onPressed: () {
-        showDialog(context: context, builder: (BuildContext context) {
-          return SimpleDialog(
-            title: Text('Информация о заявке'),
-            children: [
-              Text('Грузоотправитель: ${_data.shipper}'),
-              Text('Грузополучатель: ${_data.receiver}'),
-              Text('Дата: ${_data.date}'),
-              Text('Протяженность: ${_data.duration}, ${_data.distance}'),
-              Text('Маршрут: ${_data.from} - ${_data.to}'),
-              Text('Вес товара: ${_data.weight}'),
-              Text('Описание: ${_data.description}'),
-            ],);
-        });
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SimpleDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
+                title: Center(
+                    child: Text('Информация о заявке',
+                        style:
+                            TextStyle(color: Colors.green[900], fontSize: 24))),
+                children: [
+                  InfoDialogItem(
+                      name: 'Грузоотправитель:', value: '${_data.shipper}'),
+                  InfoDialogItem(
+                      name: 'Грузополучатель:', value: '${_data.receiver}'),
+                  InfoDialogItem(
+                      name: 'Дата:',
+                      value:
+                          '${DateFormat('dd.MM.yyyy, hh:mm').format(_data.date!)}'),
+                  InfoDialogItem(
+                      name: 'Протяженность:',
+                      value:
+                          '${_printDuration(_data.duration!)}, ${_data.distance.toString() + " км"}'),
+                  InfoDialogItem(
+                      name: 'Маршрут:', value: '${_data.from} - ${_data.to}'),
+                  InfoDialogItem(
+                      name: 'Вес товара:', value: '${_data.weight} кг'),
+                  InfoDialogItem(
+                      name: 'Описание:', value: '${_data.description}'),
+                  // style: TextStyle(color: Colors.green[900], fontSize: 20),
+                ],
+              );
+            });
       },
       icon: Icon(Icons.info_outline_rounded),
       tooltip: 'More info',
@@ -368,4 +360,47 @@ class Design {
           )),
     );
   }
+}
+
+class InfoDialogItem extends StatelessWidget {
+  const InfoDialogItem({required this.name, required this.value});
+
+  // : super(key: key);
+
+  final String name;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(25, 5, 25, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('$name ',
+                style: TextStyle(
+                    color: Colors.green[900]?.withOpacity(0.7), fontSize: 20)),
+            Padding(padding: EdgeInsets.only(top: 5)),
+            Text('$value',
+                style: TextStyle(
+                    color: Colors.green[900],
+                    fontSize: 23,
+                    fontWeight: FontWeight.w500))
+          ],
+        ));
+  }
+// return SimpleDialogOption(
+//   onPressed: onPressed,
+//   child: Row(
+//     mainAxisAlignment: MainAxisAlignment.start,
+//     crossAxisAlignment: CrossAxisAlignment.center,
+//     children: [
+//       Icon(icon, size: 36.0, color: color),
+//       Padding(
+//         padding: const EdgeInsetsDirectional.only(start: 16.0),
+//         child: Text(text),
+//       ),
+//     ],
+//   ),
+// );
 }

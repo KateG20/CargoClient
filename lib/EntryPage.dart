@@ -27,7 +27,7 @@ class _EntryPageState extends State<EntryPage> {
 
   Text? _getWarning() {
     return _warningVisible == true ? Text('$_warningText',
-      style: new TextStyle(
+      style: TextStyle(
         // color: Color(0xff9ACD32), fontSize: 25.0),
           color: Colors.red,
           fontSize: 18.0),
@@ -41,38 +41,38 @@ class _EntryPageState extends State<EntryPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) =>
-            new Material(
-                child: new Container(
+            Material(
+                child: Container(
                     padding: const EdgeInsets.all(30.0),
                     color: Colors.white,
-                    child: new Container(
-                      child: new Center(
-                          child: new Column(children: [
-                            new Padding(padding: EdgeInsets.only(top: 40.0)),
-                            new Text(
+                    child: Container(
+                      child: Center(
+                          child: Column(children: [
+                            Padding(padding: EdgeInsets.only(top: 40.0)),
+                            Text(
                               'Авторизация',
-                              style: new TextStyle(
+                              style: TextStyle(
                                 // color: Color(0xff9ACD32), fontSize: 25.0),
                                   color: Colors.lightGreen[600],
                                   fontSize: 30.0),
                             ),
-                            // new Padding(padding: EdgeInsets.only(top: 20.0)),
-                            new Padding(
+                            // Padding(padding: EdgeInsets.only(top: 20.0)),
+                            Padding(
                                 padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
                                 child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: _getWarning(),
                                   // child: Text(_warningVisible == true ? '$_warningText' : '',
                                   //           child: _warningVisible == true ? Text('$_warningText',
-                                  //   style: new TextStyle(
+                                  //   style: TextStyle(
                                   //     // color: Color(0xff9ACD32), fontSize: 25.0),
                                   //       color: Colors.redAccent,
                                   //       fontSize: 18.0),
                                   // )
                                 )),
-                            new Padding(padding: EdgeInsets.only(top: 20.0)),
-                            new TextFormField(
-                              decoration: new InputDecoration(
+                            Padding(padding: EdgeInsets.only(top: 20.0)),
+                            TextFormField(
+                              decoration: InputDecoration(
                                 labelText: "Логин",
                                 labelStyle: TextStyle(color: Colors.lightGreen),
                                 // fillColor: Colors.lightGreen,
@@ -80,9 +80,9 @@ class _EntryPageState extends State<EntryPage> {
                                     borderRadius: BorderRadius.circular(15.0),
                                     borderSide:
                                     BorderSide(color: Colors.lightGreen)),
-                                border: new OutlineInputBorder(
-                                  borderRadius: new BorderRadius.circular(15.0),
-                                  borderSide: new BorderSide(),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide(),
                                 ),
                                 //fillColor: Colors.green
                               ),
@@ -94,9 +94,9 @@ class _EntryPageState extends State<EntryPage> {
                                 }
                               },
                             ),
-                            new Padding(padding: EdgeInsets.only(top: 20.0)),
-                            new TextFormField(
-                              decoration: new InputDecoration(
+                            Padding(padding: EdgeInsets.only(top: 20.0)),
+                            TextFormField(
+                              decoration: InputDecoration(
                                 labelText: "Пароль",
                                 labelStyle: TextStyle(color: Colors.lightGreen),
                                 fillColor: Colors.lightBlueAccent,
@@ -106,9 +106,9 @@ class _EntryPageState extends State<EntryPage> {
                                     color: Colors.lightGreen,
                                   ),
                                 ),
-                                border: new OutlineInputBorder(
-                                  borderRadius: new BorderRadius.circular(15.0),
-                                  borderSide: new BorderSide(),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide(),
                                 ),
                                 //fillColor: Colors.green
                               ),
@@ -120,8 +120,8 @@ class _EntryPageState extends State<EntryPage> {
                                 }
                               },
                             ),
-                            new Padding(padding: EdgeInsets.only(top: 15.0)),
-                            new OutlinedButton(
+                            Padding(padding: EdgeInsets.only(top: 15.0)),
+                            OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 shape: const RoundedRectangleBorder(
                                     borderRadius:
@@ -145,8 +145,8 @@ class _EntryPageState extends State<EntryPage> {
                                         color: Colors.lightGreen[600]),
                                   )),
                             ),
-                            // new Padding(padding: EdgeInsets.only(top: 5)),
-                            new OutlinedButton(
+                            // Padding(padding: EdgeInsets.only(top: 5)),
+                            OutlinedButton(
                               style: OutlinedButton.styleFrom(
                                 // textStyle: TextStyle(color: Colors.white),
                                   backgroundColor:
