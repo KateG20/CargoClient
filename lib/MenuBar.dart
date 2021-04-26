@@ -28,13 +28,10 @@ class MenuBar extends StatelessWidget {
                             // mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                // padding: EdgeInsets.all(0),
                                   padding: EdgeInsets.fromLTRB(10, 40, 10, 20),
                                   child: Text(
                                     '$name',
                                     style: TextStyle(
-                                        // color: Colors.green[900],
-                                        // color: Colors.lime[900],
                                         color: Colors.brown[900],
                                         fontSize: 25,
                                         fontWeight: FontWeight.w500),

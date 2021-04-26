@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/MenuBar.dart';
+import 'FilterDialog.dart';
 import 'package:intl/intl.dart';
 
 import 'MenuBar.dart';
@@ -30,6 +31,15 @@ class Design {
                     // padding: EdgeInsets.fromLTRB(40, 8, 0, 0)),
                   ),
                   IconButton(
+                    padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
+                    // onPressed: () => showSearchDialog(context),
+                    onPressed: () => FilterDialog(context),
+                    icon: Icon(Icons.search_rounded),
+                    tooltip: 'Search',
+                    color: Colors.green[700],
+                    iconSize: 40,
+                  ),
+                  IconButton(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 6),
                     onPressed: () {
                       Navigator.push(
@@ -40,7 +50,7 @@ class Design {
                     icon: Icon(Icons.menu_rounded),
                     tooltip: 'Menu',
                     color: Colors.green[700],
-                    iconSize: 50,
+                    iconSize: 45,
                   ),
                 ])));
   }
@@ -195,8 +205,7 @@ class Design {
           color: Colors.lightGreen,
           width: 3,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(12.0)
-            ));
+        borderRadius: BorderRadius.all(Radius.circular(12.0)));
   }
 
   BoxDecoration dataBoxDecoration() {
@@ -206,8 +215,7 @@ class Design {
           color: (Colors.orange[200])!,
           width: 2,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(12.0)
-            ));
+        borderRadius: BorderRadius.all(Radius.circular(12.0)));
   }
 
   String _printDuration(Duration duration) {
@@ -298,39 +306,7 @@ class Design {
   IconButton moreInfoIcon(BuildContext context, Request _data) {
     return IconButton(
       onPressed: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SimpleDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                title: Center(
-                    child: Text('Информация о заявке',
-                        style:
-                            TextStyle(color: Colors.green[900], fontSize: 24))),
-                children: [
-                  InfoDialogItem(
-                      name: 'Грузоотправитель:', value: '${_data.shipper}'),
-                  InfoDialogItem(
-                      name: 'Грузополучатель:', value: '${_data.receiver}'),
-                  InfoDialogItem(
-                      name: 'Дата:',
-                      value:
-                          '${DateFormat('dd.MM.yyyy, hh:mm').format(_data.date!)}'),
-                  InfoDialogItem(
-                      name: 'Протяженность:',
-                      value:
-                          '${_printDuration(_data.duration!)}, ${_data.distance.toString() + " км"}'),
-                  InfoDialogItem(
-                      name: 'Маршрут:', value: '${_data.from} - ${_data.to}'),
-                  InfoDialogItem(
-                      name: 'Вес товара:', value: '${_data.weight} кг'),
-                  InfoDialogItem(
-                      name: 'Описание:', value: '${_data.description}'),
-                  // style: TextStyle(color: Colors.green[900], fontSize: 20),
-                ],
-              );
-            });
+        showInfoDialog(context, _data);
       },
       icon: Icon(Icons.info_outline_rounded),
       tooltip: 'More info',
@@ -360,12 +336,140 @@ class Design {
           )),
     );
   }
+
+  void showInfoDialog(BuildContext context, Request _data) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            backgroundColor: Colors.yellow[50],
+            title: Center(
+                child: Text('Информация о заявке',
+                    style: TextStyle(color: Colors.green[900], fontSize: 24))),
+            children: [
+              InfoDialogItem(
+                  name: 'Грузоотправитель:', value: '${_data.shipper}'),
+              InfoDialogItem(
+                  name: 'Грузополучатель:', value: '${_data.receiver}'),
+              InfoDialogItem(
+                  name: 'Дата:',
+                  value:
+                      '${DateFormat('dd.MM.yyyy, hh:mm').format(_data.date!)}'),
+              InfoDialogItem(
+                  name: 'Протяженность:',
+                  value:
+                      '${_printDuration(_data.duration!)}, ${_data.distance.toString() + " км"}'),
+              InfoDialogItem(
+                  name: 'Маршрут:', value: '${_data.from} - ${_data.to}'),
+              InfoDialogItem(name: 'Вес товара:', value: '${_data.weight} кг'),
+              InfoDialogItem(name: 'Описание:', value: '${_data.description}'),
+              // style: TextStyle(color: Colors.green[900], fontSize: 20),
+            ],
+          );
+        });
+  }
+
+  // _selectDate(BuildContext context) async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate, // Refer step 1
+  //     firstDate: DateTime(2000),
+  //     lastDate: DateTime(2025),
+  //   );
+  //   if (picked != null && picked != selectedDate)
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  // }
+  //
+  // void showSearchDialog(BuildContext context) {
+  //   // Intl.defaultLocale = "ru_RU";
+  //   DateTime _selectedDate = DateTime.now();
+  //
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return StatefulBuilder(builder: (context, setState) {
+  //           return SimpleDialog(
+  //               insetPadding: EdgeInsets.all(10),
+  //               title: Center(
+  //                   child: Text('Поиск заявок',
+  //                       style:
+  //                           TextStyle(color: Colors.green[900], fontSize: 24))),
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
+  //               children: [
+  //                 Container(
+  //                     width: 350,
+  //                     // padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+  //                     child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: [
+  //                           Padding(
+  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
+  //                               child: Column(
+  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                                 children: [
+  //                                   Text('Точка отправки',
+  //                                       style: TextStyle(
+  //                                           color: Colors.green[900]
+  //                                               ?.withOpacity(0.85),
+  //                                           fontSize: 20)),
+  //                                   TextField(
+  //                                       decoration:
+  //                                           InputDecoration(hintText: 'Откуда'),
+  //                                       onChanged: (text) {})
+  //                                 ],
+  //                               )),
+  //                           Padding(
+  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+  //                               child: Column(
+  //                                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                                 children: [
+  //                                   Text('Точка прибытия',
+  //                                       style: TextStyle(
+  //                                           color: Colors.green[900]
+  //                                               ?.withOpacity(0.85),
+  //                                           fontSize: 20)),
+  //                                   TextField(
+  //                                       decoration:
+  //                                           InputDecoration(hintText: 'Куда'),
+  //                                       onChanged: (text) {})
+  //                                 ],
+  //                               )),
+  //                           Padding(
+  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+  //                               child: Column(
+  //                                   crossAxisAlignment:
+  //                                       CrossAxisAlignment.start,
+  //                                   children: [
+  //                                     Text('Дата',
+  //                                         style: TextStyle(
+  //                                             color: Colors.green[900]
+  //                                                 ?.withOpacity(0.85),
+  //                                             fontSize: 20)),
+  //                                     TextButton(
+  //                                         onPressed: () => showDatePicker(
+  //                                               context: context,
+  //                                               initialDate: _selectedDate,
+  //                                               firstDate: DateTime(2015, 8),
+  //                                               lastDate: DateTime(2101),
+  //                                               // locale: Locale('he')
+  //                                             ),
+  //                                         child: Text(
+  //                                             '${DateFormat('dd.MM.yyyy').format(_selectedDate)}')),
+  //                                   ]))
+  //                         ]))
+  //               ]);
+  //         });
+  //       });
+  // }
 }
 
 class InfoDialogItem extends StatelessWidget {
   const InfoDialogItem({required this.name, required this.value});
-
-  // : super(key: key);
 
   final String name;
   final String value;
@@ -389,18 +493,4 @@ class InfoDialogItem extends StatelessWidget {
           ],
         ));
   }
-// return SimpleDialogOption(
-//   onPressed: onPressed,
-//   child: Row(
-//     mainAxisAlignment: MainAxisAlignment.start,
-//     crossAxisAlignment: CrossAxisAlignment.center,
-//     children: [
-//       Icon(icon, size: 36.0, color: color),
-//       Padding(
-//         padding: const EdgeInsetsDirectional.only(start: 16.0),
-//         child: Text(text),
-//       ),
-//     ],
-//   ),
-// );
 }
