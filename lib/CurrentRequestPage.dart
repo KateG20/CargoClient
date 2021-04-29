@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'Design.dart';
 import 'Request.dart';
+import 'RequestListModel.dart';
 
 class CurrentRequestPage extends StatefulWidget {
   @override
@@ -23,6 +24,10 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
         680,
         "comment")
   ];
+
+  // var listModel = RequestListModel(requests);
+
+  // var filteredRequests = requests;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +59,8 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                   ))
                 ]))));
   }
+
+
 }
 
 class KeepAlive extends StatefulWidget {

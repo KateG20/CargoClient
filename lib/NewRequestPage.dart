@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'MenuBar.dart';
 import 'Request.dart';
 import 'Design.dart';
+import 'RequestListModel.dart';
+import 'Service.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -11,21 +13,30 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-  var requests = [
-    Request("Shipper", "Receiver", DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ",
-        "Владивосток", 680, "comment"),
-    Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-        "Новосибирск", "ТЛЦ",  680, "comment"),
-    Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-        "Новосибирск", "ТЛЦ",  680, "comment"),
-    Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-        "Новосибирск", "ТЛЦ",  680, "comment"),
-    Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-        "Новосибирск", "ТЛЦ",  680, "comment")
-  ];
+  // var requests = [
+  //   Request("Shipper", "Receiver", DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ",
+  //       "Владивосток", 680, "comment"),
+  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
+  //       "Новосибирск", "ТЛЦ",  680, "comment"),
+  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
+  //       "Новосибирск", "ТЛЦ",  680, "comment"),
+  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
+  //       "Новосибирск", "ТЛЦ",  680, "comment"),
+  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
+  //       "Новосибирск", "ТЛЦ",  680, "comment")
+  // ];
+
+  var service = Service();
+
+  // Почему в туториале модель достается через контекст?
+  void filterHandler(context) {
+    // todo типа достаем модельку и фильтруем ее
+  }
 
   @override
   Widget build(BuildContext context) {
+    var list = RequestListModel(service.getNewRequests());
+
     return MaterialApp(
         title: "MyApp",
         home: Builder(
@@ -43,15 +54,15 @@ class _NewRequestPageState extends State<NewRequestPage> {
                     childrenDelegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return KeepAlive(
-                            data: requests[index],
-                            key: ValueKey<Request>(requests[index]),
+                            data: list.requests[index],
+                            key: ValueKey<Request>(list.requests[index]),
                           );
                         },
-                        childCount: requests.length,
+                        childCount: list.requests.length,
                         findChildIndexCallback: (Key key) {
                           final ValueKey valueKey = key as ValueKey;
                           final Request data = valueKey.value;
-                          return requests.indexOf(data);
+                          return list.requests.indexOf(data);
                         }),
                   )))
                 ]))));

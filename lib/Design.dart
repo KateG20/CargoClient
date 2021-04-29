@@ -33,7 +33,8 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () => FilterDialog(context),
+                    onPressed: () =>
+                        FilterDialog(context),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Search',
                     color: Colors.green[700],
@@ -128,7 +129,9 @@ class Design {
                                   )),
                             ),
                           ],
-                        )))),
+                        ))
+                )
+            ),
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
                 // padding: EdgeInsets.only(top: 15),
@@ -210,7 +213,7 @@ class Design {
 
   BoxDecoration dataBoxDecoration() {
     return BoxDecoration(
-        color: Colors.yellow[100],
+        // color: Colors.yellow[100],
         border: Border.all(
           color: (Colors.orange[200])!,
           width: 2,
