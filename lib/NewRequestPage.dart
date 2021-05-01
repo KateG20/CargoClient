@@ -13,25 +13,8 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-  // var requests = [
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 3, 8), Duration(hours: 3), 120, "ТЛЦ",
-  //       "Владивосток", 680, "comment"),
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-  //       "Новосибирск", "ТЛЦ",  680, "comment"),
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-  //       "Новосибирск", "ТЛЦ",  680, "comment"),
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-  //       "Новосибирск", "ТЛЦ",  680, "comment"),
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 7, 1), Duration(hours: 1, minutes: 12), 60,
-  //       "Новосибирск", "ТЛЦ",  680, "comment")
-  // ];
 
-  var service = Service();
-
-  // Почему в туториале модель достается через контекст?
-  void filterHandler(context) {
-    // todo типа достаем модельку и фильтруем ее
-  }
+  final Service service = Service();
 
   @override
   Widget build(BuildContext context) {
@@ -44,50 +27,63 @@ class _NewRequestPageState extends State<NewRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design().pageHeader(context, 'Новые заявки'),
+                  Design().pageHeader(context, setState, list, 'Новые заявки'),
                   Expanded(
                       child: Container(
                         color: Colors.yellow[50]?.withOpacity(0.4),
-                          child: ListView.custom(
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.all(7),
-                    childrenDelegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return KeepAlive(
-                            data: list.requests[index],
-                            key: ValueKey<Request>(list.requests[index]),
-                          );
-                        },
-                        childCount: list.requests.length,
-                        findChildIndexCallback: (Key key) {
-                          final ValueKey valueKey = key as ValueKey;
-                          final Request data = valueKey.value;
-                          return list.requests.indexOf(data);
-                        }),
-                  )))
+                          child: _myListView(context, list)
+                  //         ListView.custom(
+                  //   scrollDirection: Axis.vertical,
+                  //   padding: EdgeInsets.all(7),
+                  //   childrenDelegate: SliverChildBuilderDelegate(
+                  //       (BuildContext context, int index) {
+                  //         return KeepAlive(
+                  //           data: list.requests[index],
+                  //           key: ValueKey<Request>(list.requests[index]),
+                  //           // key: UniqueKey(),
+                  //         );
+                  //       },
+                  //       childCount: list.requests.length,
+                  //       findChildIndexCallback: (Key key) {
+                  //         final ValueKey valueKey = key as ValueKey;
+                  //         final Request data = valueKey.value;
+                  //         return list.requests.indexOf(data);
+                  //       }),
+                  // )
+                      ))
                 ]))));
   }
-}
 
-class KeepAlive extends StatefulWidget {
-  const KeepAlive({
-    required Key key,
-    required this.data,
-  }) : super(key: key);
+  Widget _myListView(BuildContext context, RequestListModel list) {
 
-  final Request data;
-
-  @override
-  _KeepAliveState createState() => _KeepAliveState(data);
-}
-
-class _KeepAliveState extends State<KeepAlive> {
-  final Request _data;
-
-  _KeepAliveState(this._data);
-
-  @override
-  Widget build(BuildContext context) {
-    return Design().requestContainer(_data, Design().newRequestRow(context, _data));
+    return ListView.builder(
+      itemCount: list.requests.length,
+      itemBuilder: (context, index) {
+        return Design().requestContainer(list.requests[index], Design().newRequestRow(context, list.requests[index]));
+      },
+    );
   }
 }
+
+// class KeepAlive extends StatefulWidget {
+//   const KeepAlive({
+//     required Key key,
+//     required this.data,
+//   }) : super(key: key);
+//
+//   final Request data;
+//
+//   @override
+//   _KeepAliveState createState() => _KeepAliveState(data);
+// }
+//
+// class _KeepAliveState extends State<KeepAlive> {
+//   final Request _data;
+//
+//   _KeepAliveState(this._data);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Design().requestContainer(_data, Design().newRequestRow(context, _data));
+//   }
+// }

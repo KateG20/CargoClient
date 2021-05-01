@@ -1,14 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/MenuBar.dart';
-import 'FilterDialog.dart';
+import 'package:flutter1/RequestListModel.dart';
 import 'package:intl/intl.dart';
 
+import 'FilterDialog.dart';
 import 'MenuBar.dart';
 import 'Request.dart';
 
 class Design {
-  Container pageHeader(BuildContext context, String text) {
+  Container pageHeader(
+      BuildContext context, setState, RequestListModel list, String text) {
     return Container(
         decoration: headerBoxDecoration(),
         // header
@@ -33,8 +35,7 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () =>
-                        FilterDialog(context),
+                    onPressed: () => FilterDialog(context, setState, list),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Search',
                     color: Colors.green[700],
@@ -58,131 +59,137 @@ class Design {
 
   Widget requestContainer(Request _data, Widget buttonRow) {
     return Container(
+        padding: EdgeInsets.fromLTRB(7, 0, 7, 0),
         // большой контейнер
         // колонка - сверху два желтых контейнера, снизу кнопки
         child:
             Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-      Container(
-          // два желтых
-          height: 170,
-          decoration: requestBoxDecoration(),
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            Padding(
-                padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-                // padding: EdgeInsets.only(top: 15),
-                child: Container(
-                    // маленький контейнер
-                    // контейнер с данными о времени и расстоянии
-                    decoration: dataBoxDecoration(),
-                    width: 185,
-                    child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          // колонка с данными
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                  text: "когда",
-                                  style: TextStyle(
-                                    color: Colors.green[900]?.withOpacity(0.6),
-                                    fontSize: 20,
-                                  )),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text:
-                                      "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
-                                  // TODO
-                                  style: TextStyle(
-                                    color: Colors.green[900],
-                                    fontSize: 23,
-                                  )),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 5)),
-                            RichText(
-                              text: TextSpan(
-                                  text: "сколько",
-                                  style: TextStyle(
-                                    color: Colors.green[900]?.withOpacity(0.6),
-                                    fontSize: 20,
-                                  )),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  // text: "${_data.duration?.toString()}",
-                                  text: "${_printDuration(_data.duration!)}",
-                                  // TODO
-                                  style: TextStyle(
-                                    color: Colors.green[900],
-                                    fontSize: 20,
-                                  )),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  text: "${_data.distance?.toString()} км",
-                                  // TODO
-                                  style: TextStyle(
-                                    color: Colors.green[900],
-                                    fontSize: 20,
-                                  )),
-                            ),
-                          ],
-                        ))
-                )
-            ),
-            Padding(
-                padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
-                // padding: EdgeInsets.only(top: 15),
-                child: Container(
-                    // контейнер с данными о пунктах назначения
-                    decoration: dataBoxDecoration(),
-                    width: 185,
-                    child: Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Column(
-                          // колонка с данными
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "откуда",
-                              style: TextStyle(
-                                color: Colors.green[900]?.withOpacity(0.6),
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "${_data.from}",
-                              style: TextStyle(
-                                color: Colors.green[900],
-                                fontSize: 22,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 5)),
-                            Text(
-                              "куда",
-                              style: TextStyle(
-                                color: Colors.green[900]?.withOpacity(0.6),
-                                fontSize: 20,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              "${_data.to}",
-                              style: TextStyle(
-                                color: Colors.green[900],
-                                fontSize: 22,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ))))
-          ])),
-      Padding(padding: EdgeInsets.only(top: 1, bottom: 10), child: buttonRow)
-    ]));
+          Container(
+              // два желтых
+              height: 170,
+              decoration: requestBoxDecoration(),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+                        // padding: EdgeInsets.only(top: 15),
+                        child: Container(
+                            // маленький контейнер
+                            // контейнер с данными о времени и расстоянии
+                            decoration: dataBoxDecoration(),
+                            width: 185,
+                            child: Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  // колонка с данными
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "когда",
+                                          style: TextStyle(
+                                            color: Colors.green[900]
+                                                ?.withOpacity(0.6),
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          text:
+                                              "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
+                                          // тут везде были какие-то TODO-шки
+                                          style: TextStyle(
+                                            color: Colors.green[900],
+                                            fontSize: 23,
+                                          )),
+                                    ),
+                                    Padding(padding: EdgeInsets.only(top: 5)),
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "сколько",
+                                          style: TextStyle(
+                                            color: Colors.green[900]
+                                                ?.withOpacity(0.6),
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          // text: "${_data.duration?.toString()}",
+                                          text:
+                                              "${_printDuration(_data.duration!)}",
+                                          style: TextStyle(
+                                            color: Colors.green[900],
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                    RichText(
+                                      text: TextSpan(
+                                          text:
+                                              "${_data.distance?.toString()} км",
+                                          style: TextStyle(
+                                            color: Colors.green[900],
+                                            fontSize: 20,
+                                          )),
+                                    ),
+                                  ],
+                                )))),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
+                        // padding: EdgeInsets.only(top: 15),
+                        child: Container(
+                            // контейнер с данными о пунктах назначения
+                            decoration: dataBoxDecoration(),
+                            width: 185,
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                child: Column(
+                                  // колонка с данными
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "откуда",
+                                      style: TextStyle(
+                                        color:
+                                            Colors.green[900]?.withOpacity(0.6),
+                                        fontSize: 20,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      "${_data.from}",
+                                      style: TextStyle(
+                                        color: Colors.green[900],
+                                        fontSize: 22,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Padding(padding: EdgeInsets.only(top: 5)),
+                                    Text(
+                                      "куда",
+                                      style: TextStyle(
+                                        color:
+                                            Colors.green[900]?.withOpacity(0.6),
+                                        fontSize: 20,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      "${_data.to}",
+                                      style: TextStyle(
+                                        color: Colors.green[900],
+                                        fontSize: 22,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ))))
+                  ])),
+          Padding(
+              padding: EdgeInsets.only(top: 1, bottom: 10), child: buttonRow)
+        ]));
   }
 
   BoxDecoration headerBoxDecoration() {
@@ -353,6 +360,8 @@ class Design {
                     style: TextStyle(color: Colors.green[900], fontSize: 24))),
             children: [
               InfoDialogItem(
+                  name: 'Стоимость:', value: '${_data.price} руб.'),
+              InfoDialogItem(
                   name: 'Грузоотправитель:', value: '${_data.shipper}'),
               InfoDialogItem(
                   name: 'Грузополучатель:', value: '${_data.receiver}'),
@@ -374,101 +383,101 @@ class Design {
         });
   }
 
-  // _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate, // Refer step 1
-  //     firstDate: DateTime(2000),
-  //     lastDate: DateTime(2025),
-  //   );
-  //   if (picked != null && picked != selectedDate)
-  //     setState(() {
-  //       selectedDate = picked;
-  //     });
-  // }
-  //
-  // void showSearchDialog(BuildContext context) {
-  //   // Intl.defaultLocale = "ru_RU";
-  //   DateTime _selectedDate = DateTime.now();
-  //
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return StatefulBuilder(builder: (context, setState) {
-  //           return SimpleDialog(
-  //               insetPadding: EdgeInsets.all(10),
-  //               title: Center(
-  //                   child: Text('Поиск заявок',
-  //                       style:
-  //                           TextStyle(color: Colors.green[900], fontSize: 24))),
-  //               shape: RoundedRectangleBorder(
-  //                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
-  //               children: [
-  //                 Container(
-  //                     width: 350,
-  //                     // padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-  //                     child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: [
-  //                           Padding(
-  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
-  //                               child: Column(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Text('Точка отправки',
-  //                                       style: TextStyle(
-  //                                           color: Colors.green[900]
-  //                                               ?.withOpacity(0.85),
-  //                                           fontSize: 20)),
-  //                                   TextField(
-  //                                       decoration:
-  //                                           InputDecoration(hintText: 'Откуда'),
-  //                                       onChanged: (text) {})
-  //                                 ],
-  //                               )),
-  //                           Padding(
-  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-  //                               child: Column(
-  //                                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                                 children: [
-  //                                   Text('Точка прибытия',
-  //                                       style: TextStyle(
-  //                                           color: Colors.green[900]
-  //                                               ?.withOpacity(0.85),
-  //                                           fontSize: 20)),
-  //                                   TextField(
-  //                                       decoration:
-  //                                           InputDecoration(hintText: 'Куда'),
-  //                                       onChanged: (text) {})
-  //                                 ],
-  //                               )),
-  //                           Padding(
-  //                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-  //                               child: Column(
-  //                                   crossAxisAlignment:
-  //                                       CrossAxisAlignment.start,
-  //                                   children: [
-  //                                     Text('Дата',
-  //                                         style: TextStyle(
-  //                                             color: Colors.green[900]
-  //                                                 ?.withOpacity(0.85),
-  //                                             fontSize: 20)),
-  //                                     TextButton(
-  //                                         onPressed: () => showDatePicker(
-  //                                               context: context,
-  //                                               initialDate: _selectedDate,
-  //                                               firstDate: DateTime(2015, 8),
-  //                                               lastDate: DateTime(2101),
-  //                                               // locale: Locale('he')
-  //                                             ),
-  //                                         child: Text(
-  //                                             '${DateFormat('dd.MM.yyyy').format(_selectedDate)}')),
-  //                                   ]))
-  //                         ]))
-  //               ]);
-  //         });
-  //       });
-  // }
+// _selectDate(BuildContext context) async {
+//   final DateTime? picked = await showDatePicker(
+//     context: context,
+//     initialDate: selectedDate, // Refer step 1
+//     firstDate: DateTime(2000),
+//     lastDate: DateTime(2025),
+//   );
+//   if (picked != null && picked != selectedDate)
+//     setState(() {
+//       selectedDate = picked;
+//     });
+// }
+//
+// void showSearchDialog(BuildContext context) {
+//   // Intl.defaultLocale = "ru_RU";
+//   DateTime _selectedDate = DateTime.now();
+//
+//   showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return StatefulBuilder(builder: (context, setState) {
+//           return SimpleDialog(
+//               insetPadding: EdgeInsets.all(10),
+//               title: Center(
+//                   child: Text('Поиск заявок',
+//                       style:
+//                           TextStyle(color: Colors.green[900], fontSize: 24))),
+//               shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
+//               children: [
+//                 Container(
+//                     width: 350,
+//                     // padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+//                     child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Padding(
+//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
+//                               child: Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.start,
+//                                 children: [
+//                                   Text('Точка отправки',
+//                                       style: TextStyle(
+//                                           color: Colors.green[900]
+//                                               ?.withOpacity(0.85),
+//                                           fontSize: 20)),
+//                                   TextField(
+//                                       decoration:
+//                                           InputDecoration(hintText: 'Откуда'),
+//                                       onChanged: (text) {})
+//                                 ],
+//                               )),
+//                           Padding(
+//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+//                               child: Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.start,
+//                                 children: [
+//                                   Text('Точка прибытия',
+//                                       style: TextStyle(
+//                                           color: Colors.green[900]
+//                                               ?.withOpacity(0.85),
+//                                           fontSize: 20)),
+//                                   TextField(
+//                                       decoration:
+//                                           InputDecoration(hintText: 'Куда'),
+//                                       onChanged: (text) {})
+//                                 ],
+//                               )),
+//                           Padding(
+//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+//                               child: Column(
+//                                   crossAxisAlignment:
+//                                       CrossAxisAlignment.start,
+//                                   children: [
+//                                     Text('Дата',
+//                                         style: TextStyle(
+//                                             color: Colors.green[900]
+//                                                 ?.withOpacity(0.85),
+//                                             fontSize: 20)),
+//                                     TextButton(
+//                                         onPressed: () => showDatePicker(
+//                                               context: context,
+//                                               initialDate: _selectedDate,
+//                                               firstDate: DateTime(2015, 8),
+//                                               lastDate: DateTime(2101),
+//                                               // locale: Locale('he')
+//                                             ),
+//                                         child: Text(
+//                                             '${DateFormat('dd.MM.yyyy').format(_selectedDate)}')),
+//                                   ]))
+//                         ]))
+//               ]);
+//         });
+//       });
+// }
 }
 
 class InfoDialogItem extends StatelessWidget {

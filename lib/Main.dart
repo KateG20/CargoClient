@@ -1,9 +1,14 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'EntryPage.dart';
 
 void main() {
-  runApp(EntryPage());
+  runApp(MaterialApp(
+      localizationsDelegates: [GlobalMaterialLocalizations.delegate],
+      supportedLocales: [const Locale('en'), const Locale('ru')],
+      home: EntryPage()));
   // runApp(OrderPage());
 }
 
@@ -111,7 +116,7 @@ void main() {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               // mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                *//*
+                                */ /*
                                 new Padding(
                                     child: FlatButton(
                                         splashColor: Colors.white,
@@ -132,7 +137,7 @@ void main() {
                                     // padding: EdgeInsets.fromLTRB(15, 0, 0, 0)
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0)
                           ),
-                                *//*
+                                */ /*
                                 new Padding(
                                     // padding: EdgeInsets.fromLTRB(59, 8, 0, 0),
                                     padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
