@@ -2,32 +2,82 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'Request.dart';
+import '../entity/Request.dart';
 
 class Service {
-  static final baseUrl = '10.0.2.2';
-  final urlGetNew = "http://" + baseUrl + ":8080/new";
+  final url = '10.0.2.2:8080';
 
-  Future<List<Request>> getNewReqs() async {
+  Future<List<Request>> getNewRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.https(urlGetNew, 'requests/new'));
+    var response = await http.get(Uri.https(url, 'requests/new'));
 
     if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return (json.decode(response.body) as List)
-          .map((i) => Request.fromJson(i))
+      return (jsonDecode(response.body) as List)
+          .map((r) => Request.fromJson(r))
           .toList();
-      // return Album.fromJson(jsonDecode(response.body));
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
       throw Exception('Failed to load new requests');
     }
   }
 
+  Future<List<Request>> getCurrentRequests() async {
+    // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
+    var response = await http.get(Uri.https(url, 'requests/current'));
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body) as List)
+          .map((r) => Request.fromJson(r))
+          .toList();
+    } else {
+      throw Exception('Failed to load current requests');
+    }
+  }
+
+  Future<List<Request>> getArchiveRequests() async {
+    // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
+    var response = await http.get(Uri.https(url, 'requests/archive'));
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(response.body) as List)
+          .map((r) => Request.fromJson(r))
+          .toList();
+    } else {
+      throw Exception('Failed to load archive requests');
+    }
+  }
+
+  Future<Request> postRequest(Request request) async {
+    final response = await http.post(Uri.http(url, 'request'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: //JsonEncoder().convert(request)
+      jsonEncode(<String, dynamic>{
+      'price': request.price,
+      'shipper': request.shipper,
+      'receiver': request.receiver,
+      'date': request.date,
+      'duration': request.duration,
+      'distance': request.distance,
+      'source': request.source,
+      'destination': request.destination,
+      'weight': request.weight,
+      'description': request.description
+      }),
+    );
+    if (response.statusCode == 201) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      return Request.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to post request');
+    }
+  }
+
   // Future<List<Request>> getNewRequests() async {
-  List<Request> getNewRequests() {
+  List<Request> getNewRequestsHard() {
     // var url = Uri.parse('https://example.com/whatsit/create');
     // // var response = await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
     // var response = http.post(url, body: {'name': 'doodle', 'color': 'blue'});
@@ -88,7 +138,7 @@ class Service {
     return requests;
   }
 
-  List<Request> getCurrentRequests() {
+  List<Request> getCurrentRequestsHard() {
     // ура хардкодим
     var requests = [
       Request(500, "Shipper", "Receiver", DateTime.utc(2021, 4, 20),
@@ -108,7 +158,7 @@ class Service {
     return requests;
   }
 
-  List<Request> getArchiveRequests() {
+  List<Request> getArchiveRequestsHard() {
     // ура хардкодим
     var requests = [
       Request(500, "Shipper", "Receiver", DateTime.utc(2020, 4, 1),

@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'Request.dart';
+import 'entity/Request.dart';
 
 class RequestListModel extends ChangeNotifier {
   final List<Request> _allRequests;

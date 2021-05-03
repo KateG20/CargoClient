@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter1/EntryPage.dart';
+import 'file:///C:/Users/Lenovo%20X1/IdeaProjects/flutter1/lib/UI/EntryPage.dart';
 import 'package:flutter1/Main.dart';
 
 void main() {

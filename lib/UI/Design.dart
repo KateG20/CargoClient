@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter1/MenuBar.dart';
 import 'package:flutter1/RequestListModel.dart';
 import 'package:intl/intl.dart';
 
 import 'FilterDialog.dart';
+import '../entity/Request.dart';
 import 'MenuBar.dart';
-import 'Request.dart';
 
 class Design {
   Container pageHeader(
@@ -159,7 +158,7 @@ class Design {
                                       textAlign: TextAlign.center,
                                     ),
                                     Text(
-                                      "${_data.from}",
+                                      "${_data.source}",
                                       style: TextStyle(
                                         color: Colors.green[900],
                                         fontSize: 22,
@@ -177,7 +176,7 @@ class Design {
                                       textAlign: TextAlign.center,
                                     ),
                                     Text(
-                                      "${_data.to}",
+                                      "${_data.destination}",
                                       style: TextStyle(
                                         color: Colors.green[900],
                                         fontSize: 22,
@@ -374,7 +373,7 @@ class Design {
                   value:
                       '${_printDuration(_data.duration!)}, ${_data.distance.toString() + " км"}'),
               InfoDialogItem(
-                  name: 'Маршрут:', value: '${_data.from} - ${_data.to}'),
+                  name: 'Маршрут:', value: '${_data.source} - ${_data.destination}'),
               InfoDialogItem(name: 'Вес товара:', value: '${_data.weight} кг'),
               InfoDialogItem(name: 'Описание:', value: '${_data.description}'),
               // style: TextStyle(color: Colors.green[900], fontSize: 20),

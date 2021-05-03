@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'MenuBar.dart';
-import 'Request.dart';
+import '../entity/Request.dart';
 import 'Design.dart';
-import 'RequestListModel.dart';
-import 'Service.dart';
+import '../RequestListModel.dart';
+import '../service/Service.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -18,7 +18,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getNewRequests());
+    var list = RequestListModel(service.getNewRequestsHard());
 
     return MaterialApp(
         title: "MyApp",

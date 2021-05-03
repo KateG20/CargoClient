@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'Design.dart';
-import 'Request.dart';
-import 'RequestListModel.dart';
-import 'Service.dart';
+import '../entity/Request.dart';
+import '../RequestListModel.dart';
+import '../service/Service.dart';
 
 class CurrentRequestPage extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getCurrentRequests());
+    var list = RequestListModel(service.getCurrentRequestsHard());
 
     return MaterialApp(
         title: "MyApp",

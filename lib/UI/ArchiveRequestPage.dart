@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'Design.dart';
-import 'Request.dart';
-import 'RequestListModel.dart';
-import 'Service.dart';
+import '../entity/Request.dart';
+import '../RequestListModel.dart';
+import '../service/Service.dart';
 
 class ArchiveRequestPage extends StatefulWidget {
   @override
@@ -23,7 +23,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getArchiveRequests());
+    var list = RequestListModel(service.getArchiveRequestsHard());
     return MaterialApp(
         title: "MyApp",
         home: Builder(
