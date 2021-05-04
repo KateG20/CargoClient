@@ -8,7 +8,6 @@ class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
-    // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
     var response = await http.get(Uri.https(url, 'requests/new'));
 
     if (response.statusCode == 200) {
@@ -56,8 +55,8 @@ class Service {
       'price': request.price,
       'shipper': request.shipper,
       'receiver': request.receiver,
-      'date': request.date,
-      'duration': request.duration,
+      'date': request.date?.millisecondsSinceEpoch,
+      'duration': request.duration?.inMilliseconds,
       'distance': request.distance,
       'source': request.source,
       'destination': request.destination,

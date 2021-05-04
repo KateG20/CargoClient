@@ -9,7 +9,7 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  bool _warningVisible = false;
+  bool _warningVisible = false; // TODO добавить обязательный ввод госномера и компании
   String _warningText = "test";
 
   void warningOn(String text) {

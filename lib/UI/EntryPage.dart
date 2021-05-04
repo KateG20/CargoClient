@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
-import 'NewRequestPage.dart';
-import 'RegistrationPage.dart';
-import '../service/Service.dart';
 import '../entity/Request.dart';
+import '../service/Service.dart';
+import 'RegistrationPage.dart';
 
 class EntryPage extends StatefulWidget {
   @override
@@ -146,7 +145,7 @@ class _EntryPageState extends State<EntryPage> {
                       //             color: Colors.lightGreen[600]),
                       //       )),
                       // ),
-                        signUpButton(),
+                      signUpButton(),
                       // OutlinedButton(
                       //     style: OutlinedButton.styleFrom(
                       //         backgroundColor:
@@ -168,6 +167,7 @@ class _EntryPageState extends State<EntryPage> {
                       //     ))
                     ])))))));
   }
+
 // @override
 // State<StatefulWidget> createState() {
 //   // TODO: implement createState
@@ -227,55 +227,64 @@ class _EntryPageState extends State<EntryPage> {
     );
   }
 
-OutlinedButton logInButton() {
-  return OutlinedButton(
-    style: OutlinedButton.styleFrom(
-      shape: const RoundedRectangleBorder(
-          borderRadius:
-          BorderRadius.all(Radius.circular(15.0))),
-      // side: BorderSide(
-      //     color: Color(0x80808099), width: 1.4)
-    ),
-    onPressed: () {
-      service.postRequest(Request.optional(price: 1000, source: "Москва", destination: "ТЛЦ"));
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //       builder: (context) => NewRequestPage()),
-      // );
-    },
-    child: Padding(
-        padding: EdgeInsets.all(7),
-        child: Text(
-          "Войти",
-          style: TextStyle(
-              fontSize: 23.0,
-              color: Colors.lightGreen[600]),
-        )),
-  );
-}
-
-OutlinedButton signUpButton() {
-  return OutlinedButton(
+  OutlinedButton logInButton() {
+    return OutlinedButton(
       style: OutlinedButton.styleFrom(
-          backgroundColor:
-          Colors.lightGreen[600]?.withOpacity(0.8),
-          shape: const RoundedRectangleBorder(
-              borderRadius:
-              BorderRadius.all(Radius.circular(15.0)))),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        // side: BorderSide(
+        //     color: Color(0x80808099), width: 1.4)
+      ),
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => RegistrationPage()),
-        );
+        service.postRequest(Request.optional(
+            price: 1000, source: "Москва", destination: "ТЛЦ"));
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => NewRequestPage()),
+        // );
       },
-      child: Text(
-        "Первичная регистрация",
-        style:
-        TextStyle(fontSize: 18.0, color: Colors.white),
-      ));
-}
+      child: Padding(
+          padding: EdgeInsets.all(7),
+          child: Text(
+            "Войти",
+            style: TextStyle(fontSize: 23.0, color: Colors.lightGreen[600]),
+          )),
+    );
+  }
+
+  OutlinedButton signUpButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => RegistrationPage()),
+          );
+        },
+        child: Text(
+          "Первичная регистрация",
+          style: TextStyle(fontSize: 18.0, color: Colors.white),
+        ));
+  }
+
+  OutlinedButton generateButton() {
+    return OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+        onPressed: () {
+          service.postRequest(Request());
+        },
+        child: Text(
+          "Первичная регистрация",
+          style: TextStyle(fontSize: 18.0, color: Colors.white),
+        ));
+  }
 }
 
 // class _EntryPageState extends State<EntryPage> {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'Design.dart';
-import '../entity/Request.dart';
 import '../RequestListModel.dart';
+import '../entity/Request.dart';
 import '../service/Service.dart';
+import 'Design.dart';
 
 class CurrentRequestPage extends StatefulWidget {
   @override
@@ -11,29 +11,32 @@ class CurrentRequestPage extends StatefulWidget {
 }
 
 class _CurrentRequestPageState extends State<CurrentRequestPage> {
-  // var requests = [
-  //   Request("Shipper", "Receiver", DateTime.utc(2021, 4, 20),
-  //       Duration(hours: 5), 120, "ТЛЦ", "Москва", 680, "comment"),
-  //   Request(
-  //       "Shipper",
-  //       "Receiver",
-  //       DateTime.utc(2021, 5, 3),
-  //       Duration(minutes: 32),
-  //       60,
-  //       "Александровск-Сахалинский",
-  //       "ТЛЦ",
-  //       680,
-  //       "comment")
-  // ];
-
-  // var listModel = RequestListModel(requests);
-
-  // var filteredRequests = requests;
   var service = Service();
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getCurrentRequestsHard());
+    // FutureBuilder<Album>(
+    //   future: futureAlbum,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData) {
+    //       return Text(snapshot.data!.title);
+    //     } else if (snapshot.hasError) {
+    //       return Text("${snapshot.error}");
+    //     }
+    //
+    //     // By default, show a loading spinner.
+    //     return CircularProgressIndicator();
+    //   },
+    // );
+    late List<Request> requestList = [];
+    // var futureList = service.getCurrentRequests();
+    // futureList.then((value) {
+    //   requestList = value;
+    // }).catchError((err) {
+    //   print('error!');
+    // });
+
+    var list = RequestListModel(requestList);
 
     return MaterialApp(
         title: "MyApp",
@@ -42,7 +45,8 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design().pageHeader(context, setState, list, 'Активные заявки'),
+                  Design()
+                      .pageHeader(context, setState, list, 'Активные заявки'),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,
@@ -63,8 +67,6 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                   ))
                 ]))));
   }
-
-
 }
 
 class KeepAlive extends StatefulWidget {

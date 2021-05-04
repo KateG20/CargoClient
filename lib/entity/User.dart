@@ -2,5 +2,8 @@ class User {
   int? id;
   String? login;
   String? password;
-  String? regKey;
+  String? name;
+  String? licensePlate;
+  String? company;
+  String? key;
 }
