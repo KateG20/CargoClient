@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'RegistrationPage.dart';
 import 'NewRequestPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -9,121 +8,205 @@ class RegistrationPage extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  bool _warningVisible = false; // TODO добавить обязательный ввод госномера и компании
-  String _warningText = "test";
+  final _formKey = GlobalKey<FormState>();
+  String? _pwd1 = "";
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
 
-  void warningOn(String text) {
+  void _showPwd1() {
     setState(() {
-      _warningText = text;
-      _warningVisible = true;
+      _obscureText1 = !_obscureText1;
     });
   }
 
-  void warningOff(String text) {
+  void _showPwd2() {
     setState(() {
-      _warningVisible = false;
+      _obscureText2 = !_obscureText2;
     });
-  }
-
-  Text? _getWarning() {
-    return _warningVisible == true ? Text('$_warningText',
-      style: new TextStyle(
-        // color: Color(0xff9ACD32), fontSize: 25.0),
-          color: Colors.red,
-          fontSize: 18.0),
-    ) : null;
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // debugShowCheckedModeBanner: false,
+        // debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
-            builder: (context) =>
-            new Material(
-                child: new Container(
+            builder: (context) => Material(
+                child: Form(
+                    key: _formKey,
+                    child: Container(
                     padding: const EdgeInsets.all(30.0),
                     color: Colors.white,
-                    child: new Container(
-                      child: new Center(
-                          child: new Column(children: [
-                            new Padding(padding: EdgeInsets.only(top: 40.0)),
-                            new Text(
-                              'Введите ключ, который вам предоставила ваша компания для входа:',
-                              style: new TextStyle(
-                                // color: Color(0xff9ACD32), fontSize: 25.0),
-                                  color: Colors.lightGreen[600],
-                                  fontSize: 20.0),
-                              textAlign: TextAlign.center,
-                            ),
-                            // new Padding(padding: EdgeInsets.only(top: 20.0)),
-                            new Padding(
-                                padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: _getWarning(),
-                                  // child: Text(_warningVisible == true ? '$_warningText' : '',
-                                  //           child: _warningVisible == true ? Text('$_warningText',
-                                  //   style: new TextStyle(
-                                  //     // color: Color(0xff9ACD32), fontSize: 25.0),
-                                  //       color: Colors.redAccent,
-                                  //       fontSize: 18.0),
-                                  // )
-                                )),
-                            new Padding(padding: EdgeInsets.only(top: 20.0)),
-                            new TextFormField(
-                              decoration: new InputDecoration(
-                                labelText: "Ключ",
-                                labelStyle: TextStyle(color: Colors.lightGreen),
-                                // fillColor: Colors.lightGreen,
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    borderSide:
-                                    BorderSide(color: Colors.lightGreen)),
-                                border: new OutlineInputBorder(
-                                  borderRadius: new BorderRadius.circular(15.0),
-                                  borderSide: new BorderSide(),
-                                ),
-                                //fillColor: Colors.green
-                              ),
-                              validator: (val) {
-                                if (val?.length == 0) {
-                                  return "Заполните поле \"Ключ\"";
-                                } else {
-                                  return null;
-                                }
-                              },
-                            ),
-                            new Padding(padding: EdgeInsets.only(top: 15.0)),
-                            new OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.all(Radius.circular(15.0))),
-                                // side: BorderSide(
-                                //     color: Color(0x80808099), width: 1.4)
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => NewRequestPage()),
-                                );
-                              },
-                              child: Padding(
-                                  padding: EdgeInsets.all(7),
-                                  child: Text(
-                                    "Войти",
-                                    style: TextStyle(
-                                        fontSize: 23.0,
-                                        color: Colors.lightGreen[600]),
-                                  )),
-                            ),
-                          ])),)
-                )
-            )
-        )
+                    child: Container(
+                        child: Center(
+                            child: Column(children: [
+                      Padding(padding: EdgeInsets.only(top: 40.0)),
+                      Text(
+                        'Придумайте логин и пароль, которые Вы будете использовать '
+                            'для входа в приложение',
+                        style: TextStyle(
+                            // color: Color(0xff9ACD32), fontSize: 25.0),
+                            color: Colors.lightGreen[700],
+                            fontSize: 20.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      //  Padding(padding: EdgeInsets.only(top: 20.0)),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
+                        // child: Align(
+                        //   alignment: Alignment.centerLeft,
+                        //   child: _getWarning(),
+                        // )
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 20.0)),
+                      loginField(),
+                      Padding(padding: EdgeInsets.only(top: 15.0)),
+                      passwordField(),
+                      Padding(padding: EdgeInsets.only(top: 15.0)),
+                      repeatPasswordField(),
+                      Padding(padding: EdgeInsets.only(top: 15.0)),
+                      signUpButton(),
+                    ]))))))));
+  }
+
+  TextFormField loginField() {
+    return TextFormField(
+        style: TextStyle(color: Colors.grey[600], fontSize: 20),
+        decoration: InputDecoration(
+          labelText: "Логин",
+          labelStyle: TextStyle(color: Colors.lightGreen),
+          // fillColor: Colors.lightGreen,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(color: Colors.lightGreen)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            borderSide: BorderSide(),
+          ),
+          //fillColor: Colors.green
+        ),
+        validator: (val) {
+          if (val == null || val.isEmpty) {
+            return "Заполните поле \"Логин\"";
+            // todo проверять логин в базе
+          } else if (false) {
+            return "Такой логин уже существует";
+          } else {
+            return null;
+          }
+        });
+  }
+
+  TextFormField passwordField() {
+    return TextFormField(
+        style: TextStyle(color: Colors.grey[600], fontSize: 20),
+        obscureText: _obscureText1,
+        decoration: InputDecoration(
+            labelText: "Пароль",
+            labelStyle: TextStyle(color: Colors.lightGreen),
+            fillColor: Colors.lightBlueAccent,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(
+                color: Colors.lightGreen,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(),
+            ),
+            suffixIcon: IconButton(
+                icon: Icon(
+                  // Based on passwordVisible state choose the icon
+                  _obscureText1
+                      ? Icons.visibility_rounded
+                      : Icons.visibility_off_rounded,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  _showPwd1();
+                })),
+        onChanged: (text) {
+          _pwd1 = text;
+        },
+        validator: (val) {
+          if (val == null || val.isEmpty) {
+            return "Заполните поле \"Пароль\"";
+            // todo проверять пользователя в базе
+          } else if (false) {
+            return "Неверный логин или пароль";
+          } else {
+            return null;
+          }
+        });
+  }
+
+  TextFormField repeatPasswordField() {
+    return TextFormField(
+        style: TextStyle(color: Colors.grey[600], fontSize: 20),
+        obscureText: _obscureText2,
+        decoration: InputDecoration(
+            labelText: "Повторите пароль",
+            labelStyle: TextStyle(color: Colors.lightGreen),
+            fillColor: Colors.lightBlueAccent,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(
+                color: Colors.lightGreen,
+              ),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+              borderSide: BorderSide(),
+            ),
+            suffixIcon: IconButton(
+                icon: Icon(
+                  // Based on passwordVisible state choose the icon
+                  _obscureText2
+                      ? Icons.visibility_rounded
+                      : Icons.visibility_off_rounded,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  _showPwd2();
+                })),
+        validator: (val) {
+          if (val == null || val.isEmpty) {
+            return "Заполните поле \"Пароль\"";
+          } else if (val != _pwd1) {
+            return "Пароли не совпадают";
+          }
+          // todo проверять пользователя в базе
+          else if (false) {
+            return "Неверный логин или пароль";
+          } else {
+            return null;
+          }
+        });
+  }
+
+  OutlinedButton signUpButton() {
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        // side: BorderSide(
+        //     color: Color(0x80808099), width: 1.4)
+      ),
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NewRequestPage()),
+          );
+        }
+      },
+      child: Padding(
+          padding: EdgeInsets.all(7),
+          child: Text(
+            "Ввести",
+            style: TextStyle(fontSize: 23.0, color: Colors.lightGreen[700]),
+          )),
     );
   }
 }
