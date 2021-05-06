@@ -9,7 +9,7 @@ class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
-    var response = await http.get(Uri.https(url, 'requests/new'));
+    var response = await http.get(Uri.http(url, 'requests/new'));
 
     if (response.statusCode == 200) {
       return (jsonDecode(response.body) as List)
@@ -22,7 +22,7 @@ class Service {
 
   Future<List<Request>> getCurrentRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.https(url, 'requests/current'));
+    var response = await http.get(Uri.http(url, 'requests/current'));
 
     if (response.statusCode == 200) {
       return (jsonDecode(response.body) as List)
@@ -35,7 +35,7 @@ class Service {
 
   Future<List<Request>> getArchiveRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.https(url, 'requests/archive'));
+    var response = await http.get(Uri.http(url, 'requests/archive'));
 
     if (response.statusCode == 200) {
       return (jsonDecode(response.body) as List)
@@ -47,22 +47,23 @@ class Service {
   }
 
   Future<Request> postRequest(Request request) async {
-    final response = await http.post(Uri.http(url, 'request'),
+    final response = await http.post(
+      Uri.http(url, 'request/create'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
-      body: //JsonEncoder().convert(request)
-      jsonEncode(<String, dynamic>{
-      'price': request.price,
-      'shipper': request.shipper,
-      'receiver': request.receiver,
-      'date': request.date?.millisecondsSinceEpoch,
-      'duration': request.duration?.inMilliseconds,
-      'distance': request.distance,
-      'source': request.source,
-      'destination': request.destination,
-      'weight': request.weight,
-      'description': request.description
+      body: jsonEncode(<String, dynamic>{
+        'price': request.price,
+        'shipper': request.shipper,
+        'receiver': request.receiver,
+        'date': request.date!.millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch,
+        'duration': request.duration?.inMinutes,
+        'distance': request.distance,
+        'source': request.source,
+        'destination': request.destination,
+        'weight': request.weight,
+        'description': request.description,
+        'status': request.status
       }),
     );
     if (response.statusCode == 201) {
@@ -76,12 +77,21 @@ class Service {
     }
   }
 
-  Future<Key> getKey() async {
-    var response = await http.get(Uri.https(url, 'user/check/key'));
+  Future<Key> getKey(String key) async {
+    // String res = JsonEncoder().convert(key);
+    // print(res);
+
+    var response = await //http.get(Uri.http(url, 'user/check/key'));
+        http.post(Uri.http(url, 'user/check/key'),
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+            },
+            // body: JsonEncoder().convert(key)
+            body: jsonEncode(<String, String>{'value': key}));
     if (response.statusCode == 200) {
       return Key.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to load new requests');
+      throw Exception('Failed to find key');
     }
   }
 

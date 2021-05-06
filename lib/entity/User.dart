@@ -5,5 +5,7 @@ class User {
   String? name;
   String? licensePlate;
   String? company;
-  String? key;
+  // String? key;
+
+  User.unregistered(this.name, this.licensePlate, this.company);
 }

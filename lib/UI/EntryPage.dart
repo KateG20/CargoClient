@@ -49,9 +49,12 @@ class _EntryPageState extends State<EntryPage> {
   //         )
   //       : null;
   // }
+  var txt = TextEditingController(); // TODO убрать
 
   @override
   Widget build(BuildContext context) {
+    txt.text = 'login'; // TODO убрать
+
     return MaterialApp(
         // debugShowCheckedModeBanner: false,
         title: "MyApp",
@@ -87,11 +90,13 @@ class _EntryPageState extends State<EntryPage> {
                           Padding(padding: EdgeInsets.only(top: 15.0)),
                           logInButton(),
                           signUpButton(),
+                                  generateButton()
                         ]))))))));
   }
 
   TextFormField loginField() {
     return TextFormField(
+        controller: txt, // TODO убрать
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         decoration: InputDecoration(
           labelText: "Логин",
@@ -120,6 +125,7 @@ class _EntryPageState extends State<EntryPage> {
 
   TextFormField passwordField() {
     return TextFormField(
+      controller: txt, // TODO убрать
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         obscureText: _obscureText,
         decoration: InputDecoration(
@@ -206,6 +212,8 @@ class _EntryPageState extends State<EntryPage> {
         ));
   }
 
+  int cnt = 0;
+
   OutlinedButton generateButton() {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
@@ -213,7 +221,9 @@ class _EntryPageState extends State<EntryPage> {
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15.0)))),
         onPressed: () {
-          service.postRequest(Request());
+          cnt++;
+          service.postRequest(Request(500, "Shipper", "Receiver", DateTime.utc(2021, 3, 8),
+              Duration(hours: 3), 120, "ТЛЦ", "Владивосток$cnt", 680, "comment", 0));
         },
         child: Text(
           "сгенерировать",

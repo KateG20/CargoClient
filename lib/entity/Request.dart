@@ -13,7 +13,7 @@ class Request {
   int? status;
 
   Request([this.price, this.shipper, this.receiver, this.date, this.duration,
-      this.distance, this.source, this.destination, this.weight, this.description]);
+      this.distance, this.source, this.destination, this.weight, this.description, this.status]);
 
   Request.optional({this.price, this.shipper, this.receiver, this.date, this.duration,
       this.distance, this.source, this.destination, this.weight, this.description});
@@ -23,12 +23,13 @@ class Request {
         json['price'],
         json['shipper'],
         json['receiver'],
-        DateTime.fromMillisecondsSinceEpoch(json['date']), // millisecondsSinceEpoch
-        Duration(milliseconds: json['duration']), // milliseconds
+        DateTime.fromMillisecondsSinceEpoch(json['date'] + DateTime(2020).millisecondsSinceEpoch), // millisecondsSinceEpoch
+        Duration(minutes: json['duration']), // milliseconds
         json['distance'],
         json['source'],
         json['destination'],
         json['weight'],
-        json['description']);
+        json['description'],
+    json['status']);
   }
 }

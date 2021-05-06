@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/UI/RegistrationPage.dart';
+import 'package:flutter1/LocalUserProvider.dart';
+import 'RegistrationPage.dart';
+import '../service/Service.dart';
+import '../entity/Key.dart' as my;
+import '../entity/User.dart';
 
 class VerificationPage extends StatefulWidget {
   @override
@@ -8,31 +12,10 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
+  var service = Service();
 
-  // bool _warningVisible = false;
-  // String _warningText = "test";
-
-  // void warningOn(String text) {
-  //   setState(() {
-  //     _warningText = text;
-  //     _warningVisible = true;
-  //   });
-  // }
-  //
-  // void warningOff(String text) {
-  //   setState(() {
-  //     _warningVisible = false;
-  //   });
-  // }
-  //
-  // Text? _getWarning() {
-  //   return _warningVisible == true ? Text('$_warningText',
-  //     style:  TextStyle(
-  //       // color: Color(0xff9ACD32), fontSize: 25.0),
-  //         color: Colors.red,
-  //         fontSize: 18.0),
-  //   ) : null;
-  // }
+  my.Key? key;
+  bool keyFound = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +76,23 @@ class _VerificationPageState extends State<VerificationPage> {
       validator: (val) {
         if (val == null || val.isEmpty) {
           return "Заполните поле \"Ключ\"";
-          // todo проверять ключ в базе
-        } else if (false) {
-          return "Такого ключа нет в базе";
         } else {
+          var futureKey = service.getKey(val);
+          // Смотрим, нашелся ли ключ
+          futureKey.then((value) {
+            key = value;
+            // keyFound = true;
+          })
+          .catchError((err) {
+            key = null;
+          });
+        }
+        // Если не нашелся, то не нашелся
+        if (key == null)
+          return "Такого ключа нет в базе";
+        else {
+          var user = User.unregistered(key!.name, key!.licensePlate, key!.company);
+          LocalUserProvider.setUser(user);
           return null;
         }
       },

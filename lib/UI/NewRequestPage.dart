@@ -18,7 +18,16 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getNewRequestsHard());
+    late List<Request> requestList = [];
+
+    var futureList = service.getNewRequests();
+    futureList.then((value) {
+      requestList = value;
+    }).catchError((err) {
+      print('error!');
+    });
+
+    var list = RequestListModel(requestList);
 
     return MaterialApp(
         title: "MyApp",
@@ -32,24 +41,6 @@ class _NewRequestPageState extends State<NewRequestPage> {
                       child: Container(
                         color: Colors.yellow[50]?.withOpacity(0.4),
                           child: _myListView(context, list)
-                  //         ListView.custom(
-                  //   scrollDirection: Axis.vertical,
-                  //   padding: EdgeInsets.all(7),
-                  //   childrenDelegate: SliverChildBuilderDelegate(
-                  //       (BuildContext context, int index) {
-                  //         return KeepAlive(
-                  //           data: list.requests[index],
-                  //           key: ValueKey<Request>(list.requests[index]),
-                  //           // key: UniqueKey(),
-                  //         );
-                  //       },
-                  //       childCount: list.requests.length,
-                  //       findChildIndexCallback: (Key key) {
-                  //         final ValueKey valueKey = key as ValueKey;
-                  //         final Request data = valueKey.value;
-                  //         return list.requests.indexOf(data);
-                  //       }),
-                  // )
                       ))
                 ]))));
   }
