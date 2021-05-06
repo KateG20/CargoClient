@@ -69,6 +69,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
     return RefreshIndicator(
         onRefresh: _pullRefresh,
         child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: list.requests.length,
           itemBuilder: (context, index) {
             return Design().requestContainer(list.requests[index],
@@ -89,26 +90,3 @@ class _NewRequestPageState extends State<NewRequestPage> {
     // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
   }
 }
-
-// class KeepAlive extends StatefulWidget {
-//   const KeepAlive({
-//     required Key key,
-//     required this.data,
-//   }) : super(key: key);
-//
-//   final Request data;
-//
-//   @override
-//   _KeepAliveState createState() => _KeepAliveState(data);
-// }
-//
-// class _KeepAliveState extends State<KeepAlive> {
-//   final Request _data;
-//
-//   _KeepAliveState(this._data);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Design().requestContainer(_data, Design().newRequestRow(context, _data));
-//   }
-// }

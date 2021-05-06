@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter1/RequestListModel.dart';
 import 'package:intl/intl.dart';
 
-import 'FilterDialog.dart';
 import '../entity/Request.dart';
+import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
 class Design {
@@ -36,7 +36,7 @@ class Design {
                     // onPressed: () => showSearchDialog(context),
                     onPressed: () => FilterDialog(context, setState, list),
                     icon: Icon(Icons.search_rounded),
-                    tooltip: 'Search',
+                    tooltip: 'Поиск',
                     color: Colors.green[700],
                     iconSize: 40,
                   ),
@@ -49,7 +49,7 @@ class Design {
                       );
                     },
                     icon: Icon(Icons.menu_rounded),
-                    tooltip: 'Menu',
+                    tooltip: 'Меню',
                     color: Colors.green[700],
                     iconSize: 45,
                   ),
@@ -66,7 +66,7 @@ class Design {
           Container(
               // два желтых
               height: 170,
-              decoration: requestBoxDecoration(),
+              decoration: greenBoxDecoration(),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -76,7 +76,7 @@ class Design {
                         child: Container(
                             // маленький контейнер
                             // контейнер с данными о времени и расстоянии
-                            decoration: dataBoxDecoration(),
+                            // decoration: dataBoxDecoration(),
                             width: 185,
                             child: Padding(
                                 padding: EdgeInsets.all(10),
@@ -89,7 +89,7 @@ class Design {
                                       text: TextSpan(
                                           text: "когда",
                                           style: TextStyle(
-                                            color: Colors.green[900]
+                                            color: Colors.green[800]
                                                 ?.withOpacity(0.6),
                                             fontSize: 20,
                                           )),
@@ -100,7 +100,7 @@ class Design {
                                               "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
                                           // тут везде были какие-то TODO-шки
                                           style: TextStyle(
-                                            color: Colors.green[900],
+                                            color: Colors.green[800],
                                             fontSize: 23,
                                           )),
                                     ),
@@ -109,7 +109,7 @@ class Design {
                                       text: TextSpan(
                                           text: "сколько",
                                           style: TextStyle(
-                                            color: Colors.green[900]
+                                            color: Colors.green[800]
                                                 ?.withOpacity(0.6),
                                             fontSize: 20,
                                           )),
@@ -120,7 +120,7 @@ class Design {
                                           text:
                                               "${_printDuration(_data.duration!)}",
                                           style: TextStyle(
-                                            color: Colors.green[900],
+                                            color: Colors.green[800],
                                             fontSize: 20,
                                           )),
                                     ),
@@ -129,18 +129,24 @@ class Design {
                                           text:
                                               "${_data.distance?.toString()} км",
                                           style: TextStyle(
-                                            color: Colors.green[900],
+                                            color: Colors.green[800],
                                             fontSize: 20,
                                           )),
                                     ),
                                   ],
                                 )))),
+                    VerticalDivider(
+                      color: Colors.orange[100],
+                      thickness: 3,
+                      indent: 10,
+                      endIndent: 10,
+                    ),
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 6, 0, 6),
                         // padding: EdgeInsets.only(top: 15),
                         child: Container(
                             // контейнер с данными о пунктах назначения
-                            decoration: dataBoxDecoration(),
+                            // decoration: dataBoxDecoration(),
                             width: 185,
                             child: Padding(
                                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -152,7 +158,7 @@ class Design {
                                       "откуда",
                                       style: TextStyle(
                                         color:
-                                            Colors.green[900]?.withOpacity(0.6),
+                                            Colors.green[800]?.withOpacity(0.6),
                                         fontSize: 20,
                                       ),
                                       textAlign: TextAlign.center,
@@ -160,7 +166,7 @@ class Design {
                                     Text(
                                       "${_data.source}",
                                       style: TextStyle(
-                                        color: Colors.green[900],
+                                        color: Colors.green[800],
                                         fontSize: 22,
                                       ),
                                       textAlign: TextAlign.center,
@@ -170,7 +176,7 @@ class Design {
                                       "куда",
                                       style: TextStyle(
                                         color:
-                                            Colors.green[900]?.withOpacity(0.6),
+                                            Colors.green[800]?.withOpacity(0.6),
                                         fontSize: 20,
                                       ),
                                       textAlign: TextAlign.center,
@@ -178,7 +184,7 @@ class Design {
                                     Text(
                                       "${_data.destination}",
                                       style: TextStyle(
-                                        color: Colors.green[900],
+                                        color: Colors.green[800],
                                         fontSize: 22,
                                       ),
                                       textAlign: TextAlign.center,
@@ -194,7 +200,9 @@ class Design {
   BoxDecoration headerBoxDecoration() {
     return BoxDecoration(
       color: Colors.lightGreen[50],
-      border: Border(bottom: BorderSide(color: Colors.lightGreen, width: 3)),
+      border: Border(
+          bottom:
+              BorderSide(color: Colors.lightGreen.withOpacity(0.7), width: 3)),
       // borderRadius: BorderRadius.all(Radius.circular(12.0)
     );
   }
@@ -202,22 +210,31 @@ class Design {
   BoxDecoration menuHeaderBoxDecoration() {
     return BoxDecoration(
       border: Border(
-          bottom:
-              BorderSide(color: Colors.brown[900]!.withOpacity(0.3), width: 3)),
+          bottom: BorderSide(
+              color: Colors.orange[200]!.withOpacity(0.7), width: 3)),
       // borderRadius: BorderRadius.all(Radius.circular(12.0)
     );
   }
 
-  BoxDecoration requestBoxDecoration() {
+  Divider menuDiv() {
+    return Divider(
+      thickness: 3,
+      indent: 7,
+      endIndent: 7,
+      color: Colors.orange[200]!.withOpacity(0.7),
+    );
+  }
+
+  BoxDecoration greenBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
-          color: Colors.lightGreen,
+          color: Colors.lightGreen.withOpacity(0.7),
           width: 3,
         ),
         borderRadius: BorderRadius.all(Radius.circular(12.0)));
   }
 
-  BoxDecoration dataBoxDecoration() {
+  BoxDecoration orangeBoxDecoration() {
     return BoxDecoration(
         // color: Colors.yellow[100],
         border: Border.all(
@@ -356,10 +373,9 @@ class Design {
             backgroundColor: Colors.yellow[50],
             title: Center(
                 child: Text('Информация о заявке',
-                    style: TextStyle(color: Colors.green[900], fontSize: 24))),
+                    style: TextStyle(color: Colors.green[800], fontSize: 24))),
             children: [
-              InfoDialogItem(
-                  name: 'Стоимость:', value: '${_data.price} руб.'),
+              InfoDialogItem(name: 'Стоимость:', value: '${_data.price} руб.'),
               InfoDialogItem(
                   name: 'Грузоотправитель:', value: '${_data.shipper}'),
               InfoDialogItem(
@@ -373,10 +389,11 @@ class Design {
                   value:
                       '${_printDuration(_data.duration!)}, ${_data.distance.toString() + " км"}'),
               InfoDialogItem(
-                  name: 'Маршрут:', value: '${_data.source} - ${_data.destination}'),
+                  name: 'Маршрут:',
+                  value: '${_data.source} - ${_data.destination}'),
               InfoDialogItem(name: 'Вес товара:', value: '${_data.weight} кг'),
               InfoDialogItem(name: 'Описание:', value: '${_data.description}'),
-              // style: TextStyle(color: Colors.green[900], fontSize: 20),
+              // style: TextStyle(color: Colors.green[800], fontSize: 20),
             ],
           );
         });
@@ -408,7 +425,7 @@ class Design {
 //               title: Center(
 //                   child: Text('Поиск заявок',
 //                       style:
-//                           TextStyle(color: Colors.green[900], fontSize: 24))),
+//                           TextStyle(color: Colors.green[800], fontSize: 24))),
 //               shape: RoundedRectangleBorder(
 //                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
 //               children: [
@@ -425,7 +442,7 @@ class Design {
 //                                 children: [
 //                                   Text('Точка отправки',
 //                                       style: TextStyle(
-//                                           color: Colors.green[900]
+//                                           color: Colors.green[800]
 //                                               ?.withOpacity(0.85),
 //                                           fontSize: 20)),
 //                                   TextField(
@@ -441,7 +458,7 @@ class Design {
 //                                 children: [
 //                                   Text('Точка прибытия',
 //                                       style: TextStyle(
-//                                           color: Colors.green[900]
+//                                           color: Colors.green[800]
 //                                               ?.withOpacity(0.85),
 //                                           fontSize: 20)),
 //                                   TextField(
@@ -458,7 +475,7 @@ class Design {
 //                                   children: [
 //                                     Text('Дата',
 //                                         style: TextStyle(
-//                                             color: Colors.green[900]
+//                                             color: Colors.green[800]
 //                                                 ?.withOpacity(0.85),
 //                                             fontSize: 20)),
 //                                     TextButton(
@@ -494,11 +511,11 @@ class InfoDialogItem extends StatelessWidget {
           children: [
             Text('$name ',
                 style: TextStyle(
-                    color: Colors.green[900]?.withOpacity(0.7), fontSize: 20)),
+                    color: Colors.green[800]?.withOpacity(0.7), fontSize: 20)),
             Padding(padding: EdgeInsets.only(top: 5)),
             Text('$value',
                 style: TextStyle(
-                    color: Colors.green[900],
+                    color: Colors.green[800],
                     fontSize: 23,
                     fontWeight: FontWeight.w500))
           ],
