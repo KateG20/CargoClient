@@ -1,20 +1,28 @@
 import 'dart:convert';
 
-import 'package:flutter1/entity/Key.dart';
+// import 'package:flutter1/entity/Key.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Request.dart';
+import '../entity/Key.dart';
 
 class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
     var response = await http.get(Uri.http(url, 'requests/new'));
+    var res = (jsonDecode(response.body) as List)
+        .map((r) => Request.fromJson(r))
+        .toList();
+
+    print('!!!');
+    for (var r in res) print(r);
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List)
-          .map((r) => Request.fromJson(r))
-          .toList();
+      return res;
+      // (jsonDecode(response.body) as List)
+      //     .map((r) => Request.fromJson(r))
+      //     .toList();
     } else {
       throw Exception('Failed to load new requests');
     }
@@ -50,7 +58,7 @@ class Service {
     final response = await http.post(
       Uri.http(url, 'request/create'),
       headers: <String, String>{
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-16',
       },
       body: jsonEncode(<String, dynamic>{
         'price': request.price,

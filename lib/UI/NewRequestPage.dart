@@ -15,21 +15,28 @@ class NewRequestPage extends StatefulWidget {
 class _NewRequestPageState extends State<NewRequestPage> {
 
   final Service service = Service();
+  late Future<List<Request>> futureList;
+  late RequestListModel list;
 
   @override
-  Widget build(BuildContext context) {
-    late List<Request> requestList = [];
+  void initState() {
+    super.initState();
+    futureList = service.getNewRequests();
 
-    var futureList = service.getNewRequests();
+    List<Request> requestList = [];
+
     futureList.then((value) {
       requestList = value;
     }).catchError((err) {
       print('error!');
     });
 
-    var list = RequestListModel(requestList);
+    list = RequestListModel(requestList);
+  }
 
-    return MaterialApp(
+  @override
+  Widget build(BuildContext context) {
+        return MaterialApp(
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -40,19 +47,45 @@ class _NewRequestPageState extends State<NewRequestPage> {
                   Expanded(
                       child: Container(
                         color: Colors.yellow[50]?.withOpacity(0.4),
-                          child: _myListView(context, list)
+                          // child: _myListView(context, list)
+                          child: _myListView(context)
                       ))
                 ]))));
   }
 
-  Widget _myListView(BuildContext context, RequestListModel list) {
+  // Widget _myListView(BuildContext context, RequestListModel list) {
+  Widget _myListView(BuildContext context) {
 
-    return ListView.builder(
-      itemCount: list.requests.length,
-      itemBuilder: (context, index) {
-        return Design().requestContainer(list.requests[index], Design().newRequestRow(context, list.requests[index]));
+    return FutureBuilder<List<Request>>(
+      future: futureList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // return Text(snapshot.data!.title);
+          list = RequestListModel(snapshot.data!);
+
+          return ListView.builder(
+            itemCount: list.requests.length,
+
+            itemBuilder: (context, index) {
+              return Design().requestContainer(list.requests[index],
+                  Design().newRequestRow(context, list.requests[index]));
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+
+        // By default, show a loading spinner.
+        return CircularProgressIndicator();
       },
     );
+    // return ListView.builder(
+    //   itemCount: list.requests.length,
+    //   itemBuilder: (context, index) {
+    //     return Design().requestContainer(list.requests[index],
+    //         Design().newRequestRow(context, list.requests[index]));
+    //   },
+    // );
   }
 }
 
