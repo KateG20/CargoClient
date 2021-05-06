@@ -3,26 +3,22 @@ import 'dart:convert';
 // import 'package:flutter1/entity/Key.dart';
 import 'package:http/http.dart' as http;
 
-import '../entity/Request.dart';
 import '../entity/Key.dart';
+import '../entity/Request.dart';
 
 class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
-    var response = await http.get(Uri.http(url, 'requests/new'));
-    var res = (jsonDecode(response.body) as List)
-        .map((r) => Request.fromJson(r))
-        .toList();
-
-    print('!!!');
-    for (var r in res) print(r);
+    var response =
+        await http.get(Uri.http(url, 'requests/new'), headers: <String, String>{
+          'Content-Type': 'application/json'
+    });
 
     if (response.statusCode == 200) {
-      return res;
-      // (jsonDecode(response.body) as List)
-      //     .map((r) => Request.fromJson(r))
-      //     .toList();
+      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
+          .map((r) => Request.fromJson(r))
+          .toList();
     } else {
       throw Exception('Failed to load new requests');
     }
@@ -30,10 +26,11 @@ class Service {
 
   Future<List<Request>> getCurrentRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/current'));
+    var response = await http.get(Uri.http(url, 'requests/current'), headers: <String, String>{
+    'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List)
+      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((r) => Request.fromJson(r))
           .toList();
     } else {
@@ -43,10 +40,11 @@ class Service {
 
   Future<List<Request>> getArchiveRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/archive'));
+    var response = await http.get(Uri.http(url, 'requests/archive'), headers: <String, String>{
+    'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List)
+      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((r) => Request.fromJson(r))
           .toList();
     } else {
@@ -58,13 +56,14 @@ class Service {
     final response = await http.post(
       Uri.http(url, 'request/create'),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-16',
+        'Content-Type': 'application/json',
       },
       body: jsonEncode(<String, dynamic>{
         'price': request.price,
         'shipper': request.shipper,
         'receiver': request.receiver,
-        'date': request.date!.millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch,
+        'date': request.date!.millisecondsSinceEpoch -
+            DateTime(2020).millisecondsSinceEpoch,
         'duration': request.duration?.inMinutes,
         'distance': request.distance,
         'source': request.source,

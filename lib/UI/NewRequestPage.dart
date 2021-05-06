@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import 'MenuBar.dart';
-import '../entity/Request.dart';
-import 'Design.dart';
 import '../RequestListModel.dart';
+import '../entity/Request.dart';
 import '../service/Service.dart';
+import 'Design.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -13,79 +11,123 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-
   final Service service = Service();
   late Future<List<Request>> futureList;
-  late RequestListModel list;
+  RequestListModel list = RequestListModel([]);
 
   @override
   void initState() {
     super.initState();
     futureList = service.getNewRequests();
 
-    List<Request> requestList = [];
-
-    futureList.then((value) {
-      requestList = value;
-    }).catchError((err) {
-      print('error!');
-    });
-
-    list = RequestListModel(requestList);
+    // List<Request> requestList = [];
+    //
+    // futureList.then((value) {
+    //   requestList = value;
+    // }).catchError((err) {
+    //   print('error!');
+    // });
+    //
+    // list = RequestListModel(requestList);
   }
 
   @override
   Widget build(BuildContext context) {
-        return MaterialApp(
+    // return FutureBuilder<List<Request>>(
+    //   future: futureList,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData) {
+    //       // return Text(snapshot.data!.title);
+    //       list = RequestListModel(snapshot.data!);
+    //
+    //       return MaterialApp(
+    //           title: "MyApp",
+    //           home: Builder(
+    //               builder: (context) => Material(
+    //                       // создали колонку, в которой сначала
+    //                       // ряд меню, а снизу прифигачиваем список
+    //                       child: Column(children: <Widget>[
+    //                     Design().pageHeader(
+    //                         context, setState, list, 'Новые заявки'),
+    //                     Expanded(
+    //                         child: Container(
+    //                             color: Colors.yellow[50]?.withOpacity(0.4),
+    //                             // child: _myListView(context, list)
+    //                             child: _myListView(context)))
+    //                   ]))));
+    //     } else if (snapshot.hasError) {
+    //       return Text("${snapshot.error}");
+    //     }
+    //
+    //     // By default, show a loading spinner.
+    //     return Center(child: CircularProgressIndicator());
+    //   },
+    // );
+    return MaterialApp(
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                    // создали колонку, в которой сначала
-                    // ряд меню, а снизу прифигачиваем список
-                    child: Column(children: <Widget>[
-                  Design().pageHeader(context, setState, list, 'Новые заявки'),
-                  Expanded(
-                      child: Container(
-                        color: Colors.yellow[50]?.withOpacity(0.4),
-                          // child: _myListView(context, list)
-                          child: _myListView(context)
-                      ))
-                ]))));
+                // создали колонку, в которой сначала
+                // ряд меню, а снизу прифигачиваем список
+                child: FutureBuilder<List<Request>>(
+                    future: futureList,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        // return Text(snapshot.data!.title);
+                        list = RequestListModel(snapshot.data!);
+
+                        return Column(children: <Widget>[
+                          Design().pageHeader(
+                              context, setState, list, 'Новые заявки'),
+                          Expanded(
+                              child: Container(
+                                  color: Colors.yellow[50]?.withOpacity(0.4),
+                                  // child: _myListView(context, list)
+                                  child: _myListView(context)))
+                        ]);
+                      } else if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+
+                      // By default, show a loading spinner.
+                      return Center(child: CircularProgressIndicator());
+                    }))));
   }
 
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
+    // хедер тоже фигачить внутри
 
-    return FutureBuilder<List<Request>>(
-      future: futureList,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          // return Text(snapshot.data!.title);
-          list = RequestListModel(snapshot.data!);
-
-          return ListView.builder(
-            itemCount: list.requests.length,
-
-            itemBuilder: (context, index) {
-              return Design().requestContainer(list.requests[index],
-                  Design().newRequestRow(context, list.requests[index]));
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
-
-        // By default, show a loading spinner.
-        return CircularProgressIndicator();
-      },
-    );
-    // return ListView.builder(
-    //   itemCount: list.requests.length,
-    //   itemBuilder: (context, index) {
-    //     return Design().requestContainer(list.requests[index],
-    //         Design().newRequestRow(context, list.requests[index]));
+    // return FutureBuilder<List<Request>>(
+    //   future: futureList,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasData) {
+    //       // return Text(snapshot.data!.title);
+    //       list = RequestListModel(snapshot.data!);
+    //
+    //       return ListView.builder(
+    //         itemCount: list.requests.length,
+    //
+    //         itemBuilder: (context, index) {
+    //           return Design().requestContainer(list.requests[index],
+    //               Design().newRequestRow(context, list.requests[index]));
+    //         },
+    //       );
+    //     } else if (snapshot.hasError) {
+    //       return Text("${snapshot.error}");
+    //     }
+    //
+    //     // By default, show a loading spinner.
+    //     return Center(child: CircularProgressIndicator());
     //   },
     // );
+    return ListView.builder(
+      itemCount: list.requests.length,
+      itemBuilder: (context, index) {
+        return Design().requestContainer(list.requests[index],
+            Design().newRequestRow(context, list.requests[index]));
+      },
+    );
   }
 }
 

@@ -90,7 +90,7 @@ class FilterDialog {
             return SimpleDialog(
                 insetPadding: EdgeInsets.all(10),
                 title: Center(
-                    child: Text('Поиск заявок',
+                    child: Text('Поиск заявок ${list.requests.length}',
                         style:
                             TextStyle(color: Colors.green[900], fontSize: 24))),
                 shape: RoundedRectangleBorder(

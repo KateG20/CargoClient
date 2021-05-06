@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../entity/Request.dart';
@@ -213,6 +213,8 @@ class _EntryPageState extends State<EntryPage> {
   }
 
   int cnt = 0;
+  var rnd = new Random();
+  var cities = ["ТЛЦ", "Иркутск", "Москва", "Санкт-Петербург", "Владивосток", "Казань", "Уфа"];
 
   OutlinedButton generateButton() {
     return OutlinedButton(
@@ -222,8 +224,12 @@ class _EntryPageState extends State<EntryPage> {
                 borderRadius: BorderRadius.all(Radius.circular(15.0)))),
         onPressed: () {
           cnt++;
-          service.postRequest(Request(500, "Shipper", "Receiver", DateTime.utc(2021, 3, 8),
-              Duration(hours: 3), 120, "ТЛЦ", "Владивосток$cnt", 680, "comment", 0));
+          service.postRequest(Request(rnd.nextInt(700) + 300, "Shipper",
+              "Receiver", DateTime.utc(rnd.nextInt(4) + 2020,
+                  rnd.nextInt(12) + 1, rnd.nextInt(31) + 1),
+              Duration(hours: rnd.nextInt(19), minutes: rnd.nextInt(60)),
+              rnd.nextInt(450) + 50, cities[rnd.nextInt(7)], cities[rnd.nextInt(7)],
+              rnd.nextInt(9900) + 100, "Комментарий", rnd.nextInt(3)));
         },
         child: Text(
           "сгенерировать",
