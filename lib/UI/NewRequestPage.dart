@@ -33,36 +33,6 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    // return FutureBuilder<List<Request>>(
-    //   future: futureList,
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData) {
-    //       // return Text(snapshot.data!.title);
-    //       list = RequestListModel(snapshot.data!);
-    //
-    //       return MaterialApp(
-    //           title: "MyApp",
-    //           home: Builder(
-    //               builder: (context) => Material(
-    //                       // создали колонку, в которой сначала
-    //                       // ряд меню, а снизу прифигачиваем список
-    //                       child: Column(children: <Widget>[
-    //                     Design().pageHeader(
-    //                         context, setState, list, 'Новые заявки'),
-    //                     Expanded(
-    //                         child: Container(
-    //                             color: Colors.yellow[50]?.withOpacity(0.4),
-    //                             // child: _myListView(context, list)
-    //                             child: _myListView(context)))
-    //                   ]))));
-    //     } else if (snapshot.hasError) {
-    //       return Text("${snapshot.error}");
-    //     }
-    //
-    //     // By default, show a loading spinner.
-    //     return Center(child: CircularProgressIndicator());
-    //   },
-    // );
     return MaterialApp(
         title: "MyApp",
         home: Builder(
@@ -96,38 +66,27 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
-    // хедер тоже фигачить внутри
+    return RefreshIndicator(
+        onRefresh: _pullRefresh,
+        child: ListView.builder(
+          itemCount: list.requests.length,
+          itemBuilder: (context, index) {
+            return Design().requestContainer(list.requests[index],
+                Design().newRequestRow(context, list.requests[index]));
+          },
+        ));
+  }
 
-    // return FutureBuilder<List<Request>>(
-    //   future: futureList,
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasData) {
-    //       // return Text(snapshot.data!.title);
-    //       list = RequestListModel(snapshot.data!);
-    //
-    //       return ListView.builder(
-    //         itemCount: list.requests.length,
-    //
-    //         itemBuilder: (context, index) {
-    //           return Design().requestContainer(list.requests[index],
-    //               Design().newRequestRow(context, list.requests[index]));
-    //         },
-    //       );
-    //     } else if (snapshot.hasError) {
-    //       return Text("${snapshot.error}");
-    //     }
-    //
-    //     // By default, show a loading spinner.
-    //     return Center(child: CircularProgressIndicator());
-    //   },
-    // );
-    return ListView.builder(
-      itemCount: list.requests.length,
-      itemBuilder: (context, index) {
-        return Design().requestContainer(list.requests[index],
-            Design().newRequestRow(context, list.requests[index]));
-      },
-    );
+  Future<void> _pullRefresh() async {
+    setState(() {
+      futureList = service.getNewRequests();
+    });
+    await Future.delayed(Duration(seconds: 1));
+    // List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
+    // setState(() {
+    //   words = freshWords;
+    // });
+    // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
   }
 }
 
