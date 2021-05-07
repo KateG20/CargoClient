@@ -24,12 +24,17 @@ class _VerificationPageState extends State<VerificationPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                child: Form(
+                child: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Form(
                     key: _formKey,
                     child: Container(
                         padding: const EdgeInsets.all(30.0),
                         color: Colors.white,
                         child: Container(
+                          color: Colors.yellow[50]?.withOpacity(0.2),
                           child: Center(
                               child: Column(children: [
                             Padding(padding: EdgeInsets.only(top: 40.0)),
@@ -44,29 +49,28 @@ class _VerificationPageState extends State<VerificationPage> {
                             //  Padding(padding: EdgeInsets.only(top: 20.0)),
                             Padding(
                               padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                              // child: Align(
-                              //   alignment: Alignment.centerLeft,
-                              //   child: _getWarning(),
-                              // )
                             ),
                             Padding(padding: EdgeInsets.only(top: 20.0)),
                             keyField(),
                             Padding(padding: EdgeInsets.only(top: 15.0)),
                             verifyButton(),
                           ])),
-                        ))))));
+                        )))))));
   }
 
   TextFormField keyField() {
     return TextFormField(
+      controller: txt,
       style: TextStyle(color: Colors.grey[600], fontSize: 20),
       decoration: InputDecoration(
         labelText: "Ключ",
         labelStyle: TextStyle(color: Colors.lightGreen[600]),
-        // fillColor: Colors.lightGreen,
+        enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
         focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(color: Colors.lightGreen)),
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
           borderSide: BorderSide(),
@@ -75,20 +79,22 @@ class _VerificationPageState extends State<VerificationPage> {
       ),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return "Заполните поле \"Ключ\"";
-        } else {
-          var futureKey = service.getKey(val);
-          // Смотрим, нашелся ли ключ
-          futureKey.then((value) {
-            key = value;
-            // keyFound = true;
-          })
-          .catchError((err) {
-            key = null;
-          });
+          key = my.Key(value: 'key', name: 'name', licensePlate: 'lp', company: 'company');
+          // return "Заполните поле \"Ключ\""; // TODO сделать нормально
         }
+        // else {
+          // var futureKey = service.getKey(val); // todo вот это все не работает
+          // // Смотрим, нашелся ли ключ
+          // futureKey.then((value) {
+          //   key = value;
+          //   // keyFound = true;
+          // })
+          // .catchError((err) {
+          //   key = null;
+          // });
+        // }
         // Если не нашелся, то не нашелся
-        if (key == null)
+        else if (key == null)
           return "Такого ключа нет в базе";
         else {
           var user = User.unregistered(key!.name, key!.licensePlate, key!.company);
@@ -99,15 +105,28 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
+  var txt = TextEditingController();
+
   OutlinedButton verifyButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        // side: BorderSide(
-        //     color: Color(0x80808099), width: 1.4)
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          side: BorderSide(color: Colors.lightGreen, width: 1.5),
+          // backgroundColor: Colors.lightGreen[50]
       ),
       onPressed: () {
+        // todo сюда получение данных с сервера
+        var futureKey = service.getKey(txt.text);
+        // Смотрим, нашелся ли ключ
+        futureKey.then((value) {
+          key = value;
+          // keyFound = true;
+        })
+            .catchError((err) {
+          key = null;
+        });
+
         if (_formKey.currentState!.validate()) {
           Navigator.push(
             context,
@@ -119,7 +138,7 @@ class _VerificationPageState extends State<VerificationPage> {
           padding: EdgeInsets.all(7),
           child: Text(
             "Ввести",
-            style: TextStyle(fontSize: 23.0, color: Colors.lightGreen[700]),
+            style: TextStyle(color: Colors.lightGreen[700], fontSize: 20),
           )),
     );
   }

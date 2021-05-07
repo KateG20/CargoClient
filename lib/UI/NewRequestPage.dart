@@ -51,14 +51,13 @@ class _NewRequestPageState extends State<NewRequestPage> {
                               context, setState, list, 'Новые заявки'),
                           Expanded(
                               child: Container(
-                                  color: Colors.yellow[50]?.withOpacity(0.4),
+                                  color: Colors.yellow[50]?.withOpacity(0.2),
                                   // child: _myListView(context, list)
                                   child: _myListView(context)))
                         ]);
                       } else if (snapshot.hasError) {
                         return Text("${snapshot.error}");
                       }
-
                       // By default, show a loading spinner.
                       return Center(child: CircularProgressIndicator());
                     }))));

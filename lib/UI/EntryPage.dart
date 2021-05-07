@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../entity/Request.dart';
@@ -60,38 +61,43 @@ class _EntryPageState extends State<EntryPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                child: Form(
-                    key: _formKey,
-                    child: Container(
-                        padding: const EdgeInsets.all(30.0),
-                        color: Colors.white,
+                child: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Form(
+                        key: _formKey,
                         child: Container(
-                            child: Center(
-                                child: Column(children: [
-                          Padding(padding: EdgeInsets.only(top: 40.0)),
-                          Text(
-                            'Авторизация',
-                            style: TextStyle(
-                                // color: Color(0xff9ACD32), fontSize: 25.0),
-                                color: Colors.lightGreen[600],
-                                fontSize: 30.0),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                            // child: Align(
-                            //   alignment: Alignment.centerLeft,
-                            //   child: _getWarning(),
-                            // )
-                          ),
-                          Padding(padding: EdgeInsets.only(top: 20.0)),
-                          loginField(),
-                          Padding(padding: EdgeInsets.only(top: 20.0)),
-                          passwordField(),
-                          Padding(padding: EdgeInsets.only(top: 15.0)),
-                          logInButton(),
-                          signUpButton(),
-                                  generateButton()
-                        ]))))))));
+                            padding: const EdgeInsets.all(30.0),
+                            // color: Colors.white,
+                            color: Colors.yellow[50]?.withOpacity(0.2),
+                            child: Container(
+                                child: Center(
+                                    child: Column(children: [
+                              Padding(padding: EdgeInsets.only(top: 40.0)),
+                              Text(
+                                'Авторизация',
+                                style: TextStyle(
+                                    // color: Color(0xff9ACD32), fontSize: 25.0),
+                                    color: Colors.lightGreen[700],
+                                    fontSize: 30.0),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
+                                // child: Align(
+                                //   alignment: Alignment.centerLeft,
+                                //   child: _getWarning(),
+                                // )
+                              ),
+                              Padding(padding: EdgeInsets.only(top: 20.0)),
+                              loginField(),
+                              Padding(padding: EdgeInsets.only(top: 20.0)),
+                              passwordField(),
+                              Padding(padding: EdgeInsets.only(top: 15.0)),
+                              logInButton(),
+                              signUpButton(),
+                              generateButton()
+                            ])))))))));
   }
 
   TextFormField loginField() {
@@ -102,9 +108,12 @@ class _EntryPageState extends State<EntryPage> {
           labelText: "Логин",
           labelStyle: TextStyle(color: Colors.lightGreen),
           // fillColor: Colors.lightGreen,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(color: Colors.lightGreen)),
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(),
@@ -125,19 +134,20 @@ class _EntryPageState extends State<EntryPage> {
 
   TextFormField passwordField() {
     return TextFormField(
-      controller: txt, // TODO убрать
+        controller: txt,
+        // TODO убрать
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         obscureText: _obscureText,
         decoration: InputDecoration(
           labelText: "Пароль",
-          labelStyle: TextStyle(color: Colors.lightGreen),
+          labelStyle: TextStyle(color: Colors.lightGreen,),
           fillColor: Colors.lightBlueAccent,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            borderSide: BorderSide(
-              color: Colors.lightGreen,
-            ),
-          ),
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(),
@@ -170,14 +180,13 @@ class _EntryPageState extends State<EntryPage> {
   OutlinedButton logInButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        // side: BorderSide(
-        //     color: Color(0x80808099), width: 1.4)
+          primary: Colors.green[800],
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          side: BorderSide(color: Colors.lightGreen, width: 1.5),
+          backgroundColor: Colors.lightGreen[50]
       ),
       onPressed: () {
-        // service.postRequest(Request.optional(
-        //     price: 1000, source: "Москва", destination: "ТЛЦ"));
         if (_formKey.currentState!.validate()) {
           Navigator.push(
             context,
@@ -189,32 +198,65 @@ class _EntryPageState extends State<EntryPage> {
           padding: EdgeInsets.all(7),
           child: Text(
             "Войти",
-            style: TextStyle(fontSize: 23.0, color: Colors.lightGreen[600]),
+            style: TextStyle(color: Colors.lightGreen[700], fontSize: 20),
           )),
     );
   }
 
+  // OutlinedButton signUpButton0() {
+  //   return OutlinedButton(
+  //       style: OutlinedButton.styleFrom(
+  //           backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
+  //           shape: const RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.all(Radius.circular(15.0)))),
+  //       onPressed: () {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => VerificationPage()),
+  //         );
+  //       },
+  //       child: Text(
+  //         "Первичная регистрация",
+  //         style: TextStyle(fontSize: 18.0, color: Colors.white),
+  //       ));
+  // }
+
   OutlinedButton signUpButton() {
     return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0)))),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => VerificationPage()),
-          );
-        },
-        child: Text(
-          "Первичная регистрация",
-          style: TextStyle(fontSize: 18.0, color: Colors.white),
-        ));
+      style: OutlinedButton.styleFrom(
+        primary: Colors.lightGreen[800],
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        side: BorderSide(color: Colors.lightGreen[300]!, width: 1.5),
+        minimumSize: Size(150, 30),
+        // backgroundColor: Colors.lightGreen[50]
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => VerificationPage()),
+        );
+      },
+      child: Padding(
+          padding: EdgeInsets.all(7),
+          child: Text(
+            "Первичная регистрация",
+            style: TextStyle(color: Colors.lightGreen[600], fontSize: 18),
+          )),
+    );
   }
 
   int cnt = 0;
   var rnd = new Random();
-  var cities = ["ТЛЦ", "Иркутск", "Москва", "Санкт-Петербург", "Владивосток", "Казань", "Уфа"];
+  var cities = [
+    "ТЛЦ",
+    "Иркутск",
+    "Москва",
+    "Санкт-Петербург",
+    "Владивосток",
+    "Казань",
+    "Уфа"
+  ];
 
   OutlinedButton generateButton() {
     return OutlinedButton(
@@ -224,12 +266,19 @@ class _EntryPageState extends State<EntryPage> {
                 borderRadius: BorderRadius.all(Radius.circular(15.0)))),
         onPressed: () {
           cnt++;
-          service.postRequest(Request(rnd.nextInt(700) + 300, "Shipper",
-              "Receiver", DateTime.utc(rnd.nextInt(4) + 2020,
-                  rnd.nextInt(12) + 1, rnd.nextInt(31) + 1),
+          service.postRequest(Request(
+              rnd.nextInt(700) + 300,
+              "Shipper",
+              "Receiver",
+              DateTime.utc(rnd.nextInt(4) + 2020, rnd.nextInt(12) + 1,
+                  rnd.nextInt(31) + 1),
               Duration(hours: rnd.nextInt(19), minutes: rnd.nextInt(60)),
-              rnd.nextInt(450) + 50, cities[rnd.nextInt(7)], cities[rnd.nextInt(7)],
-              rnd.nextInt(9900) + 100, "Комментарий", rnd.nextInt(3)));
+              rnd.nextInt(450) + 50,
+              cities[rnd.nextInt(7)],
+              cities[rnd.nextInt(7)],
+              rnd.nextInt(9900) + 100,
+              "Комментарий",
+              rnd.nextInt(3)));
         },
         child: Text(
           "сгенерировать",

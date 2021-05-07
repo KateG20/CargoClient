@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter1/RequestListModel.dart';
 import 'package:intl/intl.dart';
 
-import 'file:///C:/Users/Lenovo%20X1/IdeaProjects/flutter1/lib/entity/Request.dart';
+import '../entity/Request.dart';
 
 class FilterDialog {
   // extends StatefulWidget {
@@ -23,8 +23,8 @@ class FilterDialog {
   bool considerDate = true;
   DateTime? _selectedDateFrom = DateTime.now();
   DateTime? _selectedDateTo = DateTime.now();
-  String? _placeFrom, _placeTo;
-  int? _minWeight, _maxWeight;
+  String? _source, _destination;
+  int? _minWeight, _maxWeight, _minPrice, _maxPrice, _minDist, _maxDist;
 
   String _dateFromText = '                    ';
   String _dateToText = '                    ';
@@ -39,20 +39,20 @@ class FilterDialog {
       locale: const Locale("ru", "RU"),
       builder: (context, child) {
         return Theme(
-          data: ThemeData.dark().copyWith(
+          data: ThemeData.light().copyWith(
             textTheme: TextTheme(
-              headline1: TextStyle(color: Colors.green[900], fontSize: 24),
-              headline2: TextStyle(color: Colors.green[900], fontSize: 24),
-              headline3: TextStyle(color: Colors.green[900], fontSize: 24),
-              // headline4: TextStyle(color: Colors.green[900], fontSize: 24)
+              headline1: TextStyle(color: Colors.green[800], fontSize: 24),
+              headline2: TextStyle(color: Colors.green[800], fontSize: 24),
+              headline3: TextStyle(color: Colors.green[800], fontSize: 24),
+              // headline4: TextStyle(color: Colors.green[800], fontSize: 24)
             ),
             colorScheme: ColorScheme.dark(
-              primary: Colors.green[900]!,
+              primary: Colors.green[800]!,
               onPrimary: Colors.white,
-              surface: Colors.yellow[50]!,
-              onSurface: Colors.green[900]!,
+              surface: Colors.white,//yellow[50]!,
+              onSurface: Colors.green[800]!,
             ),
-            dialogBackgroundColor: Colors.yellow[50],
+            dialogBackgroundColor: Colors.white,//yellow[50],
           ),
           child: child!,
         );
@@ -79,20 +79,17 @@ class FilterDialog {
         context: context,
         builder: (context) {
           return
-              //   Localizations(
-              //     locale: const Locale('ru', 'RU'),
-              //     delegates: <LocalizationsDelegate<dynamic>>[
-              //       DefaultWidgetsLocalizations.delegate,
-              //       DefaultMaterialLocalizations.delegate,
-              //     ],
-              // child:
               StatefulBuilder(builder: (context, dialogSetState) {
-            return SimpleDialog(
+            return GestureDetector(
+                onTap: () {
+              FocusScope.of(context).unfocus();
+            },
+                child: SimpleDialog(
                 insetPadding: EdgeInsets.all(10),
                 title: Center(
                     child: Text('Поиск заявок ${list.requests.length}',
                         style:
-                            TextStyle(color: Colors.green[900], fontSize: 24))),
+                            TextStyle(color: Colors.green[800], fontSize: 24))),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0))),
                 children: [
@@ -102,274 +99,23 @@ class FilterDialog {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            placeFromField(),
-                            // Padding(
-                            //     padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-                            //     child: Column(
-                            //       crossAxisAlignment: CrossAxisAlignment.start,
-                            //       children: [
-                            //         Text('Точка отправки',
-                            //             style: TextStyle(
-                            //                 color: Colors.green[900]
-                            //                     ?.withOpacity(0.85),
-                            //                 fontSize: 20)),
-                            //         TextFormField(
-                            //             style: TextStyle(
-                            //                 color: Colors.grey[600],
-                            //                 fontSize: 20),
-                            //             decoration: InputDecoration(
-                            //                 enabledBorder: UnderlineInputBorder(
-                            //                   borderSide: BorderSide(
-                            //                       color: Colors.grey),
-                            //                 ),
-                            //                 focusedBorder: UnderlineInputBorder(
-                            //                   borderSide: BorderSide(
-                            //                       color: Colors.grey),
-                            //                 ),
-                            //                 hintText: 'Откуда'),
-                            //             onChanged: (text) {
-                            //               _placeFrom = text;
-                            //             })
-                            //       ],
-                            //     )),
-                            placeToField(),
-                            // Padding(
-                            //     padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                            //     child: Column(
-                            //       crossAxisAlignment: CrossAxisAlignment.start,
-                            //       children: [
-                            //         Text('Точка прибытия',
-                            //             style: TextStyle(
-                            //                 color: Colors.green[900]
-                            //                     ?.withOpacity(0.85),
-                            //                 fontSize: 20)),
-                            //         TextFormField(
-                            //             style: TextStyle(
-                            //                 color: Colors.grey[600],
-                            //                 fontSize: 20),
-                            //             decoration: InputDecoration(
-                            //                 enabledBorder: UnderlineInputBorder(
-                            //                   borderSide: BorderSide(
-                            //                       color: Colors.grey),
-                            //                 ),
-                            //                 focusedBorder: UnderlineInputBorder(
-                            //                   borderSide: BorderSide(
-                            //                       color: Colors.grey),
-                            //                 ),
-                            //                 hintText: 'Куда'),
-                            //             onChanged: (text) {
-                            //               _placeTo = text;
-                            //             })
-                            //       ],
-                            //     )),
+                            sourceField(),
+                            destinationField(),
                             dateField(context, dialogSetState),
-                            // Padding(
-                            //     padding: EdgeInsets.fromLTRB(20, 5, 20, 10),
-                            //     child: Column(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Row(
-                            //               mainAxisAlignment:
-                            //                   MainAxisAlignment.spaceBetween,
-                            //               children: [
-                            //                 Text('Дата',
-                            //                     style: TextStyle(
-                            //                         color: Colors.green[900]
-                            //                             ?.withOpacity(0.85),
-                            //                         fontSize: 20)),
-                            //                 Visibility(
-                            //                     child: Text(
-                            //                         'Некорректный промежуток',
-                            //                         style: TextStyle(
-                            //                             color: Colors.red,
-                            //                             fontSize: 20)),
-                            //                     visible: _dateWarningVisibility)
-                            //               ]),
-                            //           Row(
-                            //             children: [
-                            //               Text('C  ',
-                            //                   style: TextStyle(
-                            //                       color: Colors.green[900],
-                            //                       fontSize: 20)),
-                            //               Padding(padding: EdgeInsets.fromLTRB(1, 0, 1, 0)),
-                            //               TextButton(
-                            //                   onPressed: () => _selectDate(
-                            //                       context,
-                            //                       dialogSetState,
-                            //                       true),
-                            //                   child: Text(
-                            //                       _dateFromText,
-                            //                       style: TextStyle(
-                            //                         color: Colors.green[900],
-                            //                         fontSize: 21,
-                            //                         decoration: TextDecoration
-                            //                             .underline,
-                            //                       ))),
-                            //               IconButton(
-                            //                   icon: Icon(Icons.cancel_outlined,
-                            //                       color: Colors.grey, size: 25),
-                            //                   onPressed: () {
-                            //                     dialogSetState(() {
-                            //                       _dateFromText = '?';
-                            //                       _selectedDateFrom = null;
-                            //                     });
-                            //                   }),
-                            //             ],
-                            //           ),
-                            //           Row(children: [
-                            //             Text('По',
-                            //                 style: TextStyle(
-                            //                     color: Colors.green[900],
-                            //                     fontSize: 20)),
-                            //             TextButton(
-                            //                 onPressed: () => _selectDate(
-                            //                     context, dialogSetState, false),
-                            //                 child: Text(_dateToText,
-                            //                     style: TextStyle(
-                            //                         color: Colors.green[900],
-                            //                         fontSize: 21,
-                            //                         decoration: TextDecoration
-                            //                             .underline))),
-                            //             IconButton(
-                            //                 icon: Icon(Icons.cancel_outlined,
-                            //                     color: Colors.grey, size: 25),
-                            //                 onPressed: () {
-                            //                   dialogSetState(() {
-                            //                     _dateToText = '?';
-                            //                     _selectedDateTo = null;
-                            //                   });
-                            //                 }),
-                            //           ])
-                            //         ])),
                             weightField(),
-                            // Padding(
-                            //     padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-                            //     child: Column(
-                            //         crossAxisAlignment:
-                            //             CrossAxisAlignment.start,
-                            //         children: [
-                            //           Text('Вес груза (кг)',
-                            //               style: TextStyle(
-                            //                   color: Colors.green[900]
-                            //                       ?.withOpacity(0.85),
-                            //                   fontSize: 20)),
-                            //           Row(children: [
-                            //             Flexible(
-                            //                 child: TextFormField(
-                            //                     style: TextStyle(
-                            //                         color: Colors.grey[600],
-                            //                         fontSize: 20),
-                            //                     decoration: InputDecoration(
-                            //                         enabledBorder:
-                            //                             UnderlineInputBorder(
-                            //                           borderSide: BorderSide(
-                            //                               color: Colors.grey),
-                            //                         ),
-                            //                         focusedBorder:
-                            //                             UnderlineInputBorder(
-                            //                           borderSide: BorderSide(
-                            //                               color: Colors.grey),
-                            //                         ),
-                            //                         hintText: 'Мин.'),
-                            //                     onChanged: (text) {
-                            //                       if (text.length > 0)
-                            //                         // to do валидация что число
-                            //                         _weight = int.parse(text);
-                            //                     })),
-                            //             Padding(
-                            //                 padding: EdgeInsets.fromLTRB(
-                            //                     5, 0, 5, 0)),
-                            //             Flexible(
-                            //                 child: TextFormField(
-                            //                     style: TextStyle(
-                            //                         color: Colors.grey[600],
-                            //                         fontSize: 20),
-                            //                     decoration: InputDecoration(
-                            //                         enabledBorder:
-                            //                             UnderlineInputBorder(
-                            //                           borderSide: BorderSide(
-                            //                               color: Colors.grey),
-                            //                         ),
-                            //                         focusedBorder:
-                            //                             UnderlineInputBorder(
-                            //                           borderSide: BorderSide(
-                            //                               color: Colors.grey),
-                            //                         ),
-                            //                         hintText: 'Макс.'),
-                            //                     onChanged: (text) {
-                            //                       if (text.length > 0)
-                            //                         // to do валидация что число
-                            //                         _weight = int.parse(text);
-                            //                     })),
-                            //           ])
-                            //         ])),
+                            priceField(),
+                            distanceField(),
                             Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 7)),
                             Center(
                                 child: filterButton(context, setState, dialogSetState, list),
-                              //     OutlinedButton(
-                            //   style: OutlinedButton.styleFrom(
-                            //       primary: Colors.green[900],
-                            //       shape: const RoundedRectangleBorder(
-                            //           borderRadius: BorderRadius.all(
-                            //               Radius.circular(12.0))),
-                            //       side: BorderSide(
-                            //           color:
-                            //               Colors.green[900]!.withOpacity(0.7),
-                            //           width: 2),
-                            //       minimumSize: Size(150, 30)),
-                            //   // backgroundColor: Colors.lightGreen[50]),
-                            //   onPressed: () {
-                            //     if (_selectedDateFrom!
-                            //         .isAfter(_selectedDateTo!)) {
-                            //       dialogSetState(() {
-                            //         _dateWarningVisibility = true;
-                            //       });
-                            //       return;
-                            //     }
-                            //
-                            //     List<Function> funcs = [];
-                            //
-                            //     // if (_placeFrom != null)
-                            //     //   funcs
-                            //     //       .add((Request r) => r.from == _placeFrom);
-                            //     // if (_placeTo != null)
-                            //     //   funcs.add((Request r) => r.to == _placeTo);
-                            //     if (_minWeight != null)
-                            //       funcs.add((Request r) => r.weight == _minWeight);
-                            //     // if (considerDate) {
-                            //     //   if (_selectedDateFrom != null)
-                            //     //     funcs.add((Request r) =>
-                            //     //         r.date?.isAfter(_selectedDateFrom!));
-                            //     //   if (_selectedDateTo != null)
-                            //     //     funcs.add((Request r) =>
-                            //     //         r.date?.isBefore(_selectedDateTo!));
-                            //     // }
-                            //     // setState(() {
-                            //
-                            //     setState(() {
-                            //       list.filter(funcs);
-                            //     });
-                            //     // });
-                            //     Navigator.pop(context, true);
-                            //     // list.filter(funcs);
-                            //   },
-                            //   child: Padding(
-                            //       padding: EdgeInsets.all(7),
-                            //       child: Text('Поиск заявок',
-                            //           style: TextStyle(
-                            //               color: Colors.green[900]!
-                            //                   .withOpacity(0.7),
-                            //               fontSize: 20))),
-                            // )
                             )
                           ]))
-                ]);
+                ]));
           });
         });
   }
 
-  Widget placeFromField() {
+  Widget sourceField() {
     return Padding(
         padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
         child: Column(
@@ -377,7 +123,7 @@ class FilterDialog {
           children: [
             Text('Точка отправки',
                 style: TextStyle(
-                    color: Colors.green[900]?.withOpacity(0.85), fontSize: 20)),
+                    color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
             TextFormField(
                 style: TextStyle(color: Colors.grey[600], fontSize: 20),
                 decoration: InputDecoration(
@@ -389,21 +135,21 @@ class FilterDialog {
                     ),
                     hintText: 'Откуда'),
                 onChanged: (text) {
-                  _placeFrom = text;
+                  _source = text;
                 })
           ],
         ));
   }
 
-  Widget placeToField() {
+  Widget destinationField() {
     return Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Точка прибытия',
                 style: TextStyle(
-                    color: Colors.green[900]?.withOpacity(0.85), fontSize: 20)),
+                    color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
             TextFormField(
                 style: TextStyle(color: Colors.grey[600], fontSize: 20),
                 decoration: InputDecoration(
@@ -415,7 +161,7 @@ class FilterDialog {
                     ),
                     hintText: 'Куда'),
                 onChanged: (text) {
-                  _placeTo = text;
+                  _destination = text;
                 })
           ],
         ));
@@ -428,7 +174,7 @@ class FilterDialog {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('Дата',
                 style: TextStyle(
-                    color: Colors.green[900]?.withOpacity(0.85), fontSize: 20)),
+                    color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
             Visibility(
                 child: Text('Некорректный промежуток',
                     style: TextStyle(color: Colors.red, fontSize: 20)),
@@ -437,13 +183,13 @@ class FilterDialog {
           Row(
             children: [
               Text('C  ',
-                  style: TextStyle(color: Colors.green[900], fontSize: 20)),
+                  style: TextStyle(color: Colors.green[800], fontSize: 20)),
               Padding(padding: EdgeInsets.fromLTRB(1, 0, 1, 0)),
               TextButton(
                   onPressed: () => _selectDate(context, dialogSetState, true),
                   child: Text(_dateFromText,
                       style: TextStyle(
-                        color: Colors.green[900],
+                        color: Colors.green[800],
                         fontSize: 21,
                         decoration: TextDecoration.underline,
                       ))),
@@ -460,12 +206,12 @@ class FilterDialog {
           ),
           Row(children: [
             Text('По',
-                style: TextStyle(color: Colors.green[900], fontSize: 20)),
+                style: TextStyle(color: Colors.green[800], fontSize: 20)),
             TextButton(
                 onPressed: () => _selectDate(context, dialogSetState, false),
                 child: Text(_dateToText,
                     style: TextStyle(
-                        color: Colors.green[900],
+                        color: Colors.green[800],
                         fontSize: 21,
                         decoration: TextDecoration.underline))),
             IconButton(
@@ -482,11 +228,11 @@ class FilterDialog {
 
   Widget weightField() {
     return Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('Вес груза (кг)',
               style: TextStyle(
-                  color: Colors.green[900]?.withOpacity(0.85), fontSize: 20)),
+                  color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
           Row(children: [
             Flexible(
                 child: TextFormField(
@@ -540,7 +286,7 @@ class FilterDialog {
                     // },
                   validator: (val) {
                     if (val == null || val.isEmpty) {
-                      _maxWeight = 0;
+                      _maxWeight = 100000;
                       return null;
                     }
                     int? num = int.tryParse(val);
@@ -556,16 +302,168 @@ class FilterDialog {
         ]));
   }
 
+  Widget priceField() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Цена перевозки (руб.)',
+              style: TextStyle(
+                  color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
+          Row(children: [
+            Flexible(
+                child: TextFormField(
+                    style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                    decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Мин.'),
+                    // onChanged: (text) {
+                    //   if (text.length > 0)
+                    //     // to do валидация что число
+                    //     _weight = int.parse(text);
+                    // },
+                    // Валидация, что в поле вписано число
+                    // В таком случае записывает это число в переменную,
+                    // иначе записывает минимум - 0
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        _minPrice = 0;
+                        return null;
+                      }
+                      int? num = int.tryParse(val);
+                      if (num == null || num < 0) {
+                        return "Некорректное значение";
+                      } else {
+                        _minPrice = num;
+                        return null;
+                      }
+                    }
+                )),
+            Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
+            Flexible(
+                child: TextFormField(
+                  style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Макс.'),
+                  // onChanged: (text) {
+                  //   if (text.length > 0)
+                  //     // todo валидация что число
+                  //     _minWeight = int.parse(text);
+                  // },
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      _maxPrice = 1000000;
+                      return null;
+                    }
+                    int? num = int.tryParse(val);
+                    if (num == null || num < 0) {
+                      return "Некорректное значение";
+                    } else {
+                      _maxPrice = num;
+                      return null;
+                    }
+                  },
+                )),
+          ])
+        ]));
+  }
+
+  Widget distanceField() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('Расстояние (км)',
+              style: TextStyle(
+                  color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
+          Row(children: [
+            Flexible(
+                child: TextFormField(
+                    style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                    decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        hintText: 'Мин.'),
+                    // onChanged: (text) {
+                    //   if (text.length > 0)
+                    //     // to do валидация что число
+                    //     _weight = int.parse(text);
+                    // },
+                    // Валидация, что в поле вписано число
+                    // В таком случае записывает это число в переменную,
+                    // иначе записывает минимум - 0
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        _minDist = 0;
+                        return null;
+                      }
+                      int? num = int.tryParse(val);
+                      if (num == null || num < 0) {
+                        return "Некорректное значение";
+                      } else {
+                        _minDist = num;
+                        return null;
+                      }
+                    }
+                )),
+            Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
+            Flexible(
+                child: TextFormField(
+                  style: TextStyle(color: Colors.grey[600], fontSize: 20),
+                  decoration: InputDecoration(
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                      hintText: 'Макс.'),
+                  // onChanged: (text) {
+                  //   if (text.length > 0)
+                  //     // todo валидация что число
+                  //     _minWeight = int.parse(text);
+                  // },
+                  validator: (val) {
+                    if (val == null || val.isEmpty) {
+                      _maxDist = 100000;
+                      return null;
+                    }
+                    int? num = int.tryParse(val);
+                    if (num == null || num < 0) {
+                      return "Некорректное значение";
+                    } else {
+                      _maxDist = num;
+                      return null;
+                    }
+                  },
+                )),
+          ])
+        ]));
+  }
+
   OutlinedButton filterButton(context, setState, dialogSetState, list) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-          primary: Colors.green[900],
+          primary: Colors.green[800],
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                   Radius.circular(12.0))),
           side: BorderSide(
               color:
-              Colors.green[900]!.withOpacity(0.7),
+              Colors.green[800]!.withOpacity(0.7),
               width: 2),
           minimumSize: Size(150, 30)),
       // backgroundColor: Colors.lightGreen[50]),
@@ -608,7 +506,7 @@ class FilterDialog {
           padding: EdgeInsets.all(7),
           child: Text('Поиск заявок',
               style: TextStyle(
-                  color: Colors.green[900]!
+                  color: Colors.green[800]!
                       .withOpacity(0.7),
                   fontSize: 20))),
     );

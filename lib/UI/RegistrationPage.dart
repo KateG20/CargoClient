@@ -32,41 +32,45 @@ class _RegistrationPageState extends State<RegistrationPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                child: Form(
-                    key: _formKey,
-                    child: Container(
-                    padding: const EdgeInsets.all(30.0),
-                    color: Colors.white,
-                    child: Container(
-                        child: Center(
-                            child: Column(children: [
-                      Padding(padding: EdgeInsets.only(top: 40.0)),
-                      Text(
-                        'Придумайте логин и пароль, которые Вы будете использовать '
-                            'для входа в приложение',
-                        style: TextStyle(
-                            // color: Color(0xff9ACD32), fontSize: 25.0),
-                            color: Colors.lightGreen[700],
-                            fontSize: 20.0),
-                        textAlign: TextAlign.center,
-                      ),
-                      //  Padding(padding: EdgeInsets.only(top: 20.0)),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                        // child: Align(
-                        //   alignment: Alignment.centerLeft,
-                        //   child: _getWarning(),
-                        // )
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 20.0)),
-                      loginField(),
-                      Padding(padding: EdgeInsets.only(top: 15.0)),
-                      passwordField(),
-                      Padding(padding: EdgeInsets.only(top: 15.0)),
-                      repeatPasswordField(),
-                      Padding(padding: EdgeInsets.only(top: 15.0)),
-                      signUpButton(),
-                    ]))))))));
+                child: GestureDetector(
+                    onTap: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    child: Form(
+                        key: _formKey,
+                        child: Container(
+                            color: Colors.yellow[50]?.withOpacity(0.2),
+                            padding: const EdgeInsets.all(30.0),
+                            child: Container(
+                                child: Center(
+                                    child: Column(children: [
+                              Padding(padding: EdgeInsets.only(top: 40.0)),
+                              Text(
+                                'Придумайте логин и пароль, которые Вы будете использовать '
+                                'для входа в приложение',
+                                style: TextStyle(
+                                    // color: Color(0xff9ACD32), fontSize: 25.0),
+                                    color: Colors.lightGreen[700],
+                                    fontSize: 20.0),
+                                textAlign: TextAlign.center,
+                              ),
+                              //  Padding(padding: EdgeInsets.only(top: 20.0)),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
+                                // child: Align(
+                                //   alignment: Alignment.centerLeft,
+                                //   child: _getWarning(),
+                                // )
+                              ),
+                              Padding(padding: EdgeInsets.only(top: 20.0)),
+                              loginField(),
+                              Padding(padding: EdgeInsets.only(top: 15.0)),
+                              passwordField(),
+                              Padding(padding: EdgeInsets.only(top: 15.0)),
+                              repeatPasswordField(),
+                              Padding(padding: EdgeInsets.only(top: 15.0)),
+                              signUpButton(),
+                            ])))))))));
   }
 
   TextFormField loginField() {
@@ -74,11 +78,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         decoration: InputDecoration(
           labelText: "Логин",
-          labelStyle: TextStyle(color: Colors.lightGreen),
-          // fillColor: Colors.lightGreen,
+          labelStyle: TextStyle(color: Colors.lightGreen[600]),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(color: Colors.lightGreen)),
+              borderRadius: BorderRadius.circular(12.0),
+              borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: BorderSide(),
@@ -103,14 +110,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         obscureText: _obscureText1,
         decoration: InputDecoration(
             labelText: "Пароль",
-            labelStyle: TextStyle(color: Colors.lightGreen),
-            fillColor: Colors.lightBlueAccent,
+            labelStyle: TextStyle(color: Colors.lightGreen[600]),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: Colors.grey.withOpacity(0.7), width: 1.7)),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(
-                color: Colors.lightGreen,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
               borderSide: BorderSide(),
@@ -147,14 +154,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
         obscureText: _obscureText2,
         decoration: InputDecoration(
             labelText: "Повторите пароль",
-            labelStyle: TextStyle(color: Colors.lightGreen),
-            fillColor: Colors.lightBlueAccent,
+            labelStyle: TextStyle(color: Colors.lightGreen[600]),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(
+                    color: Colors.grey.withOpacity(0.7), width: 1.7)),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              borderSide: BorderSide(
-                color: Colors.lightGreen,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(12.0),
+                borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
               borderSide: BorderSide(),
@@ -189,9 +196,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        // side: BorderSide(
-        //     color: Color(0x80808099), width: 1.4)
+            borderRadius: BorderRadius.all(Radius.circular(12.0))),
+        side: BorderSide(color: Colors.lightGreen, width: 1.5),
       ),
       onPressed: () {
         if (_formKey.currentState!.validate()) {
@@ -205,7 +211,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           padding: EdgeInsets.all(7),
           child: Text(
             "Ввести",
-            style: TextStyle(fontSize: 23.0, color: Colors.lightGreen[700]),
+            style: TextStyle(color: Colors.lightGreen[700], fontSize: 20),
           )),
     );
   }

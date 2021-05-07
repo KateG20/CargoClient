@@ -370,7 +370,7 @@ class Design {
           return SimpleDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0))),
-            backgroundColor: Colors.yellow[50],
+            // backgroundColor: Colors.yellow[50],
             title: Center(
                 child: Text('Информация о заявке',
                     style: TextStyle(color: Colors.green[800], fontSize: 24))),
@@ -398,102 +398,6 @@ class Design {
           );
         });
   }
-
-// _selectDate(BuildContext context) async {
-//   final DateTime? picked = await showDatePicker(
-//     context: context,
-//     initialDate: selectedDate, // Refer step 1
-//     firstDate: DateTime(2000),
-//     lastDate: DateTime(2025),
-//   );
-//   if (picked != null && picked != selectedDate)
-//     setState(() {
-//       selectedDate = picked;
-//     });
-// }
-//
-// void showSearchDialog(BuildContext context) {
-//   // Intl.defaultLocale = "ru_RU";
-//   DateTime _selectedDate = DateTime.now();
-//
-//   showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return StatefulBuilder(builder: (context, setState) {
-//           return SimpleDialog(
-//               insetPadding: EdgeInsets.all(10),
-//               title: Center(
-//                   child: Text('Поиск заявок',
-//                       style:
-//                           TextStyle(color: Colors.green[800], fontSize: 24))),
-//               shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.all(Radius.circular(12.0))),
-//               children: [
-//                 Container(
-//                     width: 350,
-//                     // padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-//                     child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Padding(
-//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text('Точка отправки',
-//                                       style: TextStyle(
-//                                           color: Colors.green[800]
-//                                               ?.withOpacity(0.85),
-//                                           fontSize: 20)),
-//                                   TextField(
-//                                       decoration:
-//                                           InputDecoration(hintText: 'Откуда'),
-//                                       onChanged: (text) {})
-//                                 ],
-//                               )),
-//                           Padding(
-//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text('Точка прибытия',
-//                                       style: TextStyle(
-//                                           color: Colors.green[800]
-//                                               ?.withOpacity(0.85),
-//                                           fontSize: 20)),
-//                                   TextField(
-//                                       decoration:
-//                                           InputDecoration(hintText: 'Куда'),
-//                                       onChanged: (text) {})
-//                                 ],
-//                               )),
-//                           Padding(
-//                               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-//                               child: Column(
-//                                   crossAxisAlignment:
-//                                       CrossAxisAlignment.start,
-//                                   children: [
-//                                     Text('Дата',
-//                                         style: TextStyle(
-//                                             color: Colors.green[800]
-//                                                 ?.withOpacity(0.85),
-//                                             fontSize: 20)),
-//                                     TextButton(
-//                                         onPressed: () => showDatePicker(
-//                                               context: context,
-//                                               initialDate: _selectedDate,
-//                                               firstDate: DateTime(2015, 8),
-//                                               lastDate: DateTime(2101),
-//                                               // locale: Locale('he')
-//                                             ),
-//                                         child: Text(
-//                                             '${DateFormat('dd.MM.yyyy').format(_selectedDate)}')),
-//                                   ]))
-//                         ]))
-//               ]);
-//         });
-//       });
-// }
 }
 
 class InfoDialogItem extends StatelessWidget {
