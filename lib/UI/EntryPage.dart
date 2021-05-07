@@ -25,31 +25,6 @@ class _EntryPageState extends State<EntryPage> {
       _obscureText = !_obscureText;
     });
   }
-
-  // void warningOn(String text) {
-  //   setState(() {
-  //     _warningText = text;
-  //     _warningVisible = true;
-  //   });
-  // }
-  //
-  // void warningOff(String text) {
-  //   setState(() {
-  //     _warningVisible = false;
-  //   });
-  // }
-  //
-  // Text? _getWarning() {
-  //   return _warningVisible == true
-  //       ? Text(
-  //           '$_warningText',
-  //           style: TextStyle(
-  //               // color: Color(0xff9ACD32), fontSize: 25.0),
-  //               color: Colors.red,
-  //               fontSize: 18.0),
-  //         )
-  //       : null;
-  // }
   var txt = TextEditingController(); // TODO убрать
 
   @override

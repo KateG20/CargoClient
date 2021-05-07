@@ -6,30 +6,19 @@ import 'package:intl/intl.dart';
 import '../entity/Request.dart';
 
 class FilterDialog {
-  // extends StatefulWidget {
-//   @override
-//   _FilterDialogState createState() => _FilterDialogState();
-// }
-//
-// class _FilterDialogState extends State<FilterDialog> {
-//   @override
-//   Widget build(BuildContext context) {
-//     // Future.delayed(Duration.zero, () => showMyDialog(context));
-//     _showSearchDialog(context);
-//     return Container();
-//   }
-
   bool _dateWarningVisibility = false;
   bool considerDate = true;
   DateTime? _selectedDateFrom = DateTime.now();
   DateTime? _selectedDateTo = DateTime.now();
   String? _source, _destination;
   int? _minWeight, _maxWeight, _minPrice, _maxPrice, _minDist, _maxDist;
+  final _formKey = GlobalKey<FormState>();
+  final String _emptyDate = '                     ';
 
-  String _dateFromText = '                    ';
-  String _dateToText = '                    ';
+  String _dateFromText = '                     ';
+  String _dateToText = '                     ';
 
-  _selectDate(context, setState, bool from) async {
+  _selectDate(context, dialogSetState, bool from) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: from ? _selectedDateFrom! : _selectedDateTo!,
@@ -49,10 +38,10 @@ class FilterDialog {
             colorScheme: ColorScheme.dark(
               primary: Colors.green[800]!,
               onPrimary: Colors.white,
-              surface: Colors.white,//yellow[50]!,
+              surface: Colors.white, //yellow[50]!,
               onSurface: Colors.green[800]!,
             ),
-            dialogBackgroundColor: Colors.white,//yellow[50],
+            dialogBackgroundColor: Colors.white, //yellow[50],
           ),
           child: child!,
         );
@@ -60,13 +49,13 @@ class FilterDialog {
     );
     if (from) {
       if (picked != null && picked != _selectedDateFrom)
-        setState(() {
+        dialogSetState(() {
           _selectedDateFrom = picked;
           _dateFromText = '${DateFormat('dd.MM.yyyy').format(picked)}';
           _dateWarningVisibility = false;
         });
     } else if (picked != null && picked != _selectedDateTo)
-      setState(() {
+      dialogSetState(() {
         _selectedDateTo = picked;
         _dateToText = '${DateFormat('dd.MM.yyyy').format(picked)}';
         _dateWarningVisibility = false;
@@ -78,39 +67,44 @@ class FilterDialog {
         barrierDismissible: true,
         context: context,
         builder: (context) {
-          return
-              StatefulBuilder(builder: (context, dialogSetState) {
+          return StatefulBuilder(builder: (context, dialogSetState) {
             return GestureDetector(
                 onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-                child: SimpleDialog(
-                insetPadding: EdgeInsets.all(10),
-                title: Center(
-                    child: Text('Поиск заявок ${list.requests.length}',
-                        style:
-                            TextStyle(color: Colors.green[800], fontSize: 24))),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0))),
-                children: [
-                  Container(
-                      width: 350,
-                      // height: 400,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            sourceField(),
-                            destinationField(),
-                            dateField(context, dialogSetState),
-                            weightField(),
-                            priceField(),
-                            distanceField(),
-                            Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 7)),
-                            Center(
-                                child: filterButton(context, setState, dialogSetState, list),
-                            )
-                          ]))
-                ]));
+                  FocusScope.of(context).unfocus();
+                },
+                child: Form(
+                    key: _formKey,
+                    child: SimpleDialog(
+                        insetPadding: EdgeInsets.all(10),
+                        title: Center(
+                            child: Text('Поиск заявок ${list.requests.length}',
+                                style: TextStyle(
+                                    color: Colors.green[800], fontSize: 24))),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12.0))),
+                        children: [
+                          Container(
+                              width: 350,
+                              // height: 400,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    sourceField(),
+                                    destinationField(),
+                                    dateField(context, dialogSetState),
+                                    weightField(),
+                                    priceField(),
+                                    distanceField(),
+                                    Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 0, 20, 7)),
+                                    Center(
+                                      child: filterButton(context, setState,
+                                          dialogSetState, list),
+                                    )
+                                  ]))
+                        ])));
           });
         });
   }
@@ -177,7 +171,7 @@ class FilterDialog {
                     color: Colors.green[800]?.withOpacity(0.85), fontSize: 20)),
             Visibility(
                 child: Text('Некорректный промежуток',
-                    style: TextStyle(color: Colors.red, fontSize: 20)),
+                    style: TextStyle(color: Colors.red[800], fontSize: 19)),
                 visible: _dateWarningVisibility)
           ]),
           Row(
@@ -198,8 +192,8 @@ class FilterDialog {
                       Icon(Icons.cancel_outlined, color: Colors.grey, size: 25),
                   onPressed: () {
                     dialogSetState(() {
-                      _dateFromText = '?';
-                      _selectedDateFrom = null;
+                      _dateFromText = _emptyDate;
+                      _selectedDateFrom = DateTime.now();
                     });
                   }),
             ],
@@ -218,8 +212,8 @@ class FilterDialog {
                 icon: Icon(Icons.cancel_outlined, color: Colors.grey, size: 25),
                 onPressed: () {
                   dialogSetState(() {
-                    _dateToText = '?';
-                    _selectedDateTo = null;
+                    _dateToText = _emptyDate;
+                    _selectedDateTo = DateTime.now();
                   });
                 }),
           ])
@@ -236,40 +230,6 @@ class FilterDialog {
           Row(children: [
             Flexible(
                 child: TextFormField(
-              style: TextStyle(color: Colors.grey[600], fontSize: 20),
-              decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
-                  ),
-                  hintText: 'Мин.'),
-              // onChanged: (text) {
-              //   if (text.length > 0)
-              //     // to do валидация что число
-              //     _weight = int.parse(text);
-              // },
-                  // Валидация, что в поле вписано число
-                  // В таком случае записывает это число в переменную,
-                  // иначе записывает минимум - 0
-              validator: (val) {
-                if (val == null || val.isEmpty) {
-                  _minWeight = 0;
-                  return null;
-                }
-                int? num = int.tryParse(val);
-                if (num == null || num < 0) {
-                  return "Некорректное значение";
-                } else {
-                  _minWeight = num;
-                  return null;
-                }
-              }
-            )),
-            Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
-            Flexible(
-                child: TextFormField(
                     style: TextStyle(color: Colors.grey[600], fontSize: 20),
                     decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
@@ -278,26 +238,59 @@ class FilterDialog {
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                         ),
-                        hintText: 'Макс.'),
+                        hintText: 'Мин.'),
                     // onChanged: (text) {
                     //   if (text.length > 0)
-                    //     // todo валидация что число
-                    //     _minWeight = int.parse(text);
+                    //     // to do валидация что число
+                    //     _weight = int.parse(text);
                     // },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      _maxWeight = 100000;
-                      return null;
-                    }
-                    int? num = int.tryParse(val);
-                    if (num == null || num < 0) {
-                      return "Некорректное значение";
-                    } else {
-                      _maxWeight = num;
-                      return null;
-                    }
-                  },
-                    )),
+                    // Валидация, что в поле вписано число
+                    // В таком случае записывает это число в переменную,
+                    // иначе записывает минимум - 0
+                    validator: (val) {
+                      if (val == null || val.isEmpty) {
+                        _minWeight = 0;
+                        return null;
+                      }
+                      int? num = int.tryParse(val);
+                      if (num == null || num < 0) {
+                        return "Некорректное значение";
+                      } else {
+                        _minWeight = num;
+                        return null;
+                      }
+                    })),
+            Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
+            Flexible(
+                child: TextFormField(
+              style: TextStyle(color: Colors.grey[600], fontSize: 20),
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  hintText: 'Макс.'),
+              // onChanged: (text) {
+              //   if (text.length > 0)
+              //     // todo валидация что число
+              //     _minWeight = int.parse(text);
+              // },
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  _maxWeight = 100000;
+                  return null;
+                }
+                int? num = int.tryParse(val);
+                if (num == null || num < 0) {
+                  return "Некорректное значение";
+                } else {
+                  _maxWeight = num;
+                  return null;
+                }
+              },
+            )),
           ])
         ]));
   }
@@ -341,39 +334,38 @@ class FilterDialog {
                         _minPrice = num;
                         return null;
                       }
-                    }
-                )),
+                    })),
             Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
             Flexible(
                 child: TextFormField(
-                  style: TextStyle(color: Colors.grey[600], fontSize: 20),
-                  decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Макс.'),
-                  // onChanged: (text) {
-                  //   if (text.length > 0)
-                  //     // todo валидация что число
-                  //     _minWeight = int.parse(text);
-                  // },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      _maxPrice = 1000000;
-                      return null;
-                    }
-                    int? num = int.tryParse(val);
-                    if (num == null || num < 0) {
-                      return "Некорректное значение";
-                    } else {
-                      _maxPrice = num;
-                      return null;
-                    }
-                  },
-                )),
+              style: TextStyle(color: Colors.grey[600], fontSize: 20),
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  hintText: 'Макс.'),
+              // onChanged: (text) {
+              //   if (text.length > 0)
+              //     // todo валидация что число
+              //     _minWeight = int.parse(text);
+              // },
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  _maxPrice = 1000000;
+                  return null;
+                }
+                int? num = int.tryParse(val);
+                if (num == null || num < 0) {
+                  return "Некорректное значение";
+                } else {
+                  _maxPrice = num;
+                  return null;
+                }
+              },
+            )),
           ])
         ]));
   }
@@ -417,39 +409,38 @@ class FilterDialog {
                         _minDist = num;
                         return null;
                       }
-                    }
-                )),
+                    })),
             Padding(padding: EdgeInsets.fromLTRB(5, 0, 5, 0)),
             Flexible(
                 child: TextFormField(
-                  style: TextStyle(color: Colors.grey[600], fontSize: 20),
-                  decoration: InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                      hintText: 'Макс.'),
-                  // onChanged: (text) {
-                  //   if (text.length > 0)
-                  //     // todo валидация что число
-                  //     _minWeight = int.parse(text);
-                  // },
-                  validator: (val) {
-                    if (val == null || val.isEmpty) {
-                      _maxDist = 100000;
-                      return null;
-                    }
-                    int? num = int.tryParse(val);
-                    if (num == null || num < 0) {
-                      return "Некорректное значение";
-                    } else {
-                      _maxDist = num;
-                      return null;
-                    }
-                  },
-                )),
+              style: TextStyle(color: Colors.grey[600], fontSize: 20),
+              decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  hintText: 'Макс.'),
+              // onChanged: (text) {
+              //   if (text.length > 0)
+              //     // todo валидация что число
+              //     _minWeight = int.parse(text);
+              // },
+              validator: (val) {
+                if (val == null || val.isEmpty) {
+                  _maxDist = 100000;
+                  return null;
+                }
+                int? num = int.tryParse(val);
+                if (num == null || num < 0) {
+                  return "Некорректное значение";
+                } else {
+                  _maxDist = num;
+                  return null;
+                }
+              },
+            )),
           ])
         ]));
   }
@@ -459,56 +450,52 @@ class FilterDialog {
       style: OutlinedButton.styleFrom(
           primary: Colors.green[800],
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                  Radius.circular(12.0))),
-          side: BorderSide(
-              color:
-              Colors.green[800]!.withOpacity(0.7),
-              width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(12.0))),
+          side:
+              BorderSide(color: Colors.green[800]!.withOpacity(0.7), width: 2),
           minimumSize: Size(150, 30)),
       // backgroundColor: Colors.lightGreen[50]),
       onPressed: () {
-        if (_selectedDateFrom!
-            .isAfter(_selectedDateTo!)) {
+        if (_selectedDateFrom!.isAfter(_selectedDateTo!)) {
           dialogSetState(() {
             _dateWarningVisibility = true;
           });
           return;
         }
 
-        List<Function> funcs = [];
+        if (_formKey.currentState!.validate()) {
+          List<Function> funcs = [];
 
-        // if (_placeFrom != null)
-        //   funcs
-        //       .add((Request r) => r.from == _placeFrom);
-        // if (_placeTo != null)
-        //   funcs.add((Request r) => r.to == _placeTo);
-        if (_minWeight != null)
-          funcs.add((Request r) => r.weight == _minWeight);
-        // if (considerDate) {
-        //   if (_selectedDateFrom != null)
-        //     funcs.add((Request r) =>
-        //         r.date?.isAfter(_selectedDateFrom!));
-        //   if (_selectedDateTo != null)
-        //     funcs.add((Request r) =>
-        //         r.date?.isBefore(_selectedDateTo!));
-        // }
-        // setState(() {
+          // if (_placeFrom != null)
+          //   funcs
+          //       .add((Request r) => r.from == _placeFrom);
+          // if (_placeTo != null)
+          //   funcs.add((Request r) => r.to == _placeTo);
+          if (_minWeight != null)
+            funcs.add((Request r) => r.weight == _minWeight);
+          // if (considerDate) {
+          //   if (_selectedDateFrom != null)
+          //     funcs.add((Request r) =>
+          //         r.date?.isAfter(_selectedDateFrom!));
+          //   if (_selectedDateTo != null)
+          //     funcs.add((Request r) =>
+          //         r.date?.isBefore(_selectedDateTo!));
+          // }
+          // setState(() {
 
-        setState(() {
-          list.filter(funcs);
-        });
-        // });
-        Navigator.pop(context, true);
+          setState(() {
+            list.filter(funcs);
+          });
+          // });
+          Navigator.pop(context, true);
+        }
         // list.filter(funcs);
       },
       child: Padding(
           padding: EdgeInsets.all(7),
           child: Text('Поиск заявок',
               style: TextStyle(
-                  color: Colors.green[800]!
-                      .withOpacity(0.7),
-                  fontSize: 20))),
+                  color: Colors.green[800]!.withOpacity(0.7), fontSize: 20))),
     );
   }
 }
