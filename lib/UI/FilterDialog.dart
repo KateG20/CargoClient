@@ -1,13 +1,14 @@
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/RequestListModel.dart';
+import 'package:flutter1/UI/NewRequestPage.dart';
+import 'package:flutter1/entity/Request.dart';
+import 'package:flutter1/service/Service.dart';
 import 'package:intl/intl.dart';
-
-import '../entity/Request.dart';
 
 class FilterDialog {
   bool _dateWarningVisibility = false;
-  bool considerDate = true;
+  bool _considerDateFrom = false, _considerDateTo = false;
   DateTime? _selectedDateFrom = DateTime.now();
   DateTime? _selectedDateTo = DateTime.now();
   String? _source, _destination;
@@ -18,12 +19,14 @@ class FilterDialog {
   String _dateFromText = '                     ';
   String _dateToText = '                     ';
 
+  final Service service = Service();
+
   _selectDate(context, dialogSetState, bool from) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: from ? _selectedDateFrom! : _selectedDateTo!,
-      firstDate: DateTime(2015),
-      lastDate: DateTime(2050),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
       helpText: from ? 'Выберите начальную дату' : 'Выберите конечную дату',
       locale: const Locale("ru", "RU"),
       builder: (context, child) {
@@ -51,18 +54,20 @@ class FilterDialog {
       if (picked != null && picked != _selectedDateFrom)
         dialogSetState(() {
           _selectedDateFrom = picked;
+          _considerDateFrom = true;
           _dateFromText = '${DateFormat('dd.MM.yyyy').format(picked)}';
           _dateWarningVisibility = false;
         });
     } else if (picked != null && picked != _selectedDateTo)
       dialogSetState(() {
         _selectedDateTo = picked;
+        _considerDateTo = true;
         _dateToText = '${DateFormat('dd.MM.yyyy').format(picked)}';
         _dateWarningVisibility = false;
       });
   }
 
-  FilterDialog(BuildContext context, setState, RequestListModel list) {
+  FilterDialog(BuildContext context, setState, Future<List<Request>> futureList, RequestListModel list, status) {
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -101,7 +106,7 @@ class FilterDialog {
                                             EdgeInsets.fromLTRB(20, 0, 20, 7)),
                                     Center(
                                       child: filterButton(context, setState,
-                                          dialogSetState, list),
+                                          dialogSetState, futureList, list, status),
                                     )
                                   ]))
                         ])));
@@ -192,6 +197,7 @@ class FilterDialog {
                       Icon(Icons.cancel_outlined, color: Colors.grey, size: 25),
                   onPressed: () {
                     dialogSetState(() {
+                      _considerDateFrom = false;
                       _dateFromText = _emptyDate;
                       _selectedDateFrom = DateTime.now();
                     });
@@ -213,6 +219,7 @@ class FilterDialog {
                 onPressed: () {
                   dialogSetState(() {
                     _dateToText = _emptyDate;
+                    _considerDateTo = false;
                     _selectedDateTo = DateTime.now();
                   });
                 }),
@@ -445,7 +452,7 @@ class FilterDialog {
         ]));
   }
 
-  OutlinedButton filterButton(context, setState, dialogSetState, list) {
+  OutlinedButton filterButton(context, setState, dialogSetState, futureList, list, status) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.green[800],
@@ -465,26 +472,42 @@ class FilterDialog {
 
         if (_formKey.currentState!.validate()) {
           List<Function> funcs = [];
+          int _resultDateFrom = 0;
+          int _resultDateTo = 335619200000;
 
-          // if (_placeFrom != null)
-          //   funcs
-          //       .add((Request r) => r.from == _placeFrom);
-          // if (_placeTo != null)
-          //   funcs.add((Request r) => r.to == _placeTo);
-          if (_minWeight != null)
-            funcs.add((Request r) => r.weight == _minWeight);
-          // if (considerDate) {
-          //   if (_selectedDateFrom != null)
-          //     funcs.add((Request r) =>
-          //         r.date?.isAfter(_selectedDateFrom!));
-          //   if (_selectedDateTo != null)
-          //     funcs.add((Request r) =>
-          //         r.date?.isBefore(_selectedDateTo!));
-          // }
-          // setState(() {
+          if (_source == null || _source!.isEmpty) _source = 'any';
+          if (_destination == null || _destination!.isEmpty)
+            _destination = 'any';
+
+          if (_considerDateFrom) {
+            if (_selectedDateFrom != null)
+              _resultDateFrom = _selectedDateFrom!.millisecondsSinceEpoch -
+                  DateTime(2020).millisecondsSinceEpoch;
+          }
+          if (_considerDateTo) {
+            // funcs.add((Request r) =>
+            //     r.date?.isAfter(_selectedDateFrom!));
+            if (_selectedDateTo != null)
+              _resultDateTo = _selectedDateTo!.millisecondsSinceEpoch -
+                  DateTime(2020).millisecondsSinceEpoch;
+            // funcs.add((Request r) =>
+            //     r.date?.isBefore(_selectedDateTo!));
+          }
+
+          // _minWeight, _maxWeight, _minPrice, _maxPrice, _minDist, _maxDist
+          if (_minWeight == null) _minWeight = 0;
+          if (_minPrice == null) _minPrice = 0;
+          if (_minDist == null) _minDist = 0;
+          if (_maxWeight == null) _maxWeight = 100000;
+          if (_maxPrice == null) _maxPrice = 1000000;
+          if (_maxDist == null) _maxDist = 100000;
+          // TODO заловеркейсить все строки
 
           setState(() {
-            list.filter(funcs);
+            futureList = service.filterRequests(status, _source!, _destination!,
+                _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
+                _minPrice!, _maxPrice!, _minDist!, _maxDist!);
+            // list.filter(funcs);
           });
           // });
           Navigator.pop(context, true);

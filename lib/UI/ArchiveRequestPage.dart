@@ -19,7 +19,15 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   //       Duration(minutes: 32), 60, "Дмитров", "ТЛЦ", 680, "comment")
   // ];
 
+  // TODO тут все переделать нормально, как в новых заявках
   var service = Service();
+  late Future<List<Request>> futureList;
+
+  @override
+  void initState() {
+    super.initState();
+    futureList = service.getArchiveRequests();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +39,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design().pageHeader(context, setState, list, 'Архивные заявки'),
+                  Design().pageHeader(context, setState, futureList, list, 2),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,

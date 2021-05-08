@@ -10,10 +10,8 @@ class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
-    var response =
-        await http.get(Uri.http(url, 'requests/new'), headers: <String, String>{
-          'Content-Type': 'application/json'
-    });
+    var response = await http.get(Uri.http(url, 'requests/new'),
+        headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -26,8 +24,8 @@ class Service {
 
   Future<List<Request>> getCurrentRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/current'), headers: <String, String>{
-    'Content-Type': 'application/json'});
+    var response = await http.get(Uri.http(url, 'requests/current'),
+        headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -40,8 +38,8 @@ class Service {
 
   Future<List<Request>> getArchiveRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/archive'), headers: <String, String>{
-    'Content-Type': 'application/json'});
+    var response = await http.get(Uri.http(url, 'requests/archive'),
+        headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
       return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -99,6 +97,35 @@ class Service {
       return Key.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to find key');
+    }
+  }
+
+  Future<List<Request>> filterRequests(
+      int status,
+      String from,
+      String to,
+      int dateFrom,
+      int dateTo,
+      int minWeight,
+      int maxWeight,
+      int minPrice,
+      int maxPrice,
+      int minDist,
+      int maxDist) async {
+    var response = await http.get(
+        Uri.http(
+            url,
+            'requests/filter/$status/$from/$to/$dateFrom/'
+            '$dateTo/$minWeight/$maxWeight/$minPrice/$maxPrice/'
+            '$minDist/$maxDist'),
+        headers: <String, String>{'Content-Type': 'application/json'});
+
+    if (response.statusCode == 200) {
+      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
+          .map((r) => Request.fromJson(r))
+          .toList();
+    } else {
+      throw Exception('Failed to filter requests');
     }
   }
 

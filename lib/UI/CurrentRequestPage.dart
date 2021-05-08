@@ -37,6 +37,13 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
     // });
 
     var list = RequestListModel(requestList);
+    late Future<List<Request>> futureList; // TODO тут все переделать нормально, как в новых заявках
+
+    @override
+    void initState() {
+      super.initState();
+      futureList = service.getArchiveRequests();
+    }
 
     return MaterialApp(
         title: "MyApp",
@@ -46,7 +53,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
                   Design()
-                      .pageHeader(context, setState, list, 'Активные заявки'),
+                      .pageHeader(context, setState, futureList, list, 1),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,

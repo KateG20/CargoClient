@@ -6,6 +6,8 @@ import '../service/Service.dart';
 import 'Design.dart';
 
 class NewRequestPage extends StatefulWidget {
+  // set setFutureList(Future<List<Request>> setFutureList) {}
+
   @override
   _NewRequestPageState createState() => _NewRequestPageState();
 }
@@ -13,6 +15,7 @@ class NewRequestPage extends StatefulWidget {
 class _NewRequestPageState extends State<NewRequestPage> {
   final Service service = Service();
   late Future<List<Request>> futureList;
+  set setFutureList(Future<List<Request>> val) => futureList = val;
   RequestListModel list = RequestListModel([]);
 
   @override
@@ -48,7 +51,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
                         return Column(children: <Widget>[
                           Design().pageHeader(
-                              context, setState, list, 'Новые заявки'),
+                              context, setState, futureList, list, 0),//'Новые заявки'),
                           Expanded(
                               child: Container(
                                   color: Colors.yellow[50]?.withOpacity(0.2),

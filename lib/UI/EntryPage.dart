@@ -51,7 +51,7 @@ class _EntryPageState extends State<EntryPage> {
                                     child: Column(children: [
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Text(
-                                'Авторизация',
+                                'Авторизация',//${DateTime(2030).millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch}',
                                 style: TextStyle(
                                     // color: Color(0xff9ACD32), fontSize: 25.0),
                                     color: Colors.lightGreen[700],

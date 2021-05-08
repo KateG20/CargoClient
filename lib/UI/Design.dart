@@ -9,7 +9,7 @@ import 'MenuBar.dart';
 
 class Design {
   Container pageHeader(
-      BuildContext context, setState, RequestListModel list, String text) {
+      BuildContext context, setState, futureList, RequestListModel list, int status) {
     return Container(
         decoration: headerBoxDecoration(),
         // header
@@ -23,7 +23,7 @@ class Design {
                 children: [
                   TextButton(
                     onPressed: null,
-                    child: Text(text,
+                    child: Text(status == 0 ? 'Новые заявки' : status == 1 ? 'Текущие заявки' : 'Архивные заявки',
                         style: TextStyle(
                             color: Colors.green[800],
                             fontSize: 27.0,
@@ -34,7 +34,7 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () => FilterDialog(context, setState, list),
+                    onPressed: () => FilterDialog(context, setState, futureList, list, status),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Поиск',
                     color: Colors.green[700],
