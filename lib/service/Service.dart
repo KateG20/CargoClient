@@ -14,9 +14,10 @@ class Service {
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
+      var list = (jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((r) => Request.fromJson(r))
           .toList();
+      return list;
     } else {
       throw Exception('Failed to load new requests');
     }
@@ -100,6 +101,9 @@ class Service {
     }
   }
 
+// 'requests/filter/$status/$from/$to/$dateFrom/'
+  // '$dateTo/$minWeight/$maxWeight/$minPrice/$maxPrice/'
+  // '$minDist/$maxDist'
   Future<List<Request>> filterRequests(
       int status,
       String from,
@@ -112,18 +116,36 @@ class Service {
       int maxPrice,
       int minDist,
       int maxDist) async {
+    var queryParameters = {
+      'status': status.toString(),
+      'from': from,
+      'to': to,
+      'dateFrom': dateFrom.toString(),
+      'dateTo': dateTo.toString(),
+      'minWeight': minWeight.toString(),
+      'maxWeight': maxWeight.toString(),
+      'minPrice': minPrice.toString(),
+      'maxPrice': maxPrice.toString(),
+      'minDist': minDist.toString(),
+      'maxDist': maxDist.toString(),
+    };
     var response = await http.get(
         Uri.http(
             url,
-            'requests/filter/$status/$from/$to/$dateFrom/'
-            '$dateTo/$minWeight/$maxWeight/$minPrice/$maxPrice/'
-            '$minDist/$maxDist'),
+            'requests/filter',
+            queryParameters
+            // 'requests/filter?status=$status&from=$from&to=$to&dateFrom=$dateFrom'
+            //     '&dateTo=$dateTo&minWeight=$minWeight&maxWeight=$maxWeight&'
+            //     'minPrice=$minPrice&maxPrice=$maxPrice&minDist=$minDist&'
+            //     'maxDist=$maxDist'
+        ),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
-      return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
+      var list = (jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((r) => Request.fromJson(r))
           .toList();
+      return list;
     } else {
       throw Exception('Failed to filter requests');
     }

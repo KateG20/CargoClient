@@ -22,6 +22,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   // TODO тут все переделать нормально, как в новых заявках
   var service = Service();
   late Future<List<Request>> futureList;
+  String test = 'test';
 
   @override
   void initState() {

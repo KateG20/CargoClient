@@ -38,6 +38,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
 
     var list = RequestListModel(requestList);
     late Future<List<Request>> futureList; // TODO тут все переделать нормально, как в новых заявках
+    // String test = 'test';
 
     @override
     void initState() {

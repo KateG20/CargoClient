@@ -9,7 +9,7 @@ import 'MenuBar.dart';
 
 class Design {
   Container pageHeader(
-      BuildContext context, setState, futureList, RequestListModel list, int status) {
+      BuildContext context, futureListNotifier, futureList, RequestListModel list, int status) {
     return Container(
         decoration: headerBoxDecoration(),
         // header
@@ -34,7 +34,7 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () => FilterDialog(context, setState, futureList, list, status),
+                    onPressed: () => FilterDialog(context, futureListNotifier, futureList, list, status),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Поиск',
                     color: Colors.green[700],

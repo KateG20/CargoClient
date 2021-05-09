@@ -1,4 +1,5 @@
 // import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/RequestListModel.dart';
 import 'package:flutter1/UI/NewRequestPage.dart';
@@ -67,7 +68,8 @@ class FilterDialog {
       });
   }
 
-  FilterDialog(BuildContext context, setState, Future<List<Request>> futureList, RequestListModel list, status) {
+  FilterDialog(BuildContext context, futureListNotifier, Future<List<Request>> futureList,
+      RequestListModel list, status) {
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -105,7 +107,7 @@ class FilterDialog {
                                         padding:
                                             EdgeInsets.fromLTRB(20, 0, 20, 7)),
                                     Center(
-                                      child: filterButton(context, setState,
+                                      child: filterButton(context, futureListNotifier,
                                           dialogSetState, futureList, list, status),
                                     )
                                   ]))
@@ -452,7 +454,11 @@ class FilterDialog {
         ]));
   }
 
-  OutlinedButton filterButton(context, setState, dialogSetState, futureList, list, status) {
+  // final ValueListenable<Future<List<Request>>> _futureListListenable;
+  // _futureListNotifier
+
+  OutlinedButton filterButton(context, futureListNotifier, dialogSetState, futureList,
+      list, status) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.green[800],
@@ -494,21 +500,37 @@ class FilterDialog {
             //     r.date?.isBefore(_selectedDateTo!));
           }
 
-          // _minWeight, _maxWeight, _minPrice, _maxPrice, _minDist, _maxDist
           if (_minWeight == null) _minWeight = 0;
           if (_minPrice == null) _minPrice = 0;
           if (_minDist == null) _minDist = 0;
           if (_maxWeight == null) _maxWeight = 100000;
           if (_maxPrice == null) _maxPrice = 1000000;
           if (_maxDist == null) _maxDist = 100000;
-          // TODO заловеркейсить все строки
 
-          setState(() {
-            futureList = service.filterRequests(status, _source!, _destination!,
-                _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
-                _minPrice!, _maxPrice!, _minDist!, _maxDist!);
+          // Future<List<Request>> newFutureList = service.filterRequests(status, _source!, _destination!,
+          //     _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
+          //     _minPrice!, _maxPrice!, _minDist!, _maxDist!);
+
+          futureListNotifier.value = service.filterRequests(status, _source!, _destination!,
+              _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
+              _minPrice!, _maxPrice!, _minDist!, _maxDist!);
+
+          // Services.getUsers().then((usersFromServer) {
+          //   setState(() {
+          //     users = usersFromServer;
+          //     filteredUsers = users;
+          //   });
+          // });
+
+          // Buffer.test = 'newTest';
+          // setState(() {
+            // Buffer.test = 'newTest';
+            // futureList = newFutureList;
+            // futureList = service.filterRequests(status, _source!, _destination!,
+            //     _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
+            //     _minPrice!, _maxPrice!, _minDist!, _maxDist!);
             // list.filter(funcs);
-          });
+          // });
           // });
           Navigator.pop(context, true);
         }

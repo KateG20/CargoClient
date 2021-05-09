@@ -6,8 +6,6 @@ import '../service/Service.dart';
 import 'Design.dart';
 
 class NewRequestPage extends StatefulWidget {
-  // set setFutureList(Future<List<Request>> setFutureList) {}
-
   @override
   _NewRequestPageState createState() => _NewRequestPageState();
 }
@@ -15,13 +13,18 @@ class NewRequestPage extends StatefulWidget {
 class _NewRequestPageState extends State<NewRequestPage> {
   final Service service = Service();
   late Future<List<Request>> futureList;
-  set setFutureList(Future<List<Request>> val) => futureList = val;
+
+  // set setFutureList(Future<List<Request>> val) => futureList = val;
   RequestListModel list = RequestListModel([]);
+
+  late ValueNotifier<Future<List<Request>>> _futureListNotifier;
 
   @override
   void initState() {
     super.initState();
     futureList = service.getNewRequests();
+    _futureListNotifier =
+        ValueNotifier<Future<List<Request>>>(service.getNewRequests());
 
     // List<Request> requestList = [];
     //
@@ -35,6 +38,12 @@ class _NewRequestPageState extends State<NewRequestPage> {
   }
 
   @override
+  void dispose() {
+    _futureListNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: "MyApp",
@@ -42,28 +51,34 @@ class _NewRequestPageState extends State<NewRequestPage> {
             builder: (context) => Material(
                 // создали колонку, в которой сначала
                 // ряд меню, а снизу прифигачиваем список
-                child: FutureBuilder<List<Request>>(
-                    future: futureList,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        // return Text(snapshot.data!.title);
-                        list = RequestListModel(snapshot.data!);
+                child: ValueListenableBuilder(
+                    valueListenable: _futureListNotifier,
+                    builder: (context, value, child) =>
+                        FutureBuilder<List<Request>>(
+                            future: _futureListNotifier.value,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                // return Text(snapshot.data!.title);
+                                list = RequestListModel(snapshot.data!);
 
-                        return Column(children: <Widget>[
-                          Design().pageHeader(
-                              context, setState, futureList, list, 0),//'Новые заявки'),
-                          Expanded(
-                              child: Container(
-                                  color: Colors.yellow[50]?.withOpacity(0.2),
-                                  // child: _myListView(context, list)
-                                  child: _myListView(context)))
-                        ]);
-                      } else if (snapshot.hasError) {
-                        return Text("${snapshot.error}");
-                      }
-                      // By default, show a loading spinner.
-                      return Center(child: CircularProgressIndicator());
-                    }))));
+                                return Column(children: <Widget>[
+                                  // Text(Buffer.test, style: TextStyle(color: Colors.black),),
+                                  Design().pageHeader(context,
+                                      _futureListNotifier, futureList, list, 0),
+                                  //'Новые заявки'),
+                                  Expanded(
+                                      child: Container(
+                                          color: Colors.yellow[50]
+                                              ?.withOpacity(0.2),
+                                          // child: _myListView(context, list)
+                                          child: _myListView(context)))
+                                ]);
+                              } else if (snapshot.hasError) {
+                                return Text("${snapshot.error}");
+                              }
+                              // By default, show a loading spinner.
+                              return Center(child: CircularProgressIndicator());
+                            })))));
   }
 
   // Widget _myListView(BuildContext context, RequestListModel list) {
@@ -81,8 +96,9 @@ class _NewRequestPageState extends State<NewRequestPage> {
   }
 
   Future<void> _pullRefresh() async {
+    Future<List<Request>> newList = service.getNewRequests();
     setState(() {
-      futureList = service.getNewRequests();
+      futureList = newList;
     });
     await Future.delayed(Duration(seconds: 1));
     // List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
