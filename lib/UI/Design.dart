@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter1/LocalUserProvider.dart';
 import 'package:flutter1/RequestListModel.dart';
+import 'package:flutter1/service/Service.dart';
 import 'package:intl/intl.dart';
 
 import '../entity/Request.dart';
@@ -8,6 +10,8 @@ import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
 class Design {
+  var service = Service();
+
   Container pageHeader(
       BuildContext context, futureListNotifier, futureList, RequestListModel list, int status) {
     return Container(
@@ -258,8 +262,8 @@ class Design {
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        rejectButton(),
-        acceptButton(),
+        rejectButton(_data),
+        acceptButton(_data),
         moreInfoIcon(context, _data),
       ],
     );
@@ -271,7 +275,7 @@ class Design {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(padding: EdgeInsets.only(right: 50)),
-        doneButton(),
+        doneButton(_data),
         moreInfoIcon(context, _data),
       ],
     );
@@ -287,7 +291,7 @@ class Design {
     );
   }
 
-  OutlinedButton rejectButton() {
+  OutlinedButton rejectButton(Request data) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.orange,
@@ -297,7 +301,8 @@ class Design {
           minimumSize: Size(150, 30),
           backgroundColor: Colors.orange[50]),
       onPressed: () {
-        // TODO
+        // service.updateRequestStatus(data.id!, ) todo всё не так
+        // todo убрать из списка предложений для этого юзера
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -308,7 +313,7 @@ class Design {
     );
   }
 
-  OutlinedButton acceptButton() {
+  OutlinedButton acceptButton(Request data) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.lightGreen[800],
@@ -318,7 +323,8 @@ class Design {
           minimumSize: Size(150, 30),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () {
-        // TODO
+        service.updateRequestStatus(data.id!, 1);
+        service.addRequestToUser(LocalUserProvider.user.id!, data.id!);
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -341,7 +347,7 @@ class Design {
     );
   }
 
-  OutlinedButton doneButton() {
+  OutlinedButton doneButton(Request data) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -352,7 +358,7 @@ class Design {
         primary: Colors.lightGreen[800],
       ),
       onPressed: () {
-        // TODO
+        service.updateRequestStatus(data.id!, 3);
       },
       child: Padding(
           padding: EdgeInsets.all(7),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 // import 'package:flutter1/entity/Key.dart';
+import 'package:flutter1/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -10,7 +11,8 @@ class Service {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
-    var response = await http.get(Uri.http(url, 'requests/new'),
+    var response = await http.get(
+        Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
@@ -25,7 +27,8 @@ class Service {
 
   Future<List<Request>> getCurrentRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/current'),
+    var response = await http.get(
+        Uri.http(url, 'requests/current/${LocalUserProvider.user.id}'),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
@@ -39,7 +42,8 @@ class Service {
 
   Future<List<Request>> getArchiveRequests() async {
     // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
-    var response = await http.get(Uri.http(url, 'requests/archive'),
+    var response = await http.get(
+        Uri.http(url, 'requests/archive/${LocalUserProvider.user.id}'),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
@@ -101,6 +105,43 @@ class Service {
     }
   }
 
+  Future<Request> updateRequestStatus(int id, int newStatus) async {
+    final http.Response response = await http.put(
+        Uri.http(url, 'request/status/$id/$newStatus'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+    if (response.statusCode == 200) {
+      // If the server did return a 200 UPDATED response,
+      // then parse the JSON.
+      return Request.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 UPDATED response,
+      // then throw an exception.
+      throw Exception('Failed to update status');
+    }
+  }
+
+  Future<Request> addRequestToUser(int requestId, int userId) async {
+    final response = await http.put(
+      Uri.http(url, 'request/add/$requestId/$userId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      }
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 UPDATED response,
+      // then parse the JSON.
+      return Request.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to add request to user');
+    }
+  }
+
+
+
 // 'requests/filter/$status/$from/$to/$dateFrom/'
   // '$dateTo/$minWeight/$maxWeight/$minPrice/$maxPrice/'
   // '$minDist/$maxDist'
@@ -130,15 +171,7 @@ class Service {
       'maxDist': maxDist.toString(),
     };
     var response = await http.get(
-        Uri.http(
-            url,
-            'requests/filter',
-            queryParameters
-            // 'requests/filter?status=$status&from=$from&to=$to&dateFrom=$dateFrom'
-            //     '&dateTo=$dateTo&minWeight=$minWeight&maxWeight=$maxWeight&'
-            //     'minPrice=$minPrice&maxPrice=$maxPrice&minDist=$minDist&'
-            //     'maxDist=$maxDist'
-        ),
+        Uri.http(url, 'requests/filter', queryParameters),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
@@ -153,14 +186,6 @@ class Service {
 
   // Future<List<Request>> getNewRequests() async {
   List<Request> getNewRequestsHard() {
-    // var url = Uri.parse('https://example.com/whatsit/create');
-    // // var response = await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
-    // var response = http.post(url, body: {'name': 'doodle', 'color': 'blue'});
-    // print('Response status: ${response.statusCode}');
-    // print('Response body: ${response.body}');
-
-    // print(await http.read('https://example.com/foobar.txt'));
-
     // ура хардкодим
     var requests = [
       Request(500, "Shipper", "Receiver", DateTime.utc(2021, 3, 8),

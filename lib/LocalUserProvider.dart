@@ -6,8 +6,4 @@ class LocalUserProvider {
   static void setUser(User user) {
     LocalUserProvider.user = user;
   }
-
-  // static User getUser() {
-  //   return user;
-  // }
 }
