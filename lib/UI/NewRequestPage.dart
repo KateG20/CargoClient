@@ -13,6 +13,7 @@ class NewRequestPage extends StatefulWidget {
 class _NewRequestPageState extends State<NewRequestPage> {
   final Service service = Service();
   late Future<List<Request>> futureList;
+  bool _filtered = false;
 
   // set setFutureList(Future<List<Request>> val) => futureList = val;
   RequestListModel list = RequestListModel([]);
@@ -22,19 +23,9 @@ class _NewRequestPageState extends State<NewRequestPage> {
   @override
   void initState() {
     super.initState();
-    futureList = service.getNewRequests();
+    // futureList = service.getNewRequests();
     _futureListNotifier =
         ValueNotifier<Future<List<Request>>>(service.getNewRequests());
-
-    // List<Request> requestList = [];
-    //
-    // futureList.then((value) {
-    //   requestList = value;
-    // }).catchError((err) {
-    //   print('error!');
-    // });
-    //
-    // list = RequestListModel(requestList);
   }
 
   @override
@@ -63,8 +54,8 @@ class _NewRequestPageState extends State<NewRequestPage> {
 
                                 return Column(children: <Widget>[
                                   // Text(Buffer.test, style: TextStyle(color: Colors.black),),
-                                  Design().pageHeader(context,
-                                      _futureListNotifier, futureList, list, 0),
+                                  Design.pageHeader(context,
+                                      _futureListNotifier, list, 0),
                                   //'Новые заявки'),
                                   Expanded(
                                       child: Container(
@@ -100,11 +91,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
     setState(() {
       futureList = newList;
     });
+    // why use newList var? https://stackoverflow.com/a/52992836/2301224
     await Future.delayed(Duration(seconds: 1));
-    // List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
-    // setState(() {
-    //   words = freshWords;
-    // });
-    // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
   }
 }

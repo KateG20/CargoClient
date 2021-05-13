@@ -40,7 +40,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design().pageHeader(context, setState, futureList, list, 2),
+                  Design.pageHeader(context, setState, list, 2),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,

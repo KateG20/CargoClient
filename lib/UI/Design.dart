@@ -12,8 +12,8 @@ import 'MenuBar.dart';
 class Design {
   var service = Service();
 
-  Container pageHeader(
-      BuildContext context, futureListNotifier, futureList, RequestListModel list, int status) {
+  static Container pageHeader(
+      BuildContext context, futureListNotifier, RequestListModel list, int status) {
     return Container(
         decoration: headerBoxDecoration(),
         // header
@@ -38,7 +38,7 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () => FilterDialog(context, futureListNotifier, futureList, list, status),
+                    onPressed: () => FilterDialog(context, futureListNotifier, list, status),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Поиск',
                     color: Colors.green[700],
@@ -201,7 +201,7 @@ class Design {
         ]));
   }
 
-  BoxDecoration headerBoxDecoration() {
+  static BoxDecoration headerBoxDecoration() {
     return BoxDecoration(
       color: Colors.lightGreen[50],
       border: Border(
@@ -301,8 +301,7 @@ class Design {
           minimumSize: Size(150, 30),
           backgroundColor: Colors.orange[50]),
       onPressed: () {
-        // service.updateRequestStatus(data.id!, ) todo всё не так
-        // todo убрать из списка предложений для этого юзера
+        service.rejectRequest(data.id!, LocalUserProvider.user.id!);
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -324,7 +323,7 @@ class Design {
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () {
         service.updateRequestStatus(data.id!, 1);
-        service.addRequestToUser(LocalUserProvider.user.id!, data.id!);
+        service.addRequestToUser(data.id!, LocalUserProvider.user.id!);
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -358,7 +357,7 @@ class Design {
         primary: Colors.lightGreen[800],
       ),
       onPressed: () {
-        service.updateRequestStatus(data.id!, 3);
+        service.updateRequestStatus(data.id!, 2);
       },
       child: Padding(
           padding: EdgeInsets.all(7),

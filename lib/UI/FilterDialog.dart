@@ -7,6 +7,8 @@ import 'package:flutter1/entity/Request.dart';
 import 'package:flutter1/service/Service.dart';
 import 'package:intl/intl.dart';
 
+import '../LocalUserProvider.dart';
+
 class FilterDialog {
   bool _dateWarningVisibility = false;
   bool _considerDateFrom = false, _considerDateTo = false;
@@ -68,7 +70,7 @@ class FilterDialog {
       });
   }
 
-  FilterDialog(BuildContext context, futureListNotifier, Future<List<Request>> futureList,
+  FilterDialog(BuildContext context, futureListNotifier,
       RequestListModel list, status) {
     showDialog(
         barrierDismissible: true,
@@ -108,7 +110,7 @@ class FilterDialog {
                                             EdgeInsets.fromLTRB(20, 0, 20, 7)),
                                     Center(
                                       child: filterButton(context, futureListNotifier,
-                                          dialogSetState, futureList, list, status),
+                                          dialogSetState, list, status),
                                     )
                                   ]))
                         ])));
@@ -457,7 +459,7 @@ class FilterDialog {
   // final ValueListenable<Future<List<Request>>> _futureListListenable;
   // _futureListNotifier
 
-  OutlinedButton filterButton(context, futureListNotifier, dialogSetState, futureList,
+  OutlinedButton filterButton(context, futureListNotifier, dialogSetState,
       list, status) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -511,7 +513,8 @@ class FilterDialog {
           //     _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
           //     _minPrice!, _maxPrice!, _minDist!, _maxDist!);
 
-          futureListNotifier.value = service.filterRequests(status, _source!, _destination!,
+          futureListNotifier.value = service.filterRequests(status,
+              LocalUserProvider.user.id!, _source!, _destination!,
               _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
               _minPrice!, _maxPrice!, _minDist!, _maxDist!);
 

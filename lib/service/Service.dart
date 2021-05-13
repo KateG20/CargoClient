@@ -12,7 +12,8 @@ class Service {
 
   Future<List<Request>> getNewRequests() async {
     var response = await http.get(
-        Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'),
+        // Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'), todo откомментить
+        Uri.http(url, 'requests/new/1'),
         headers: <String, String>{'Content-Type': 'application/json'});
 
     if (response.statusCode == 200) {
@@ -124,11 +125,10 @@ class Service {
 
   Future<Request> addRequestToUser(int requestId, int userId) async {
     final response = await http.put(
-      Uri.http(url, 'request/add/$requestId/$userId'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-      }
-    );
+        Uri.http(url, 'request/add/$requestId/$userId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        });
     if (response.statusCode == 200) {
       // If the server did return a 200 UPDATED response,
       // then parse the JSON.
@@ -140,13 +140,22 @@ class Service {
     }
   }
 
+  Future<Request> rejectRequest(int requestId, int userId) async {
+    final response = await http.put(
+        Uri.http(url, 'request/reject/$requestId/$userId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        });
+    if (response.statusCode == 200) {
+      return Request.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to reject request');
+    }
+  }
 
-
-// 'requests/filter/$status/$from/$to/$dateFrom/'
-  // '$dateTo/$minWeight/$maxWeight/$minPrice/$maxPrice/'
-  // '$minDist/$maxDist'
   Future<List<Request>> filterRequests(
       int status,
+      int userId,
       String from,
       String to,
       int dateFrom,
@@ -159,6 +168,7 @@ class Service {
       int maxDist) async {
     var queryParameters = {
       'status': status.toString(),
+      'userId': userId.toString(),
       'from': from,
       'to': to,
       'dateFrom': dateFrom.toString(),
