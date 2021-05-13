@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/LocalUserProvider.dart';
 
 import 'ArchiveRequestPage.dart';
 import 'CurrentRequestPage.dart';
@@ -7,9 +8,9 @@ import 'EntryPage.dart';
 import 'NewRequestPage.dart';
 
 class MenuBar extends StatelessWidget {
-  final String name = "Курсач Курсач Курсач";
-  final String autoNumber = "Т704СВ199";
-  final String company = "Не является представителем компании";
+  final String name = LocalUserProvider.user.name!;
+  final String autoNumber = LocalUserProvider.user.licensePlate!;
+  final String company = LocalUserProvider.user.company!;
 
   @override
   Widget build(BuildContext context) {

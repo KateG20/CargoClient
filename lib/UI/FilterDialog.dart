@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter1/RequestListModel.dart';
 import 'package:flutter1/UI/NewRequestPage.dart';
 import 'package:flutter1/entity/Request.dart';
-import 'package:flutter1/service/Service.dart';
+import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
 
 import '../LocalUserProvider.dart';
@@ -22,7 +22,7 @@ class FilterDialog {
   String _dateFromText = '                     ';
   String _dateToText = '                     ';
 
-  final Service service = Service();
+  final RequestService service = RequestService();
 
   _selectDate(context, dialogSetState, bool from) async {
     final DateTime? picked = await showDatePicker(

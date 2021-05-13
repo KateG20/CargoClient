@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/service/RequestService.dart';
 
+import '../service/RequestService.dart';
+import '../service/UserService.dart';
 import 'NewRequestPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -9,9 +13,17 @@ class RegistrationPage extends StatefulWidget {
 
 class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
+
+  // String? login;
   String? _pwd1 = "";
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool _warning = false;
+  var _loginCtrl = TextEditingController();
+  var _pwdCtrl = TextEditingController();
+
+  var requestService = RequestService();
+  var userService = UserService();
 
   void _showPwd1() {
     setState(() {
@@ -56,12 +68,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                               ),
                               //  Padding(padding: EdgeInsets.only(top: 20.0)),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                                // child: Align(
-                                //   alignment: Alignment.centerLeft,
-                                //   child: _getWarning(),
-                                // )
-                              ),
+                                  padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Visibility(
+                                        child: Text(
+                                            'Не удалось создать пользователя. '
+                                            'Вероятно, такой логин уже занят.',
+                                            style: TextStyle(
+                                                color: Colors.red[800],
+                                                fontSize: 19)),
+                                        visible: _warning),
+                                  )),
                               Padding(padding: EdgeInsets.only(top: 20.0)),
                               loginField(),
                               Padding(padding: EdgeInsets.only(top: 15.0)),
@@ -76,6 +94,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextFormField loginField() {
     return TextFormField(
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
+        controller: _loginCtrl,
         decoration: InputDecoration(
           labelText: "Логин",
           labelStyle: TextStyle(color: Colors.lightGreen[600]),
@@ -96,8 +115,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Логин\"";
             // todo проверять логин в базе
-          } else if (false) {
-            return "Такой логин уже существует";
+          // } else if (LocalUserProvider.user.login == null) {
+          //   return "Такой логин уже существует";
           } else {
             return null;
           }
@@ -107,6 +126,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextFormField passwordField() {
     return TextFormField(
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
+        controller: _pwdCtrl,
         obscureText: _obscureText1,
         decoration: InputDecoration(
             labelText: "Пароль",
@@ -140,8 +160,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Пароль\"";
             // todo проверять пользователя в базе
-          } else if (false) {
-            return "Неверный логин или пароль";
+            // } else if (false) {
+            //   return "Неверный логин или пароль";
           } else {
             return null;
           }
@@ -182,10 +202,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
             return "Заполните поле \"Пароль\"";
           } else if (val != _pwd1) {
             return "Пароли не совпадают";
-          }
-          // todo проверять пользователя в базе
-          else if (false) {
-            return "Неверный логин или пароль";
+            // }
+            // todo проверять пользователя в базе
+            // else if (false) {
+            //   return "Неверный логин или пароль";
           } else {
             return null;
           }
@@ -199,12 +219,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         side: BorderSide(color: Colors.lightGreen, width: 1.5),
       ),
-      onPressed: () {
+      onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NewRequestPage()),
-          );
+          LocalUserProvider.user.login = _loginCtrl.text;
+          LocalUserProvider.user.password = _pwdCtrl.text; // todo зашифровать
+          await userService.createUser(LocalUserProvider.user).then((value) {
+            LocalUserProvider.setUser(value);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => NewRequestPage()));
+          }).catchError((error) {
+            setState(() {
+              _warning = true;
+            });
+          });
+
+          // if (_formKey.currentState!.validate()) {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => NewRequestPage()),
+          //   );
         }
       },
       child: Padding(

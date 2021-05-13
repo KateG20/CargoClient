@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../RequestListModel.dart';
 import '../entity/Request.dart';
-import '../service/Service.dart';
+import '../service/RequestService.dart';
 import 'Design.dart';
 
 class CurrentRequestPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class CurrentRequestPage extends StatefulWidget {
 }
 
 class _CurrentRequestPageState extends State<CurrentRequestPage> {
-  var service = Service();
+  var service = RequestService();
 
   @override
   Widget build(BuildContext context) {

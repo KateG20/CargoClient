@@ -3,7 +3,7 @@ import 'package:flutter1/LocalUserProvider.dart';
 
 import '../entity/Key.dart' as my;
 import '../entity/User.dart';
-import '../service/Service.dart';
+import '../service/RequestService.dart';
 import 'RegistrationPage.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -13,10 +13,11 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
-  var service = Service();
+  var service = RequestService();
 
   my.Key? key;
   bool keyFound = false;
+  var _keyCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +62,7 @@ class _VerificationPageState extends State<VerificationPage> {
 
   TextFormField keyField() {
     return TextFormField(
-      controller: _txt,
+      controller: _keyCtrl,
       style: TextStyle(color: Colors.grey[600], fontSize: 20),
       decoration: InputDecoration(
         labelText: "Ключ",
@@ -103,16 +104,11 @@ class _VerificationPageState extends State<VerificationPage> {
         else if (key == null)
           return "Такого ключа нет в базе";
         else {
-          var user =
-              User.unregistered(key!.name, key!.licensePlate, key!.company);
-          LocalUserProvider.setUser(user);
           return null;
         }
       },
     );
   }
-
-  var _txt = TextEditingController();
 
   Future<my.Key>? _futureKey;
 
@@ -151,27 +147,16 @@ class _VerificationPageState extends State<VerificationPage> {
         // backgroundColor: Colors.lightGreen[50]
       ),
       onPressed: () async {
-        // try {
-        await service.getKey(_txt.text).then((value) {
+        await service.getKey(_keyCtrl.text).then((value) {
           key = value;
         }).catchError((error) {
           key = null;
         });
-        // }
-        // catch (Exception e) {
-        //
-        // }
-        // var futureKey = service.getKey(_txt.text);
-        // // Смотрим, нашелся ли ключ
-        // futureKey.then((value) {
-        //   key = value;
-        //   // keyFound = true;
-        // })
-        //     .catchError((err) {
-        //   key = null;
-        // });
 
         if (_formKey.currentState!.validate()) {
+          var user =
+          User.unregistered(key!.name, key!.licensePlate, key!.company);
+          LocalUserProvider.setUser(user);
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => RegistrationPage()),

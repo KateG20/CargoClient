@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../RequestListModel.dart';
 import '../entity/Request.dart';
-import '../service/Service.dart';
+import '../service/RequestService.dart';
 import 'Design.dart';
 
 class NewRequestPage extends StatefulWidget {
@@ -11,7 +11,7 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-  final Service service = Service();
+  final RequestService service = RequestService();
   late Future<List<Request>> futureList;
   bool _filtered = false;
 
@@ -40,8 +40,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                // создали колонку, в которой сначала
-                // ряд меню, а снизу прифигачиваем список
+                child: WillPopScope(
                 child: ValueListenableBuilder(
                     valueListenable: _futureListNotifier,
                     builder: (context, value, child) =>
@@ -69,7 +68,32 @@ class _NewRequestPageState extends State<NewRequestPage> {
                               }
                               // By default, show a loading spinner.
                               return Center(child: CircularProgressIndicator());
-                            })))));
+                            })),
+                  onWillPop: () => _willPopCallback()
+                ))
+    ));
+  }
+
+  Future<bool> _willPopCallback() async {
+    showDialog<bool>(
+      context: context,
+      builder: (c) => AlertDialog(
+        // title: Text('Warning'),
+        content: Text('Выйти из приложения?'),
+        actions: [
+          OutlinedButton(
+            child: Text('Да'),
+            onPressed: () => Navigator.pop(c, true),
+          ),
+          OutlinedButton(
+            child: Text('Нет'),
+            onPressed: () => Navigator.pop(c, false),
+          ),
+        ],
+      ),
+    );
+    // then
+    return true; // return true if the route to be popped
   }
 
   // Widget _myListView(BuildContext context, RequestListModel list) {

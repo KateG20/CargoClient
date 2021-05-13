@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
 import 'package:flutter1/RequestListModel.dart';
-import 'package:flutter1/service/Service.dart';
+import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
 
 import '../entity/Request.dart';
@@ -10,7 +10,7 @@ import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
 class Design {
-  var service = Service();
+  var service = RequestService();
 
   static Container pageHeader(
       BuildContext context, futureListNotifier, RequestListModel list, int status) {

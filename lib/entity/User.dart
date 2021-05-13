@@ -5,7 +5,13 @@ class User {
   String? name;
   String? licensePlate;
   String? company;
-  // String? key;
+
+  User(this.login, this.password, this.name, this.licensePlate, this.company);
 
   User.unregistered(this.name, this.licensePlate, this.company);
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(json['login'], json['password'], json['name'],
+        json['licensePlate'], json['company']);
+  }
 }

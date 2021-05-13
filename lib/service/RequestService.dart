@@ -1,13 +1,12 @@
 import 'dart:convert';
 
-// import 'package:flutter1/entity/Key.dart';
 import 'package:flutter1/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
 import '../entity/Request.dart';
 
-class Service {
+class RequestService {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {

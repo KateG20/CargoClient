@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'Design.dart';
 import '../entity/Request.dart';
 import '../RequestListModel.dart';
-import '../service/Service.dart';
+import '../service/RequestService.dart';
 
 class ArchiveRequestPage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   // ];
 
   // TODO тут все переделать нормально, как в новых заявках
-  var service = Service();
+  var service = RequestService();
   late Future<List<Request>> futureList;
   String test = 'test';
 

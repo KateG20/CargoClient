@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../entity/Request.dart';
-import '../service/Service.dart';
+import '../service/RequestService.dart';
 import 'NewRequestPage.dart';
 import 'VerificationPage.dart';
 
@@ -17,7 +17,7 @@ class _EntryPageState extends State<EntryPage> {
   bool _warningVisible = false;
   String _warningText = "test";
   bool _obscureText = true;
-  Service service = Service();
+  RequestService service = RequestService();
   final _formKey = GlobalKey<FormState>();
 
   void _showPwd() {
