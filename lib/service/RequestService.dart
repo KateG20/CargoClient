@@ -4,7 +4,6 @@ import 'package:flutter1/LocalUserProvider.dart';
 import 'package:flutter1/exception/NoKeyFoundException.dart';
 import 'package:http/http.dart' as http;
 
-import '../entity/Key.dart';
 import '../entity/Request.dart';
 
 class RequestService {
@@ -12,11 +11,11 @@ class RequestService {
 
   Future<List<Request>> getNewRequests() async {
     var response = await http.get(
-        // Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'), todo откомментить
-        Uri.http(url, 'requests/new/1'),
+        Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'),
+        // Uri.http(url, 'requests/new/1'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': 'sessionid=asdasdasqqwd' // todo откуда-то достать куки
+          'Cookie': LocalUserProvider.jSessionId!
         });
 
     if (response.statusCode == 200) {
@@ -24,8 +23,7 @@ class RequestService {
           .map((r) => Request.fromJson(r))
           .toList();
       return list;
-    }
-    else if (response.statusCode == 404) {
+    } else if (response.statusCode == 404) {
       throw NoKeyFoundException();
     } else {
       throw Exception('Failed to check key');
@@ -33,10 +31,12 @@ class RequestService {
   }
 
   Future<List<Request>> getCurrentRequests() async {
-    // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
     var response = await http.get(
         Uri.http(url, 'requests/current/${LocalUserProvider.user.id}'),
-        headers: <String, String>{'Content-Type': 'application/json'});
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
+        });
 
     if (response.statusCode == 200) {
       return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -48,10 +48,12 @@ class RequestService {
   }
 
   Future<List<Request>> getArchiveRequests() async {
-    // return http.get(Uri.https('http://localhost:5000/api/trainid?id=15', 'requests/new'));
     var response = await http.get(
         Uri.http(url, 'requests/archive/${LocalUserProvider.user.id}'),
-        headers: <String, String>{'Content-Type': 'application/json'});
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
+        });
 
     if (response.statusCode == 200) {
       return (jsonDecode(utf8.decode(response.bodyBytes)) as List)
@@ -67,6 +69,7 @@ class RequestService {
       Uri.http(url, 'request/create'),
       headers: <String, String>{
         'Content-Type': 'application/json',
+        'Cookie': LocalUserProvider.jSessionId!
       },
       body: jsonEncode(<String, dynamic>{
         'price': request.price,
@@ -84,12 +87,8 @@ class RequestService {
       }),
     );
     if (response.statusCode == 201) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
       return Request.fromJson(jsonDecode(response.body));
     } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
       throw Exception('Failed to post request');
     }
   }
@@ -98,7 +97,8 @@ class RequestService {
     final http.Response response = await http.put(
         Uri.http(url, 'request/status/$id/$newStatus'),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+          'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
         });
     if (response.statusCode == 200) {
       // If the server did return a 200 UPDATED response,
@@ -116,6 +116,7 @@ class RequestService {
         Uri.http(url, 'request/add/$requestId/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
         });
     if (response.statusCode == 200) {
       // If the server did return a 200 UPDATED response,
@@ -133,6 +134,7 @@ class RequestService {
         Uri.http(url, 'request/reject/$requestId/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
         });
     if (response.statusCode == 200) {
       return Request.fromJson(jsonDecode(response.body));
@@ -170,7 +172,10 @@ class RequestService {
     };
     var response = await http.get(
         Uri.http(url, 'requests/filter', queryParameters),
-        headers: <String, String>{'Content-Type': 'application/json'});
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': LocalUserProvider.jSessionId!
+        });
 
     if (response.statusCode == 200) {
       var list = (jsonDecode(utf8.decode(response.bodyBytes)) as List)

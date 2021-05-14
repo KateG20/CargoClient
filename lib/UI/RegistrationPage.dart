@@ -1,5 +1,9 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/entity/User.dart';
 import 'package:flutter1/service/RequestService.dart';
 
 import '../service/RequestService.dart';
@@ -115,8 +119,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Логин\"";
             // todo проверять логин в базе
-          // } else if (LocalUserProvider.user.login == null) {
-          //   return "Такой логин уже существует";
+            // } else if (LocalUserProvider.user.login == null) {
+            //   return "Такой логин уже существует";
           } else {
             return null;
           }
@@ -221,24 +225,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          LocalUserProvider.user.login = _loginCtrl.text;
-          LocalUserProvider.user.password = _pwdCtrl.text; // todo зашифровать
+          String encodedPwd =
+              sha256.convert(utf8.encode(_pwdCtrl.text)).toString();
+
           // todo посмотреть, какой код будет с одинаковыми логинами
-          await userService.createUser(LocalUserProvider.user).then((value) {
+          await userService
+              .createUser(User.create(
+                  _loginCtrl.text, encodedPwd, LocalUserProvider.user))
+              .then((value) {
             LocalUserProvider.setUser(value);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => NewRequestPage()));
           }).catchError((error) {
             setState(() {
               _warning = true;
             });
+          }).then((value) {
+            userService.loginUser(_loginCtrl.text, encodedPwd).then((value) =>
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => NewRequestPage())));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => NewRequestPage()));
           });
-
-          // if (_formKey.currentState!.validate()) {
-          //   Navigator.push(
-          //     context,
-          //     MaterialPageRoute(builder: (context) => NewRequestPage()),
-          //   );
         }
       },
       child: Padding(

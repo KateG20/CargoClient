@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter1/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -7,7 +8,24 @@ import '../entity/User.dart';
 
 class UserService {
   final url = '10.0.2.2:8080';
-  String? cookie; // тут по идее должен быть куки
+
+  Future<void> loginUser(String login, String password) async {
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$login:$password'));
+
+    var response = await http.get(Uri.http(url, 'login'),
+        headers: <String, String>{'authorization': basicAuth});
+
+    if (response.statusCode == 200) {
+      String? rawCookie = response.headers['set-cookie'];
+      if (rawCookie != null) {
+        int index = rawCookie.indexOf(';');
+        LocalUserProvider.jSessionId = (index == -1) ? rawCookie : rawCookie.substring(0, index);
+      }
+    } else {
+      throw Exception('Failed to login user');
+    }
+  }
 
   Future<User> createUser(User user) async {
     final response = await http.post(
@@ -24,16 +42,16 @@ class UserService {
         'keyValue': user.key
       }),
     );
-    String? rawCookie = response.headers['set-cookie'];
-    if (rawCookie != null) {
-      int index = rawCookie.indexOf(';');
-      cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
-    }
+    // String? rawCookie = response.headers['set-cookie'];
+    // if (rawCookie != null) {
+    //   int index = rawCookie.indexOf(';');
+    //   cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
+    // }
 
     if (response.statusCode == 201) {
       return User.fromJson(jsonDecode(response.body));
     } else {
-      throw Exception('Failed to post request');
+      throw Exception('Failed to create user');
     }
   }
 
