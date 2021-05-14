@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/exception/NoKeyFoundException.dart';
 
 import '../entity/Key.dart' as my;
 import '../entity/User.dart';
 import '../service/RequestService.dart';
+import '../service/UserService.dart';
 import 'RegistrationPage.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -13,10 +15,12 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
-  var service = RequestService();
+  var requestService = RequestService();
+  var userService = UserService();
 
   my.Key? key;
   bool keyFound = false;
+  String? _errorMsg;
   var _keyCtrl = TextEditingController();
 
   @override
@@ -102,7 +106,7 @@ class _VerificationPageState extends State<VerificationPage> {
         // }
         // Если не нашелся, то не нашелся
         else if (key == null)
-          return "Такого ключа нет в базе";
+          return _errorMsg;
         else {
           return null;
         }
@@ -113,32 +117,6 @@ class _VerificationPageState extends State<VerificationPage> {
   Future<my.Key>? _futureKey;
 
   Widget verifyButton() {
-    // return OutlinedButton(
-    //   style: OutlinedButton.styleFrom(
-    //     shape: const RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.all(Radius.circular(12.0))),
-    //     side: BorderSide(color: Colors.lightGreen, width: 1.5),
-    //     // backgroundColor: Colors.lightGreen[50]
-    //   ),
-    //   onPressed: () {
-    // _futureKey = service.getKey(_txt.text);
-    // FutureBuilder<my.Key>(
-    //     future: _futureKey,
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasData) {
-    //         // только если есть данные, мы можем запустить валидацию и идти дальше
-    //         if (_formKey.currentState!.validate()) {
-    //           Navigator.push(
-    //             context,
-    //             MaterialPageRoute(builder: (context) => RegistrationPage()),
-    //           );
-    //         }
-    //       } else if (snapshot.hasError) {
-    //         return Text("${snapshot.error}");
-    //       }
-    //       // By default, show a loading spinner.
-    //       return Center(child: CircularProgressIndicator());
-    //     });
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -147,15 +125,19 @@ class _VerificationPageState extends State<VerificationPage> {
         // backgroundColor: Colors.lightGreen[50]
       ),
       onPressed: () async {
-        await service.getKey(_keyCtrl.text).then((value) {
+        await userService.checkKey(_keyCtrl.text).then((value) {
           key = value;
-        }).catchError((error) {
+        }).catchError((e) {
+          if (e is NoKeyFoundException)
+            _errorMsg = 'Такого ключа нет в базе';
+          else
+            _errorMsg = 'Ошибка проверки ключа';
           key = null;
         });
 
         if (_formKey.currentState!.validate()) {
           var user =
-          User.unregistered(key!.name, key!.licensePlate, key!.company);
+              User.unregistered(key!.name, key!.licensePlate, key!.company, key!.value);
           LocalUserProvider.setUser(user);
           Navigator.push(
             context,

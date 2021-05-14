@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/exception/NoKeyFoundException.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -13,15 +14,21 @@ class RequestService {
     var response = await http.get(
         // Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'), todo откомментить
         Uri.http(url, 'requests/new/1'),
-        headers: <String, String>{'Content-Type': 'application/json'});
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Cookie': 'sessionid=asdasdasqqwd' // todo откуда-то достать куки
+        });
 
     if (response.statusCode == 200) {
       var list = (jsonDecode(utf8.decode(response.bodyBytes)) as List)
           .map((r) => Request.fromJson(r))
           .toList();
       return list;
+    }
+    else if (response.statusCode == 404) {
+      throw NoKeyFoundException();
     } else {
-      throw Exception('Failed to load new requests');
+      throw Exception('Failed to check key');
     }
   }
 
@@ -84,24 +91,6 @@ class RequestService {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
       throw Exception('Failed to post request');
-    }
-  }
-
-  Future<Key> getKey(String key) async {
-    // String res = JsonEncoder().convert(key);
-    // print(res);
-
-    var response = await //http.get(Uri.http(url, 'user/check/key'));
-        http.post(Uri.http(url, 'user/check/key'),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-            },
-            // body: JsonEncoder().convert(key)
-            body: jsonEncode(<String, String>{'value': key}));
-    if (response.statusCode == 200) {
-      return Key.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to find key');
     }
   }
 

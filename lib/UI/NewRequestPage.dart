@@ -69,32 +69,32 @@ class _NewRequestPageState extends State<NewRequestPage> {
                               // By default, show a loading spinner.
                               return Center(child: CircularProgressIndicator());
                             })),
-                  onWillPop: () => _willPopCallback()
+                  onWillPop: () async => false
                 ))
     ));
   }
 
-  Future<bool> _willPopCallback() async {
-    showDialog<bool>(
-      context: context,
-      builder: (c) => AlertDialog(
-        // title: Text('Warning'),
-        content: Text('Выйти из приложения?'),
-        actions: [
-          OutlinedButton(
-            child: Text('Да'),
-            onPressed: () => Navigator.pop(c, true),
-          ),
-          OutlinedButton(
-            child: Text('Нет'),
-            onPressed: () => Navigator.pop(c, false),
-          ),
-        ],
-      ),
-    );
-    // then
-    return true; // return true if the route to be popped
-  }
+  // Future<bool> _willPopCallback() async {
+  //   showDialog<bool>(
+  //     context: context,
+  //     builder: (c) => AlertDialog(
+  //       // title: Text('Warning'),
+  //       content: Text('Выйти из приложения?'),
+  //       actions: [
+  //         OutlinedButton(
+  //           child: Text('Да'),
+  //           onPressed: () => Navigator.pop(c, true),
+  //         ),
+  //         OutlinedButton(
+  //           child: Text('Нет'),
+  //           onPressed: () => Navigator.pop(c, false),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  //   // then
+  //   return true; // return true if the route to be popped
+  // }
 
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {

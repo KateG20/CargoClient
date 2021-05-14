@@ -223,6 +223,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         if (_formKey.currentState!.validate()) {
           LocalUserProvider.user.login = _loginCtrl.text;
           LocalUserProvider.user.password = _pwdCtrl.text; // todo зашифровать
+          // todo посмотреть, какой код будет с одинаковыми логинами
           await userService.createUser(LocalUserProvider.user).then((value) {
             LocalUserProvider.setUser(value);
             Navigator.push(context,
