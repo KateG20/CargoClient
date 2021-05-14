@@ -23,6 +23,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   var service = RequestService();
   late Future<List<Request>> futureList;
   String test = 'test';
+  List<Request> list = [];
 
   @override
   void initState() {
@@ -32,7 +33,6 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
 
   @override
   Widget build(BuildContext context) {
-    var list = RequestListModel(service.getArchiveRequestsHard());
     return MaterialApp(
         title: "MyApp",
         home: Builder(
@@ -40,7 +40,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design.pageHeader(context, setState, list, 2),
+                  // Design.pageHeader(context, setState, list, 2),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,
@@ -48,15 +48,15 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                     childrenDelegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return KeepAlive(
-                            data: list.requests[index],
-                            key: ValueKey<Request>(list.requests[index]),
+                            data: list[index],
+                            key: ValueKey<Request>(list[index]),
                           );
                         },
-                        childCount: list.requests.length,
+                        childCount: list.length,
                         findChildIndexCallback: (Key key) {
                           final ValueKey valueKey = key as ValueKey;
                           final Request data = valueKey.value;
-                          return list.requests.indexOf(data);
+                          return list.indexOf(data);
                         }),
                   ))
                 ]))));

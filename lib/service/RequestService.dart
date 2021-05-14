@@ -111,27 +111,23 @@ class RequestService {
     }
   }
 
-  Future<Request> addRequestToUser(int requestId, int userId) async {
+  Future<void> addRequestToUser(int requestId, int userId) async {
     final response = await http.put(
         Uri.http(url, 'request/add/$requestId/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!
         });
-    if (response.statusCode == 200) {
-      // If the server did return a 200 UPDATED response,
-      // then parse the JSON.
-      return Request.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 201 CREATED response,
-      // then throw an exception.
+    if (response.statusCode != 200) {
+    //   return Request.fromJson(jsonDecode(response.body));
+    // } else {
       throw Exception('Failed to add request to user');
     }
   }
 
   Future<Request> rejectRequest(int requestId, int userId) async {
     final response = await http.put(
-        Uri.http(url, 'request/reject/$requestId/$userId'),
+        Uri.http(url, 'request/reject/$requestId/$userId'), // почему-то тут налл requestId
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!

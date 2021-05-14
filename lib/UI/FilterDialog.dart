@@ -7,6 +7,7 @@ import 'package:flutter1/entity/Request.dart';
 import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
 
+import '../ListFilterNotifier.dart';
 import '../LocalUserProvider.dart';
 
 class FilterDialog {
@@ -70,8 +71,8 @@ class FilterDialog {
       });
   }
 
-  FilterDialog(BuildContext context, futureListNotifier,
-      RequestListModel list, status) {
+  FilterDialog(BuildContext context, ListFilterNotifier futureListNotifier,
+      List<Request> list, status) {
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -86,7 +87,7 @@ class FilterDialog {
                     child: SimpleDialog(
                         insetPadding: EdgeInsets.all(10),
                         title: Center(
-                            child: Text('Поиск заявок ${list.requests.length}',
+                            child: Text('Поиск заявок ${list.length}',
                                 style: TextStyle(
                                     color: Colors.green[800], fontSize: 24))),
                         shape: RoundedRectangleBorder(
@@ -459,7 +460,7 @@ class FilterDialog {
   // final ValueListenable<Future<List<Request>>> _futureListListenable;
   // _futureListNotifier
 
-  OutlinedButton filterButton(context, futureListNotifier, dialogSetState,
+  OutlinedButton filterButton(context, ListFilterNotifier futureListNotifier, dialogSetState,
       list, status) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -479,7 +480,6 @@ class FilterDialog {
         }
 
         if (_formKey.currentState!.validate()) {
-          List<Function> funcs = [];
           int _resultDateFrom = 0;
           int _resultDateTo = 335619200000;
 
@@ -493,13 +493,9 @@ class FilterDialog {
                   DateTime(2020).millisecondsSinceEpoch;
           }
           if (_considerDateTo) {
-            // funcs.add((Request r) =>
-            //     r.date?.isAfter(_selectedDateFrom!));
             if (_selectedDateTo != null)
               _resultDateTo = _selectedDateTo!.millisecondsSinceEpoch -
                   DateTime(2020).millisecondsSinceEpoch;
-            // funcs.add((Request r) =>
-            //     r.date?.isBefore(_selectedDateTo!));
           }
 
           if (_minWeight == null) _minWeight = 0;
@@ -509,32 +505,10 @@ class FilterDialog {
           if (_maxPrice == null) _maxPrice = 1000000;
           if (_maxDist == null) _maxDist = 100000;
 
-          // Future<List<Request>> newFutureList = service.filterRequests(status, _source!, _destination!,
-          //     _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
-          //     _minPrice!, _maxPrice!, _minDist!, _maxDist!);
-
-          futureListNotifier.value = service.filterRequests(status,
+          futureListNotifier.filter(service.filterRequests(status,
               LocalUserProvider.user.id!, _source!, _destination!,
               _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
-              _minPrice!, _maxPrice!, _minDist!, _maxDist!);
-
-          // Services.getUsers().then((usersFromServer) {
-          //   setState(() {
-          //     users = usersFromServer;
-          //     filteredUsers = users;
-          //   });
-          // });
-
-          // Buffer.test = 'newTest';
-          // setState(() {
-            // Buffer.test = 'newTest';
-            // futureList = newFutureList;
-            // futureList = service.filterRequests(status, _source!, _destination!,
-            //     _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
-            //     _minPrice!, _maxPrice!, _minDist!, _maxDist!);
-            // list.filter(funcs);
-          // });
-          // });
+              _minPrice!, _maxPrice!, _minDist!, _maxDist!));
           Navigator.pop(context, true);
         }
         // list.filter(funcs);

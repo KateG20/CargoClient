@@ -9,19 +9,24 @@ import '../entity/User.dart';
 class UserService {
   final url = '10.0.2.2:8080';
 
-  Future<void> loginUser(String login, String password) async {
-    String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('$login:$password'));
+  Future<User> loginUser(String login, String password) async {
+    String basicAuth = 'Basic ' + base64Encode(utf8.encode('$login:$password'));
 
-    var response = await http.get(Uri.http(url, 'login'),
+    var queryParameters = {'login': login};
+
+    var response = await http.get(Uri.http(url, 'login', queryParameters),
         headers: <String, String>{'authorization': basicAuth});
 
     if (response.statusCode == 200) {
       String? rawCookie = response.headers['set-cookie'];
       if (rawCookie != null) {
+        print(rawCookie);
         int index = rawCookie.indexOf(';');
-        LocalUserProvider.jSessionId = (index == -1) ? rawCookie : rawCookie.substring(0, index);
-      }
+        LocalUserProvider.jSessionId =
+            (index == -1) ? rawCookie : rawCookie.substring(0, index);
+        return User.fromJson(jsonDecode(response.body));
+      } else
+        throw Exception('Failed to receive cookie');
     } else {
       throw Exception('Failed to login user');
     }
@@ -57,10 +62,10 @@ class UserService {
 
   Future<Key> checkKey(String keyValue) async {
     var response = await http.post(Uri.http(url, 'user/check/key'),
-            headers: <String, String>{
-              'Content-Type': 'application/json',
-            },
-            body: jsonEncode(<String, String>{'value': keyValue}));
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(<String, String>{'value': keyValue}));
     if (response.statusCode == 200) {
       return Key.fromJson(jsonDecode(response.body));
     } else {

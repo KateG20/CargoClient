@@ -7,7 +7,7 @@ class User {
   String? company;
   String? key;
 
-  User(this.id, this.login, this.password, this.name, this.licensePlate, this.company, this.key);
+  User(this.id, this.login, this.name, this.licensePlate, this.company, this.key);
 
   User.create(this.login, this.password, User dummyUser) {
     this.name = dummyUser.name;
@@ -19,7 +19,9 @@ class User {
   User.unregistered(this.name, this.licensePlate, this.company, this.key);
 
   factory User.fromJson(Map<String, dynamic> json) {
-    return User(json['id'], json['login'], json['password'], json['name'],
+    return User(json['id'], json['login'],
+        // json['password'],
+        json['name'],
         json['licensePlate'], json['company'], json['key']);
   }
 }

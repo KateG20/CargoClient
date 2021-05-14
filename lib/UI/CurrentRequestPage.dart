@@ -36,7 +36,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
     //   print('error!');
     // });
 
-    var list = RequestListModel(requestList);
+    List<Request> list = [];
     late Future<List<Request>> futureList; // TODO тут все переделать нормально, как в новых заявках
     // String test = 'test';
 
@@ -53,8 +53,8 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     // создали колонку, в которой сначала
                     // ряд меню, а снизу прифигачиваем список
                     child: Column(children: <Widget>[
-                  Design
-                      .pageHeader(context, setState, list, 1),
+                  // Design
+                  //     .pageHeader(context, setState, list, 1),
                   Expanded(
                       child: ListView.custom(
                     scrollDirection: Axis.vertical,
@@ -62,15 +62,15 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     childrenDelegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           return KeepAlive(
-                            data: list.requests[index],
-                            key: ValueKey<Request>(list.requests[index]),
+                            data: list[index],
+                            key: ValueKey<Request>(list[index]),
                           );
                         },
-                        childCount: list.requests.length,
+                        childCount: list.length,
                         findChildIndexCallback: (Key key) {
                           final ValueKey valueKey = key as ValueKey;
                           final Request data = valueKey.value;
-                          return list.requests.indexOf(data);
+                          return list.indexOf(data);
                         }),
                   ))
                 ]))));

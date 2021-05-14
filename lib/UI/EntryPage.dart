@@ -1,10 +1,14 @@
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter1/LocalUserProvider.dart';
 
 import '../entity/Request.dart';
+import '../entity/User.dart';
 import '../service/RequestService.dart';
+import '../service/UserService.dart';
 import 'NewRequestPage.dart';
 import 'VerificationPage.dart';
 
@@ -14,22 +18,27 @@ class EntryPage extends StatefulWidget {
 }
 
 class _EntryPageState extends State<EntryPage> {
-  bool _warningVisible = false;
-  String _warningText = "test";
+  // bool _warningVisible = false;
+  // String _warningText = "test";
   bool _obscureText = true;
+  bool _incorrectData = false;
   RequestService service = RequestService();
   final _formKey = GlobalKey<FormState>();
+  var userService = UserService();
+
+  var _loginCtrl = TextEditingController();
+  var _pwdCtrl = TextEditingController();
 
   void _showPwd() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
-  var txt = TextEditingController(); // TODO убрать
 
   @override
   Widget build(BuildContext context) {
-    txt.text = 'login'; // TODO убрать
+    _loginCtrl.text = 'log2'; // TODO убрать
+    _pwdCtrl.text = 'pwd';
 
     return MaterialApp(
         // debugShowCheckedModeBanner: false,
@@ -43,7 +52,7 @@ class _EntryPageState extends State<EntryPage> {
                     child: Form(
                         key: _formKey,
                         child: Container(
-                            padding: const EdgeInsets.all(30.0),
+                            padding: EdgeInsets.all(30.0),
                             // color: Colors.white,
                             color: Colors.yellow[50]?.withOpacity(0.2),
                             child: Container(
@@ -51,7 +60,8 @@ class _EntryPageState extends State<EntryPage> {
                                     child: Column(children: [
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Text(
-                                'Авторизация',//${DateTime(2030).millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch}',
+                                'Авторизация',
+                                //${DateTime(2030).millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch}',
                                 style: TextStyle(
                                     // color: Color(0xff9ACD32), fontSize: 25.0),
                                     color: Colors.lightGreen[700],
@@ -77,7 +87,7 @@ class _EntryPageState extends State<EntryPage> {
 
   TextFormField loginField() {
     return TextFormField(
-        controller: txt, // TODO убрать
+        controller: _loginCtrl, // TODO убрать
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         decoration: InputDecoration(
           labelText: "Логин",
@@ -85,7 +95,8 @@ class _EntryPageState extends State<EntryPage> {
           // fillColor: Colors.lightGreen,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
@@ -98,9 +109,8 @@ class _EntryPageState extends State<EntryPage> {
         validator: (val) {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Логин\"";
-            // todo проверять пользователя в базе
-          } else if (false) {
-            return "Неверный логин или пароль";
+          } else if (_incorrectData) {
+            return 'Неверный логин или пароль';
           } else {
             return null;
           }
@@ -109,17 +119,19 @@ class _EntryPageState extends State<EntryPage> {
 
   TextFormField passwordField() {
     return TextFormField(
-        controller: txt,
-        // TODO убрать
+        controller: _pwdCtrl,
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         obscureText: _obscureText,
         decoration: InputDecoration(
           labelText: "Пароль",
-          labelStyle: TextStyle(color: Colors.lightGreen,),
+          labelStyle: TextStyle(
+            color: Colors.lightGreen,
+          ),
           fillColor: Colors.lightBlueAccent,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
-              borderSide: BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
+              borderSide:
+                  BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
@@ -143,9 +155,8 @@ class _EntryPageState extends State<EntryPage> {
         validator: (val) {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Пароль\"";
-            // todo проверять пользователя в базе
-          } else if (false) {
-            return "Неверный логин или пароль";
+          } else if (_incorrectData) {
+            return 'Неверный логин или пароль';
           } else {
             return null;
           }
@@ -159,10 +170,16 @@ class _EntryPageState extends State<EntryPage> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12.0))),
           side: BorderSide(color: Colors.lightGreen, width: 1.5),
-          backgroundColor: Colors.lightGreen[50]
-      ),
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
+          backgroundColor: Colors.lightGreen[50]),
+      onPressed: () async {
+          await userService
+              .loginUser(_loginCtrl.text,
+                  sha256.convert(utf8.encode(_pwdCtrl.text)).toString())
+              .then((value) {
+            LocalUserProvider.user = value;
+          }).catchError((error) {_incorrectData = true;});
+
+          if (_formKey.currentState!.validate()) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewRequestPage()),

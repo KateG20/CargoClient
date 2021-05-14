@@ -91,19 +91,7 @@ class _VerificationPageState extends State<VerificationPage> {
               name: 'name',
               licensePlate: 'lp',
               company: 'company');
-          // return "Заполните поле \"Ключ\""; // TODO сделать нормально
         }
-        // else {
-        // var futureKey = service.getKey(val); // todo вот это все не работает
-        // // Смотрим, нашелся ли ключ
-        // futureKey.then((value) {
-        //   key = value;
-        //   // keyFound = true;
-        // })
-        // .catchError((err) {
-        //   key = null;
-        // });
-        // }
         // Если не нашелся, то не нашелся
         else if (key == null)
           return _errorMsg;
@@ -122,7 +110,6 @@ class _VerificationPageState extends State<VerificationPage> {
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(12.0))),
         side: BorderSide(color: Colors.lightGreen, width: 1.5),
-        // backgroundColor: Colors.lightGreen[50]
       ),
       onPressed: () async {
         await userService.checkKey(_keyCtrl.text).then((value) {

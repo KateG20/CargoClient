@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/RequestListModel.dart';
 import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
 
+import '../ListFilterNotifier.dart';
 import '../entity/Request.dart';
 import 'FilterDialog.dart';
 import 'MenuBar.dart';
@@ -12,8 +12,8 @@ import 'MenuBar.dart';
 class Design {
   var service = RequestService();
 
-  static Container pageHeader(
-      BuildContext context, futureListNotifier, RequestListModel list, int status) {
+  static Container pageHeader(BuildContext context,
+      ListFilterNotifier futureListNotifier, List<Request> list, int status) {
     return Container(
         decoration: headerBoxDecoration(),
         // header
@@ -27,7 +27,12 @@ class Design {
                 children: [
                   TextButton(
                     onPressed: null,
-                    child: Text(status == 0 ? 'Новые заявки' : status == 1 ? 'Текущие заявки' : 'Архивные заявки',
+                    child: Text(
+                        status == 0
+                            ? 'Новые заявки'
+                            : status == 1
+                                ? 'Текущие заявки'
+                                : 'Архивные заявки',
                         style: TextStyle(
                             color: Colors.green[800],
                             fontSize: 27.0,
@@ -38,7 +43,8 @@ class Design {
                   IconButton(
                     padding: EdgeInsets.fromLTRB(30, 0, 0, 3),
                     // onPressed: () => showSearchDialog(context),
-                    onPressed: () => FilterDialog(context, futureListNotifier, list, status),
+                    onPressed: () =>
+                        FilterDialog(context, futureListNotifier, list, status),
                     icon: Icon(Icons.search_rounded),
                     tooltip: 'Поиск',
                     color: Colors.green[700],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/ListFilterNotifier.dart';
 
-import '../RequestListModel.dart';
 import '../entity/Request.dart';
 import '../service/RequestService.dart';
 import 'Design.dart';
@@ -16,16 +16,15 @@ class _NewRequestPageState extends State<NewRequestPage> {
   bool _filtered = false;
 
   // set setFutureList(Future<List<Request>> val) => futureList = val;
-  RequestListModel list = RequestListModel([]);
+  List<Request> list = [];
 
-  late ValueNotifier<Future<List<Request>>> _futureListNotifier;
+  late ListFilterNotifier _futureListNotifier;
 
   @override
   void initState() {
     super.initState();
     // futureList = service.getNewRequests();
-    _futureListNotifier =
-        ValueNotifier<Future<List<Request>>>(service.getNewRequests());
+    _futureListNotifier = ListFilterNotifier(value: _getRequests());
   }
 
   @override
@@ -41,23 +40,41 @@ class _NewRequestPageState extends State<NewRequestPage> {
         home: Builder(
             builder: (context) => Material(
                 child: WillPopScope(
-                child: ValueListenableBuilder(
-                    valueListenable: _futureListNotifier,
-                    builder: (context, value, child) =>
-                        FutureBuilder<List<Request>>(
+                    child: ValueListenableBuilder(
+                        valueListenable: _futureListNotifier,
+                        builder: (context, value, child) => FutureBuilder<
+                                List<Request>>(
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 // return Text(snapshot.data!.title);
-                                list = RequestListModel(snapshot.data!);
+                                list = snapshot.data!;
 
                                 return Column(children: <Widget>[
-                                  // Text(Buffer.test, style: TextStyle(color: Colors.black),),
-                                  Design.pageHeader(context,
-                                      _futureListNotifier, list, 0),
-                                  //'Новые заявки'),
+                                  Design.pageHeader(
+                                      context, _futureListNotifier, list, 0),
+                                  Container(
+                                    width: double.infinity,
+                                      color: Colors.yellow[50]
+                                          ?.withOpacity(0.2),
+                                      child: Visibility(
+                                          child: TextButton(
+                                              onPressed: (() {
+                                                _futureListNotifier
+                                                    .reset(_getRequests());
+                                              }),
+                                              child: Text('Сбросить фильтры',
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .lightGreen[800],
+                                                      fontSize: 20,
+                                                      decoration: TextDecoration
+                                                          .underline))),
+                                          visible:
+                                              _futureListNotifier.filtered)),
                                   Expanded(
                                       child: Container(
+                                        // padding: EdgeInsets.all(0),
                                           color: Colors.yellow[50]
                                               ?.withOpacity(0.2),
                                           // child: _myListView(context, list)
@@ -69,9 +86,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
                               // By default, show a loading spinner.
                               return Center(child: CircularProgressIndicator());
                             })),
-                  onWillPop: () async => false
-                ))
-    ));
+                    onWillPop: () async => false))));
   }
 
   // Future<bool> _willPopCallback() async {
@@ -102,20 +117,25 @@ class _NewRequestPageState extends State<NewRequestPage> {
         onRefresh: _pullRefresh,
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: list.requests.length,
+          itemCount: list.length,
           itemBuilder: (context, index) {
-            return Design().requestContainer(list.requests[index],
-                Design().newRequestRow(context, list.requests[index]));
+            return Design().requestContainer(
+                list[index], Design().newRequestRow(context, list[index]));
           },
         ));
   }
 
   Future<void> _pullRefresh() async {
+    if (_futureListNotifier.filtered) return;
     Future<List<Request>> newList = service.getNewRequests();
     setState(() {
-      futureList = newList;
+      _futureListNotifier.value = newList;
     });
     // why use newList var? https://stackoverflow.com/a/52992836/2301224
     await Future.delayed(Duration(seconds: 1));
+  }
+
+  Future<List<Request>> _getRequests() async {
+    return await service.getNewRequests();
   }
 }
