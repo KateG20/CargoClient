@@ -53,7 +53,6 @@ class _EntryPageState extends State<EntryPage> {
                         key: _formKey,
                         child: Container(
                             padding: EdgeInsets.all(30.0),
-                            // color: Colors.white,
                             color: Colors.yellow[50]?.withOpacity(0.2),
                             child: Container(
                                 child: Center(
@@ -61,18 +60,12 @@ class _EntryPageState extends State<EntryPage> {
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Text(
                                 'Авторизация',
-                                //${DateTime(2030).millisecondsSinceEpoch - DateTime(2020).millisecondsSinceEpoch}',
                                 style: TextStyle(
-                                    // color: Color(0xff9ACD32), fontSize: 25.0),
                                     color: Colors.lightGreen[700],
                                     fontSize: 30.0),
                               ),
                               Padding(
                                 padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                                // child: Align(
-                                //   alignment: Alignment.centerLeft,
-                                //   child: _getWarning(),
-                                // )
                               ),
                               Padding(padding: EdgeInsets.only(top: 20.0)),
                               loginField(),
@@ -176,6 +169,7 @@ class _EntryPageState extends State<EntryPage> {
               .loginUser(_loginCtrl.text,
                   sha256.convert(utf8.encode(_pwdCtrl.text)).toString())
               .then((value) {
+                _incorrectData = false;
             LocalUserProvider.user = value;
           }).catchError((error) {_incorrectData = true;});
 

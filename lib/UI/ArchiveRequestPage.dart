@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-import 'Design.dart';
+import '../ListFilterNotifier.dart';
 import '../entity/Request.dart';
-import '../RequestListModel.dart';
 import '../service/RequestService.dart';
+import 'RequestList.dart';
 
 class ArchiveRequestPage extends StatefulWidget {
   @override
@@ -12,23 +11,23 @@ class ArchiveRequestPage extends StatefulWidget {
 }
 
 class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
-  // var requests = [
-  //   Request("Shipper", "Receiver", DateTime.utc(2020, 4, 1), Duration(hours: 5),
-  //       120, "ТЛЦ", "Санкт-Петербург", 680, "comment"),
-  //   Request("Shipper", "Receiver", DateTime.utc(2020, 12, 21),
-  //       Duration(minutes: 32), 60, "Дмитров", "ТЛЦ", 680, "comment")
-  // ];
-
-  // TODO тут все переделать нормально, как в новых заявках
-  var service = RequestService();
+  final RequestService service = RequestService();
   late Future<List<Request>> futureList;
-  String test = 'test';
+
   List<Request> list = [];
+
+  late ListFilterNotifier _futureListNotifier;
 
   @override
   void initState() {
     super.initState();
-    futureList = service.getArchiveRequests();
+    _futureListNotifier = ListFilterNotifier(value: _getRequests());
+  }
+
+  @override
+  void dispose() {
+    _futureListNotifier.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,51 +36,85 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
-                    // создали колонку, в которой сначала
-                    // ряд меню, а снизу прифигачиваем список
-                    child: Column(children: <Widget>[
-                  // Design.pageHeader(context, setState, list, 2),
-                  Expanded(
-                      child: ListView.custom(
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.all(7),
-                    childrenDelegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          return KeepAlive(
-                            data: list[index],
-                            key: ValueKey<Request>(list[index]),
-                          );
-                        },
-                        childCount: list.length,
-                        findChildIndexCallback: (Key key) {
-                          final ValueKey valueKey = key as ValueKey;
-                          final Request data = valueKey.value;
-                          return list.indexOf(data);
-                        }),
-                  ))
-                ]))));
+                child: WillPopScope(
+                    child: ValueListenableBuilder(
+                        valueListenable: _futureListNotifier,
+                        builder: (context, value, child) => FutureBuilder<
+                                List<Request>>(
+                            future: _futureListNotifier.value,
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                list = snapshot.data!;
+
+                                return Column(children: <Widget>[
+                                  RequestList.pageHeader(
+                                      context, _futureListNotifier, list, 2),
+                                  Visibility(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow[50]
+                                              ?.withOpacity(0.2),
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.lightGreen
+                                                      .withOpacity(0.7),
+                                                  width: 3)),
+                                        ),
+                                        width: double.infinity,
+                                        child: TextButton(
+                                            onPressed: (() {
+                                              _futureListNotifier
+                                                  .reset(_getRequests());
+                                            }),
+                                            child: Text('Сбросить фильтры',
+                                                style: TextStyle(
+                                                    color:
+                                                        Colors.lightGreen[800],
+                                                    fontSize: 20,
+                                                    decoration: TextDecoration
+                                                        .underline))),
+                                      ),
+                                      visible: _futureListNotifier.filtered),
+                                  Expanded(
+                                      child: Container(
+                                          color: Colors.yellow[50]
+                                              ?.withOpacity(0.2),
+                                          child: _myListView(context)))
+                                ]);
+                              } else if (snapshot.hasError) {
+                                return Text("${snapshot.error}");
+                              }
+                              // By default, show a loading spinner.
+                              return Center(child: CircularProgressIndicator());
+                            })),
+                    onWillPop: () async => false))));
   }
-}
 
-class KeepAlive extends StatefulWidget {
-  const KeepAlive({
-    required Key key,
-    required this.data,
-  }) : super(key: key);
+  // Widget _myListView(BuildContext context, RequestListModel list) {
+  Widget _myListView(BuildContext context) {
+    return RefreshIndicator(
+        onRefresh: _pullRefresh,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: list.length,
+          itemBuilder: (context, index) {
+            return RequestList().requestContainer(list[index],
+                RequestList().archiveRequestRow(context, list[index]));
+          },
+        ));
+  }
 
-  final Request data;
+  Future<void> _pullRefresh() async {
+    if (_futureListNotifier.filtered) return;
+    Future<List<Request>> newList = service.getArchiveRequests();
+    setState(() {
+      _futureListNotifier.value = newList;
+    });
+    // why use newList var? https://stackoverflow.com/a/52992836/2301224
+    await Future.delayed(Duration(seconds: 1));
+  }
 
-  @override
-  _KeepAliveState createState() => _KeepAliveState(data);
-}
-
-class _KeepAliveState extends State<KeepAlive> {
-  final Request _data;
-
-  _KeepAliveState(this._data);
-
-  @override
-  Widget build(BuildContext context) {
-    return Design().requestContainer(_data, Design().archiveRequestRow(context, _data));
+  Future<List<Request>> _getRequests() async {
+    return await service.getArchiveRequests();
   }
 }

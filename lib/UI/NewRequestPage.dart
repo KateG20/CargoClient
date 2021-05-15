@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/ListFilterNotifier.dart';
 
+import '../ListFilterNotifier.dart';
 import '../entity/Request.dart';
 import '../service/RequestService.dart';
-import 'Design.dart';
+import 'RequestList.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -13,9 +13,7 @@ class NewRequestPage extends StatefulWidget {
 class _NewRequestPageState extends State<NewRequestPage> {
   final RequestService service = RequestService();
   late Future<List<Request>> futureList;
-  bool _filtered = false;
 
-  // set setFutureList(Future<List<Request>> val) => futureList = val;
   List<Request> list = [];
 
   late ListFilterNotifier _futureListNotifier;
@@ -23,7 +21,6 @@ class _NewRequestPageState extends State<NewRequestPage> {
   @override
   void initState() {
     super.initState();
-    // futureList = service.getNewRequests();
     _futureListNotifier = ListFilterNotifier(value: _getRequests());
   }
 
@@ -47,37 +44,41 @@ class _NewRequestPageState extends State<NewRequestPage> {
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                // return Text(snapshot.data!.title);
                                 list = snapshot.data!;
 
                                 return Column(children: <Widget>[
-                                  Design.pageHeader(
+                                  RequestList.pageHeader(
                                       context, _futureListNotifier, list, 0),
-                                  Container(
-                                    width: double.infinity,
-                                      color: Colors.yellow[50]
-                                          ?.withOpacity(0.2),
-                                      child: Visibility(
-                                          child: TextButton(
-                                              onPressed: (() {
-                                                _futureListNotifier
-                                                    .reset(_getRequests());
-                                              }),
-                                              child: Text('Сбросить фильтры',
-                                                  style: TextStyle(
-                                                      color: Colors
-                                                          .lightGreen[800],
-                                                      fontSize: 20,
-                                                      decoration: TextDecoration
-                                                          .underline))),
-                                          visible:
-                                              _futureListNotifier.filtered)),
-                                  Expanded(
+                                  Visibility(
                                       child: Container(
-                                        // padding: EdgeInsets.all(0),
+                                        decoration: BoxDecoration(
                                           color: Colors.yellow[50]
                                               ?.withOpacity(0.2),
-                                          // child: _myListView(context, list)
+                                          border: Border(
+                                              bottom: BorderSide(
+                                                  color: Colors.lightGreen
+                                                      .withOpacity(0.7),
+                                                  width: 3)),
+                                        ),
+                                        width: double.infinity,
+                                        child: TextButton(
+                                            onPressed: (() {
+                                              _futureListNotifier
+                                                  .reset(_getRequests());
+                                            }),
+                                            child: Text('Сбросить фильтры',
+                                                style: TextStyle(
+                                                    color:
+                                                    Colors.lightGreen[800],
+                                                    fontSize: 20,
+                                                    decoration: TextDecoration
+                                                        .underline))),
+                                      ),
+                                      visible: _futureListNotifier.filtered),
+                                  Expanded(
+                                      child: Container(
+                                          color: Colors.yellow[50]
+                                              ?.withOpacity(0.2),
                                           child: _myListView(context)))
                                 ]);
                               } else if (snapshot.hasError) {
@@ -119,8 +120,11 @@ class _NewRequestPageState extends State<NewRequestPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: list.length,
           itemBuilder: (context, index) {
-            return Design().requestContainer(
-                list[index], Design().newRequestRow(context, list[index]));
+            return RequestList().requestContainer(
+                // todo тут меняется
+                list[index],
+                RequestList()
+                    .newRequestRow(_futureListNotifier, context, list[index]));
           },
         ));
   }

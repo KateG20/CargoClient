@@ -9,6 +9,14 @@ import '../entity/User.dart';
 class UserService {
   final url = '10.0.2.2:8080';
 
+  Future<void> logout() async {
+    var response = await http.get(Uri.http(url, 'logout'));
+    if (response.statusCode != 200) {
+      throw Exception('Failed to logout');
+    }
+    else print('logged out'); // todo убрать
+  }
+
   Future<User> loginUser(String login, String password) async {
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$login:$password'));
 

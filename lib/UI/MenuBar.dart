@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/service/UserService.dart';
 
 import 'ArchiveRequestPage.dart';
 import 'CurrentRequestPage.dart';
-import 'Design.dart';
+import 'RequestList.dart';
 import 'EntryPage.dart';
 import 'NewRequestPage.dart';
 
@@ -80,7 +81,7 @@ class MenuBar extends StatelessWidget {
                           // decoration: BoxDecoration(
                           //   color: Colors.yellow[50]?.withOpacity(0.5),
                           // )
-                          decoration: Design().greenBoxDecoration(),
+                          decoration: RequestList().greenBoxDecoration(),
                           // decoration: Design().menuHeaderBoxDecoration(),
                         )),
                         Container(
@@ -148,7 +149,8 @@ class MenuBar extends StatelessWidget {
                               title: Text('Выйти',
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.green[800])),
-                              onTap: () {
+                              onTap: () async {
+                                await UserService().logout();
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

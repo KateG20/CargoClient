@@ -28,16 +28,16 @@ class Request {
   Request.withId(
       this.id,
       this.price,
-        this.shipper,
-        this.receiver,
-        this.date,
-        this.duration,
-        this.distance,
-        this.source,
-        this.destination,
-        this.weight,
-        this.description,
-        this.status);
+      this.shipper,
+      this.receiver,
+      this.date,
+      this.duration,
+      this.distance,
+      this.source,
+      this.destination,
+      this.weight,
+      this.description,
+      this.status);
 
   Request.optional(
       {this.price,
@@ -53,7 +53,7 @@ class Request {
 
   factory Request.fromJson(Map<String, dynamic> json) {
     return Request.withId(
-      json['id'],
+        json['id'],
         json['price'],
         json['shipper'],
         json['receiver'],

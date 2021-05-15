@@ -9,7 +9,7 @@ import '../entity/Request.dart';
 import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
-class Design {
+class RequestList {
   var service = RequestService();
 
   static Container pageHeader(BuildContext context,
@@ -263,25 +263,25 @@ class Design {
     return res;
   }
 
-  Row newRequestRow(BuildContext context, Request _data) {
+  Row newRequestRow(ListFilterNotifier futureListNotifier, BuildContext context, Request _data) {
     return Row(
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        rejectButton(_data),
-        acceptButton(_data),
+        rejectButton(_data, futureListNotifier),
+        acceptButton(_data, futureListNotifier),
         moreInfoIcon(context, _data),
       ],
     );
   }
 
-  Row currentRequestRow(BuildContext context, Request _data) {
+  Row currentRequestRow(ListFilterNotifier futureListNotifier, BuildContext context, Request _data) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(padding: EdgeInsets.only(right: 50)),
-        doneButton(_data),
+        doneButton(_data, futureListNotifier),
         moreInfoIcon(context, _data),
       ],
     );
@@ -297,7 +297,7 @@ class Design {
     );
   }
 
-  OutlinedButton rejectButton(Request data) {
+  OutlinedButton rejectButton(Request data, ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.orange,
@@ -308,6 +308,7 @@ class Design {
           backgroundColor: Colors.orange[50]),
       onPressed: () {
         service.rejectRequest(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value = service.getNewRequests(); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -318,7 +319,7 @@ class Design {
     );
   }
 
-  OutlinedButton acceptButton(Request data) {
+  OutlinedButton acceptButton(Request data, ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.lightGreen[800],
@@ -330,6 +331,7 @@ class Design {
       onPressed: () {
         service.updateRequestStatus(data.id!, 1);
         service.addRequestToUser(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value = service.getNewRequests(); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -352,7 +354,7 @@ class Design {
     );
   }
 
-  OutlinedButton doneButton(Request data) {
+  OutlinedButton doneButton(Request data, ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -364,6 +366,7 @@ class Design {
       ),
       onPressed: () {
         service.updateRequestStatus(data.id!, 2);
+        futureListNotifier.value = service.getCurrentRequests(); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
