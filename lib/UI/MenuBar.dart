@@ -4,7 +4,7 @@ import 'package:flutter1/service/UserService.dart';
 
 import 'ArchiveRequestPage.dart';
 import 'CurrentRequestPage.dart';
-import 'RequestList.dart';
+import 'ListWidgets.dart';
 import 'EntryPage.dart';
 import 'NewRequestPage.dart';
 
@@ -81,7 +81,7 @@ class MenuBar extends StatelessWidget {
                           // decoration: BoxDecoration(
                           //   color: Colors.yellow[50]?.withOpacity(0.5),
                           // )
-                          decoration: RequestList().greenBoxDecoration(),
+                          decoration: ListWidgets().greenBoxDecoration(),
                           // decoration: Design().menuHeaderBoxDecoration(),
                         )),
                         Container(
@@ -150,7 +150,7 @@ class MenuBar extends StatelessWidget {
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.green[800])),
                               onTap: () async {
-                                await UserService().logout();
+                                await UserService().logout(); // todo ваще не работает
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

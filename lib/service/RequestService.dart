@@ -123,7 +123,7 @@ class RequestService {
 
   Future<void> rejectRequest(int requestId, int userId) async {
     final response = await http.put(
-        Uri.http(url, 'request/reject/$requestId/$userId'), // почему-то тут налл requestId
+        Uri.http(url, 'request/reject/$requestId/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!

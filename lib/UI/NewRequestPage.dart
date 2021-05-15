@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/RType.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
 import '../ListFilterNotifier.dart';
 import '../entity/Request.dart';
 import '../service/RequestService.dart';
-import 'RequestList.dart';
+import 'ListWidgets.dart';
 
 class NewRequestPage extends StatefulWidget {
   @override
@@ -11,7 +13,8 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-  final RequestService service = RequestService();
+  // final RequestService service = RequestService();
+  final ServiceViewModel vm = ServiceViewModel();
   late Future<List<Request>> futureList;
 
   List<Request> list = [];
@@ -21,7 +24,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
   @override
   void initState() {
     super.initState();
-    _futureListNotifier = ListFilterNotifier(value: _getRequests());
+    _futureListNotifier = ListFilterNotifier(value: vm.getRequests(RType.news));
   }
 
   @override
@@ -47,7 +50,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
                                 list = snapshot.data!;
 
                                 return Column(children: <Widget>[
-                                  RequestList.pageHeader(
+                                  ListWidgets.pageHeader(
                                       context, _futureListNotifier, list, 0),
                                   Visibility(
                                       child: Container(
@@ -64,7 +67,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
                                         child: TextButton(
                                             onPressed: (() {
                                               _futureListNotifier
-                                                  .reset(_getRequests());
+                                                  .reset(vm.getRequests(RType.news));
                                             }),
                                             child: Text('Сбросить фильтры',
                                                 style: TextStyle(
@@ -115,31 +118,30 @@ class _NewRequestPageState extends State<NewRequestPage> {
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
     return RefreshIndicator(
-        onRefresh: _pullRefresh,
+        onRefresh: (() => vm.refreshList(RType.news, _futureListNotifier)),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: list.length,
           itemBuilder: (context, index) {
-            return RequestList().requestContainer(
-                // todo тут меняется
+            return ListWidgets().requestContainer(
                 list[index],
-                RequestList()
+                ListWidgets()
                     .newRequestRow(_futureListNotifier, context, list[index]));
           },
         ));
   }
 
-  Future<void> _pullRefresh() async {
-    if (_futureListNotifier.filtered) return;
-    Future<List<Request>> newList = service.getNewRequests();
-    setState(() {
-      _futureListNotifier.value = newList;
-    });
-    // why use newList var? https://stackoverflow.com/a/52992836/2301224
-    await Future.delayed(Duration(seconds: 1));
-  }
+  // Future<void> _pullRefresh() async {
+  //   if (_futureListNotifier.filtered) return;
+  //   Future<List<Request>> newList = service.getNewRequests();
+  //   setState(() {
+  //     _futureListNotifier.value = newList;
+  //   });
+  //   // why use newList var? https://stackoverflow.com/a/52992836/2301224
+  //   await Future.delayed(Duration(seconds: 1));
+  // }
 
-  Future<List<Request>> _getRequests() async {
-    return await service.getNewRequests();
-  }
+  // Future<List<Request>> _getRequests() async {
+  //   return await service.getNewRequests();
+  // }
 }

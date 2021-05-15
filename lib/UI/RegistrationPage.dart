@@ -1,13 +1,7 @@
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/entity/User.dart';
-import 'package:flutter1/service/RequestService.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
-import '../service/RequestService.dart';
-import '../service/UserService.dart';
+import '../LocalUserProvider.dart';
 import 'NewRequestPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -26,8 +20,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   var _loginCtrl = TextEditingController();
   var _pwdCtrl = TextEditingController();
 
-  var requestService = RequestService();
-  var userService = UserService();
+  // var requestService = RequestService();
+  // var userService = UserService();
+  final ServiceViewModel vm = ServiceViewModel();
 
   void _showPwd1() {
     setState(() {
@@ -225,13 +220,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-          String encodedPwd =
-              sha256.convert(utf8.encode(_pwdCtrl.text)).toString();
 
           // todo посмотреть, какой код будет с одинаковыми логинами
-          await userService
-              .createUser(User.create(
-                  _loginCtrl.text, encodedPwd, LocalUserProvider.user))
+          await vm.createUser(_loginCtrl.text, _pwdCtrl.text)
               .then((value) {
             LocalUserProvider.setUser(value);
           }).catchError((error) {
@@ -239,11 +230,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               _warning = true;
             });
           }).then((value) {
-            userService.loginUser(_loginCtrl.text, encodedPwd).then((value) =>
+            vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) =>
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => NewRequestPage())));
-            // Navigator.push(context,
-            //     MaterialPageRoute(builder: (context) => NewRequestPage()));
           });
         }
       },

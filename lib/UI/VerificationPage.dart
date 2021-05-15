@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 import 'package:flutter1/exception/NoKeyFoundException.dart';
 
 import '../entity/Key.dart' as my;
@@ -15,8 +16,9 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
-  var requestService = RequestService();
-  var userService = UserService();
+  // var requestService = RequestService();
+  // var userService = UserService();
+  final ServiceViewModel vm = ServiceViewModel();
 
   my.Key? key;
   bool keyFound = false;
@@ -102,8 +104,6 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
-  Future<my.Key>? _futureKey;
-
   Widget verifyButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
@@ -112,7 +112,7 @@ class _VerificationPageState extends State<VerificationPage> {
         side: BorderSide(color: Colors.lightGreen, width: 1.5),
       ),
       onPressed: () async {
-        await userService.checkKey(_keyCtrl.text).then((value) {
+        await vm.checkKey(_keyCtrl.text).then((value) {
           key = value;
         }).catchError((e) {
           if (e is NoKeyFoundException)
@@ -123,8 +123,8 @@ class _VerificationPageState extends State<VerificationPage> {
         });
 
         if (_formKey.currentState!.validate()) {
-          var user =
-              User.unregistered(key!.name, key!.licensePlate, key!.company, key!.value);
+          var user = User.unregistered(
+              key!.name, key!.licensePlate, key!.company, key!.value);
           LocalUserProvider.setUser(user);
           Navigator.push(
             context,

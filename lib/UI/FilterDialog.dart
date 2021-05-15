@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/UI/NewRequestPage.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 import 'package:flutter1/entity/Request.dart';
 import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
@@ -22,7 +23,8 @@ class FilterDialog {
   String _dateFromText = '                     ';
   String _dateToText = '                     ';
 
-  final RequestService service = RequestService();
+  // final RequestService service = RequestService();
+  final ServiceViewModel vm = ServiceViewModel();
 
   _selectDate(context, dialogSetState, bool from) async {
     final DateTime? picked = await showDatePicker(
@@ -504,7 +506,7 @@ class FilterDialog {
           if (_maxPrice == null) _maxPrice = 1000000;
           if (_maxDist == null) _maxDist = 100000;
 
-          futureListNotifier.filter(service.filterRequests(status,
+          futureListNotifier.filter(vm.filterRequests(status,
               LocalUserProvider.user.id!, _source!, _destination!,
               _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
               _minPrice!, _maxPrice!, _minDist!, _maxDist!));

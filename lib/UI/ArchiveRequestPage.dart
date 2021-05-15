@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/RType.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
 import '../ListFilterNotifier.dart';
 import '../entity/Request.dart';
 import '../service/RequestService.dart';
-import 'RequestList.dart';
+import 'ListWidgets.dart';
 
 class ArchiveRequestPage extends StatefulWidget {
   @override
@@ -11,7 +13,7 @@ class ArchiveRequestPage extends StatefulWidget {
 }
 
 class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
-  final RequestService service = RequestService();
+  final ServiceViewModel vm = ServiceViewModel();
   late Future<List<Request>> futureList;
 
   List<Request> list = [];
@@ -21,7 +23,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   @override
   void initState() {
     super.initState();
-    _futureListNotifier = ListFilterNotifier(value: _getRequests());
+    _futureListNotifier = ListFilterNotifier(value: vm.getRequests(RType.archive));
   }
 
   @override
@@ -47,7 +49,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                                 list = snapshot.data!;
 
                                 return Column(children: <Widget>[
-                                  RequestList.pageHeader(
+                                  ListWidgets.pageHeader(
                                       context, _futureListNotifier, list, 2),
                                   Visibility(
                                       child: Container(
@@ -64,7 +66,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                                         child: TextButton(
                                             onPressed: (() {
                                               _futureListNotifier
-                                                  .reset(_getRequests());
+                                                  .reset(vm.getRequests(RType.archive));
                                             }),
                                             child: Text('Сбросить фильтры',
                                                 style: TextStyle(
@@ -90,31 +92,16 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                     onWillPop: () async => false))));
   }
 
-  // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
     return RefreshIndicator(
-        onRefresh: _pullRefresh,
+        onRefresh: (() => vm.refreshList(RType.archive, _futureListNotifier)),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: list.length,
           itemBuilder: (context, index) {
-            return RequestList().requestContainer(list[index],
-                RequestList().archiveRequestRow(context, list[index]));
+            return ListWidgets().requestContainer(list[index],
+                ListWidgets().archiveRequestRow(context, list[index]));
           },
         ));
-  }
-
-  Future<void> _pullRefresh() async {
-    if (_futureListNotifier.filtered) return;
-    Future<List<Request>> newList = service.getArchiveRequests();
-    setState(() {
-      _futureListNotifier.value = newList;
-    });
-    // why use newList var? https://stackoverflow.com/a/52992836/2301224
-    await Future.delayed(Duration(seconds: 1));
-  }
-
-  Future<List<Request>> _getRequests() async {
-    return await service.getArchiveRequests();
   }
 }

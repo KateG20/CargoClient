@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/service/RequestService.dart';
+import 'package:flutter1/RType.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 import 'package:intl/intl.dart';
 
 import '../ListFilterNotifier.dart';
@@ -9,8 +10,9 @@ import '../entity/Request.dart';
 import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
-class RequestList {
-  var service = RequestService();
+class ListWidgets {
+  // var service = RequestService();
+  final ServiceViewModel vm = ServiceViewModel();
 
   static Container pageHeader(BuildContext context,
       ListFilterNotifier futureListNotifier, List<Request> list, int status) {
@@ -306,9 +308,9 @@ class RequestList {
           side: BorderSide(color: (Colors.orange[200])!, width: 2),
           minimumSize: Size(150, 30),
           backgroundColor: Colors.orange[50]),
-      onPressed: () {
-        service.rejectRequest(data.id!, LocalUserProvider.user.id!);
-        futureListNotifier.value = service.getNewRequests(); // обновление списка
+      onPressed: () async {
+        await vm.rejectRequest(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value = vm.getRequests(RType.news); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -328,10 +330,10 @@ class RequestList {
           side: BorderSide(color: Colors.lightGreen, width: 2),
           minimumSize: Size(150, 30),
           backgroundColor: Colors.lightGreen[50]),
-      onPressed: () {
-        service.updateRequestStatus(data.id!, 1);
-        service.addRequestToUser(data.id!, LocalUserProvider.user.id!);
-        futureListNotifier.value = service.getNewRequests(); // обновление списка
+      onPressed: () async {
+        await vm.acceptRequest(data.id!);
+        await vm.addRequestToUser(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value = vm.getRequests(RType.news); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -364,9 +366,9 @@ class RequestList {
         backgroundColor: Colors.lightGreen[50],
         primary: Colors.lightGreen[800],
       ),
-      onPressed: () {
-        service.updateRequestStatus(data.id!, 2);
-        futureListNotifier.value = service.getCurrentRequests(); // обновление списка
+      onPressed: () async {
+        await vm.completeRequest(data.id!);
+        futureListNotifier.value = vm.getRequests(RType.current); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter1/LocalUserProvider.dart';
+import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
 import '../entity/Request.dart';
 import '../entity/User.dart';
@@ -22,9 +23,12 @@ class _EntryPageState extends State<EntryPage> {
   // String _warningText = "test";
   bool _obscureText = true;
   bool _incorrectData = false;
-  RequestService service = RequestService();
+
+  // RequestService service = RequestService();
   final _formKey = GlobalKey<FormState>();
-  var userService = UserService();
+
+  // var userService = UserService();
+  final ServiceViewModel vm = ServiceViewModel();
 
   var _loginCtrl = TextEditingController();
   var _pwdCtrl = TextEditingController();
@@ -165,15 +169,14 @@ class _EntryPageState extends State<EntryPage> {
           side: BorderSide(color: Colors.lightGreen, width: 1.5),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () async {
-          await userService
-              .loginUser(_loginCtrl.text,
-                  sha256.convert(utf8.encode(_pwdCtrl.text)).toString())
-              .then((value) {
-                _incorrectData = false;
-            LocalUserProvider.user = value;
-          }).catchError((error) {_incorrectData = true;});
+        await vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
+          _incorrectData = false;
+          LocalUserProvider.user = value;
+        }).catchError((error) {
+          _incorrectData = true;
+        });
 
-          if (_formKey.currentState!.validate()) {
+        if (_formKey.currentState!.validate()) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => NewRequestPage()),
@@ -252,7 +255,7 @@ class _EntryPageState extends State<EntryPage> {
                 borderRadius: BorderRadius.all(Radius.circular(15.0)))),
         onPressed: () {
           cnt++;
-          service.postRequest(Request(
+          RequestService().postRequest(Request(
               rnd.nextInt(700) + 300,
               "Shipper",
               "Receiver",
