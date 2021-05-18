@@ -1,4 +1,4 @@
-import 'entity/User.dart';
+import '../entity/User.dart';
 
 class LocalUserProvider {
   static late User user;

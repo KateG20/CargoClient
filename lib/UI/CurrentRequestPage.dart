@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/RType.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
+import '../RType.dart';
+import '../ViewModel/ServiceViewModel.dart';
 
-import '../ListFilterNotifier.dart';
+import '../notifier/ListFilterNotifier.dart';
 import '../entity/Request.dart';
 import '../service/RequestService.dart';
 import 'ListWidgets.dart';
@@ -13,11 +13,9 @@ class CurrentRequestPage extends StatefulWidget {
 }
 
 class _CurrentRequestPageState extends State<CurrentRequestPage> {
-  // final RequestService service = RequestService();
   final ServiceViewModel vm = ServiceViewModel();
-  late Future<List<Request>> futureList;
 
-  List<Request> list = [];
+  List<Request> _list = [];
 
   late ListFilterNotifier _futureListNotifier;
 
@@ -47,11 +45,11 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                list = snapshot.data!;
+                                _list = snapshot.data!;
 
                                 return Column(children: <Widget>[
                                   ListWidgets.pageHeader(
-                                      context, _futureListNotifier, list, 1),
+                                      context, _futureListNotifier, _list, 1),
                                   Visibility(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -99,10 +97,10 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
         onRefresh: (() => vm.refreshList(RType.current, _futureListNotifier)),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: list.length,
+          itemCount: _list.length,
           itemBuilder: (context, index) {
             return ListWidgets().requestContainer(
-                list[index], ListWidgets().currentRequestRow(_futureListNotifier, context, list[index]));
+                _list[index], ListWidgets().currentRequestRow(_futureListNotifier, context, _list[index]));
           },
         ));
   }

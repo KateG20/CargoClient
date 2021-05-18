@@ -7,8 +7,8 @@ import 'package:flutter1/entity/User.dart';
 import 'package:flutter1/service/RequestService.dart';
 import 'package:flutter1/service/UserService.dart';
 
-import '../ListFilterNotifier.dart';
-import '../LocalUserProvider.dart';
+import '../notifier/ListFilterNotifier.dart';
+import '../provider/LocalUserProvider.dart';
 import '../RType.dart';
 
 class ServiceViewModel {
@@ -41,12 +41,12 @@ class ServiceViewModel {
     await requestService.rejectRequest(requestId, userId);
   }
 
-  Future<void> acceptRequest(int requestId) async {
-    await requestService.updateRequestStatus(requestId, 1);
+  Future<void> acceptRequest(int requestId, int userId) async {
+    await requestService.updateRequestStatus(requestId, 1, userId);
   }
 
-  Future<void> completeRequest(int requestId) async {
-    await requestService.updateRequestStatus(requestId, 2);
+  Future<void> completeRequest(int requestId, int userId) async {
+    await requestService.updateRequestStatus(requestId, 2, userId);
   }
 
   Future<void> addRequestToUser(int requestId, int userId) async {

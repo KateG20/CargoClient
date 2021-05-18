@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter1/LocalUserProvider.dart';
+import 'file:///C:/Users/Lenovo%20X1/IdeaProjects/flutter1/lib/provider/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -11,7 +11,7 @@ class UserService {
 
   Future<void> logout() async {
     var response = await http.get(Uri.http(url, 'logout'));
-    if (response.statusCode != 200) {
+    if (response.statusCode < 200 && response.statusCode >= 400) {
       throw Exception('Failed to logout');
     }
     else print('logged out'); // todo убрать
@@ -55,11 +55,6 @@ class UserService {
         'keyValue': user.key
       }),
     );
-    // String? rawCookie = response.headers['set-cookie'];
-    // if (rawCookie != null) {
-    //   int index = rawCookie.indexOf(';');
-    //   cookie = (index == -1) ? rawCookie : rawCookie.substring(0, index);
-    // }
 
     if (response.statusCode == 201) {
       return User.fromJson(jsonDecode(response.body));

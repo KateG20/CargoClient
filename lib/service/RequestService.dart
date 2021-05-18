@@ -1,10 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/exception/NoKeyFoundException.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Request.dart';
+import '../exception/NoKeyFoundException.dart';
+import '../exception/RequestAcceptConflictException.dart';
+import '../provider/LocalUserProvider.dart';
 
 class RequestService {
   final url = '10.0.2.2:8080';
@@ -12,7 +13,6 @@ class RequestService {
   Future<List<Request>> getNewRequests() async {
     var response = await http.get(
         Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'),
-        // Uri.http(url, 'requests/new/1'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!
@@ -64,6 +64,7 @@ class RequestService {
     }
   }
 
+  // todo убрать
   Future<Request> postRequest(Request request) async {
     final response = await http.post(
       Uri.http(url, 'request/create'),
@@ -82,8 +83,7 @@ class RequestService {
         'source': request.source,
         'destination': request.destination,
         'weight': request.weight,
-        'description': request.description,
-        'status': request.status
+        'description': request.description
       }),
     );
     if (response.statusCode == 201) {
@@ -93,16 +93,14 @@ class RequestService {
     }
   }
 
-  Future<void> updateRequestStatus(int id, int newStatus) async {
+  Future<void> updateRequestStatus(int id, int newStatus, int userId) async {
     final http.Response response = await http.put(
-        Uri.http(url, 'request/status/$id/$newStatus'),
+        Uri.http(url, 'request/status/$id/$newStatus/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!
         });
     if (response.statusCode != 200) {
-    //   return Request.fromJson(jsonDecode(response.body));
-    // } else {
       throw Exception('Failed to update status');
     }
   }
@@ -114,9 +112,10 @@ class RequestService {
           'Content-Type': 'application/json',
           'Cookie': LocalUserProvider.jSessionId!
         });
-    if (response.statusCode != 200) {
-    //   return Request.fromJson(jsonDecode(response.body));
-    // } else {
+    if (response.statusCode == 98798798789) {
+      // TODO код если не удалось привязать
+      throw RequestAcceptConflictException();
+    } else if (response.statusCode != 200) {
       throw Exception('Failed to add request to user');
     }
   }
@@ -129,8 +128,6 @@ class RequestService {
           'Cookie': LocalUserProvider.jSessionId!
         });
     if (response.statusCode != 200) {
-    //   return Request.fromJson(jsonDecode(response.body));
-    // } else {
       throw Exception('Failed to reject request');
     }
   }
@@ -179,88 +176,88 @@ class RequestService {
     }
   }
 
-  // Future<List<Request>> getNewRequests() async {
-  List<Request> getNewRequestsHard() {
-    // ура хардкодим
-    var requests = [
-      Request(500, "Shipper", "Receiver", DateTime.utc(2021, 3, 8),
-          Duration(hours: 3), 120, "ТЛЦ", "1Владивосток", 680, "comment"),
-      Request(
-          500,
-          "Shipper",
-          "Receiver",
-          DateTime.utc(2021, 7, 1),
-          Duration(hours: 1, minutes: 12),
-          60,
-          "2Новосибирск",
-          "ТЛЦ",
-          680,
-          "comment"),
-      Request(
-          500,
-          "Shipper",
-          "Receiver",
-          DateTime.utc(2021, 7, 1),
-          Duration(hours: 1, minutes: 12),
-          60,
-          "3Новосибирск",
-          "ТЛЦ",
-          200,
-          "comment"),
-      Request(
-          500,
-          "Shipper",
-          "Receiver",
-          DateTime.utc(2021, 7, 1),
-          Duration(hours: 1, minutes: 12),
-          60,
-          "4Новосибирск",
-          "ТЛЦ",
-          1200,
-          "comment"),
-      Request(
-          500,
-          "Shipper",
-          "Receiver",
-          DateTime.utc(2021, 7, 1),
-          Duration(hours: 1, minutes: 12),
-          60,
-          "5Новосибирск",
-          "ТЛЦ",
-          680,
-          "comment"),
-    ];
-    return requests;
-  }
-
-  List<Request> getCurrentRequestsHard() {
-    // ура хардкодим
-    var requests = [
-      Request(500, "Shipper", "Receiver", DateTime.utc(2021, 4, 20),
-          Duration(hours: 5), 120, "ТЛЦ", "Москва", 680, "comment"),
-      Request(
-          500,
-          "Shipper",
-          "Receiver",
-          DateTime.utc(2021, 5, 3),
-          Duration(minutes: 32),
-          60,
-          "Александровск-Сахалинский",
-          "ТЛЦ",
-          680,
-          "comment")
-    ];
-    return requests;
-  }
-
-  List<Request> getArchiveRequestsHard() {
-    // ура хардкодим
-    var requests = [
-      Request(500, "Shipper", "Receiver", DateTime.utc(2020, 4, 1),
-          Duration(hours: 5), 120, "ТЛЦ", "Санкт-Петербург", 680, "comment"),
-      Request(500, "Shipper", "Receiver", DateTime.utc(2020, 12, 21),
-          Duration(minutes: 32), 60, "Дмитров", "ТЛЦ", 680, "comment")
-    ];
-    return requests;
-  }
+// Future<List<Request>> getNewRequests() async {
+// List<Request> getNewRequestsHard() {
+//   // ура хардкодим
+//   var requests = [
+//     Request(500, "Shipper", "Receiver", DateTime.utc(2021, 3, 8),
+//         Duration(hours: 3), 120, "ТЛЦ", "1Владивосток", 680, "comment"),
+//     Request(
+//         500,
+//         "Shipper",
+//         "Receiver",
+//         DateTime.utc(2021, 7, 1),
+//         Duration(hours: 1, minutes: 12),
+//         60,
+//         "2Новосибирск",
+//         "ТЛЦ",
+//         680,
+//         "comment"),
+//     Request(
+//         500,
+//         "Shipper",
+//         "Receiver",
+//         DateTime.utc(2021, 7, 1),
+//         Duration(hours: 1, minutes: 12),
+//         60,
+//         "3Новосибирск",
+//         "ТЛЦ",
+//         200,
+//         "comment"),
+//     Request(
+//         500,
+//         "Shipper",
+//         "Receiver",
+//         DateTime.utc(2021, 7, 1),
+//         Duration(hours: 1, minutes: 12),
+//         60,
+//         "4Новосибирск",
+//         "ТЛЦ",
+//         1200,
+//         "comment"),
+//     Request(
+//         500,
+//         "Shipper",
+//         "Receiver",
+//         DateTime.utc(2021, 7, 1),
+//         Duration(hours: 1, minutes: 12),
+//         60,
+//         "5Новосибирск",
+//         "ТЛЦ",
+//         680,
+//         "comment"),
+//   ];
+//   return requests;
+// }
+//
+// List<Request> getCurrentRequestsHard() {
+//   // ура хардкодим
+//   var requests = [
+//     Request(500, "Shipper", "Receiver", DateTime.utc(2021, 4, 20),
+//         Duration(hours: 5), 120, "ТЛЦ", "Москва", 680, "comment"),
+//     Request(
+//         500,
+//         "Shipper",
+//         "Receiver",
+//         DateTime.utc(2021, 5, 3),
+//         Duration(minutes: 32),
+//         60,
+//         "Александровск-Сахалинский",
+//         "ТЛЦ",
+//         680,
+//         "comment")
+//   ];
+//   return requests;
+// }
+//
+// List<Request> getArchiveRequestsHard() {
+//   // ура хардкодим
+//   var requests = [
+//     Request(500, "Shipper", "Receiver", DateTime.utc(2020, 4, 1),
+//         Duration(hours: 5), 120, "ТЛЦ", "Санкт-Петербург", 680, "comment"),
+//     Request(500, "Shipper", "Receiver", DateTime.utc(2020, 12, 21),
+//         Duration(minutes: 32), 60, "Дмитров", "ТЛЦ", 680, "comment")
+//   ];
+//   return requests;
+// }
 }

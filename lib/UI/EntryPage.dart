@@ -1,15 +1,11 @@
-import 'dart:convert';
 import 'dart:math';
 
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
+import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
-import '../entity/User.dart';
+import '../provider/LocalUserProvider.dart';
 import '../service/RequestService.dart';
-import '../service/UserService.dart';
 import 'NewRequestPage.dart';
 import 'VerificationPage.dart';
 
@@ -19,15 +15,11 @@ class EntryPage extends StatefulWidget {
 }
 
 class _EntryPageState extends State<EntryPage> {
-  // bool _warningVisible = false;
-  // String _warningText = "test";
   bool _obscureText = true;
   bool _incorrectData = false;
 
-  // RequestService service = RequestService();
   final _formKey = GlobalKey<FormState>();
 
-  // var userService = UserService();
   final ServiceViewModel vm = ServiceViewModel();
 
   var _loginCtrl = TextEditingController();
@@ -72,17 +64,17 @@ class _EntryPageState extends State<EntryPage> {
                                 padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
                               ),
                               Padding(padding: EdgeInsets.only(top: 20.0)),
-                              loginField(),
+                              _loginField(),
                               Padding(padding: EdgeInsets.only(top: 20.0)),
-                              passwordField(),
+                              _passwordField(),
                               Padding(padding: EdgeInsets.only(top: 15.0)),
-                              logInButton(),
-                              signUpButton(),
+                              _logInButton(),
+                              _signUpButton(),
                               generateButton()
                             ])))))))));
   }
 
-  TextFormField loginField() {
+  TextFormField _loginField() {
     return TextFormField(
         controller: _loginCtrl, // TODO убрать
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
@@ -114,7 +106,7 @@ class _EntryPageState extends State<EntryPage> {
         });
   }
 
-  TextFormField passwordField() {
+  TextFormField _passwordField() {
     return TextFormField(
         controller: _pwdCtrl,
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
@@ -160,7 +152,7 @@ class _EntryPageState extends State<EntryPage> {
         });
   }
 
-  OutlinedButton logInButton() {
+  OutlinedButton _logInButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.green[800],
@@ -192,25 +184,7 @@ class _EntryPageState extends State<EntryPage> {
     );
   }
 
-  // OutlinedButton signUpButton0() {
-  //   return OutlinedButton(
-  //       style: OutlinedButton.styleFrom(
-  //           backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
-  //           shape: const RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.all(Radius.circular(15.0)))),
-  //       onPressed: () {
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(builder: (context) => VerificationPage()),
-  //         );
-  //       },
-  //       child: Text(
-  //         "Первичная регистрация",
-  //         style: TextStyle(fontSize: 18.0, color: Colors.white),
-  //       ));
-  // }
-
-  OutlinedButton signUpButton() {
+  OutlinedButton _signUpButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         primary: Colors.lightGreen[800],
@@ -247,6 +221,7 @@ class _EntryPageState extends State<EntryPage> {
     "Уфа"
   ];
 
+  // todo удалить
   OutlinedButton generateButton() {
     return OutlinedButton(
         style: OutlinedButton.styleFrom(
@@ -266,8 +241,7 @@ class _EntryPageState extends State<EntryPage> {
               cities[rnd.nextInt(7)],
               cities[rnd.nextInt(7)],
               rnd.nextInt(9900) + 100,
-              "Комментарий",
-              rnd.nextInt(3)));
+              "Комментарий"));
         },
         child: Text(
           "сгенерировать",
@@ -276,11 +250,3 @@ class _EntryPageState extends State<EntryPage> {
   }
 }
 
-// class _EntryPageState extends State<EntryPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     // TODO: implement build
-//     throw UnimplementedError();
-//   }
-//
-// }

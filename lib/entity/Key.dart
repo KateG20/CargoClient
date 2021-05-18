@@ -2,11 +2,8 @@ import 'package:flutter/foundation.dart';
 
 class Key {
   String? value;
-
   String? name;
-
   String? licensePlate;
-
   String? company;
 
   Key({this.value, this.name, this.licensePlate, this.company});

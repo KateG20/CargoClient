@@ -1,14 +1,10 @@
-// import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter1/UI/NewRequestPage.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
-import 'package:flutter1/entity/Request.dart';
-import 'package:flutter1/service/RequestService.dart';
 import 'package:intl/intl.dart';
 
-import '../ListFilterNotifier.dart';
-import '../LocalUserProvider.dart';
+import '../ViewModel/ServiceViewModel.dart';
+import '../entity/Request.dart';
+import '../notifier/ListFilterNotifier.dart';
+import '../provider/LocalUserProvider.dart';
 
 class FilterDialog {
   bool _dateWarningVisibility = false;
@@ -19,11 +15,9 @@ class FilterDialog {
   int? _minWeight, _maxWeight, _minPrice, _maxPrice, _minDist, _maxDist;
   final _formKey = GlobalKey<FormState>();
   final String _emptyDate = '                     ';
-
   String _dateFromText = '                     ';
   String _dateToText = '                     ';
 
-  // final RequestService service = RequestService();
   final ServiceViewModel vm = ServiceViewModel();
 
   _selectDate(context, dialogSetState, bool from) async {
@@ -111,8 +105,12 @@ class FilterDialog {
                                         padding:
                                             EdgeInsets.fromLTRB(20, 0, 20, 7)),
                                     Center(
-                                      child: filterButton(context, futureListNotifier,
-                                          dialogSetState, list, status),
+                                      child: filterButton(
+                                          context,
+                                          futureListNotifier,
+                                          dialogSetState,
+                                          list,
+                                          status),
                                     )
                                   ]))
                         ])));
@@ -461,8 +459,8 @@ class FilterDialog {
   // final ValueListenable<Future<List<Request>>> _futureListListenable;
   // _futureListNotifier
 
-  OutlinedButton filterButton(context, ListFilterNotifier futureListNotifier, dialogSetState,
-      list, status) {
+  OutlinedButton filterButton(context, ListFilterNotifier futureListNotifier,
+      dialogSetState, list, status) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.green[800],
@@ -506,10 +504,19 @@ class FilterDialog {
           if (_maxPrice == null) _maxPrice = 1000000;
           if (_maxDist == null) _maxDist = 100000;
 
-          futureListNotifier.filter(vm.filterRequests(status,
-              LocalUserProvider.user.id!, _source!, _destination!,
-              _resultDateFrom, _resultDateTo, _minWeight!, _maxWeight!,
-              _minPrice!, _maxPrice!, _minDist!, _maxDist!));
+          futureListNotifier.filter(vm.filterRequests(
+              status,
+              LocalUserProvider.user.id!,
+              _source!,
+              _destination!,
+              _resultDateFrom,
+              _resultDateTo,
+              _minWeight!,
+              _maxWeight!,
+              _minPrice!,
+              _maxPrice!,
+              _minDist!,
+              _maxDist!));
           Navigator.pop(context, true);
         }
         // list.filter(funcs);

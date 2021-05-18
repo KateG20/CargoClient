@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/RType.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 import 'package:intl/intl.dart';
 
-import '../ListFilterNotifier.dart';
+import '../RType.dart';
+import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
+import '../exception/RequestAcceptConflictException.dart';
+import '../notifier/ListFilterNotifier.dart';
+import '../provider/LocalUserProvider.dart';
 import 'FilterDialog.dart';
 import 'MenuBar.dart';
 
 class ListWidgets {
-  // var service = RequestService();
   final ServiceViewModel vm = ServiceViewModel();
 
   static Container pageHeader(BuildContext context,
@@ -219,39 +219,11 @@ class ListWidgets {
     );
   }
 
-  BoxDecoration menuHeaderBoxDecoration() {
-    return BoxDecoration(
-      border: Border(
-          bottom: BorderSide(
-              color: Colors.orange[200]!.withOpacity(0.7), width: 3)),
-      // borderRadius: BorderRadius.all(Radius.circular(12.0)
-    );
-  }
-
-  Divider menuDiv() {
-    return Divider(
-      thickness: 3,
-      indent: 7,
-      endIndent: 7,
-      color: Colors.orange[200]!.withOpacity(0.7),
-    );
-  }
-
   BoxDecoration greenBoxDecoration() {
     return BoxDecoration(
         border: Border.all(
           color: Colors.lightGreen.withOpacity(0.7),
           width: 3,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(12.0)));
-  }
-
-  BoxDecoration orangeBoxDecoration() {
-    return BoxDecoration(
-        // color: Colors.yellow[100],
-        border: Border.all(
-          color: (Colors.orange[200])!,
-          width: 2,
         ),
         borderRadius: BorderRadius.all(Radius.circular(12.0)));
   }
@@ -265,19 +237,21 @@ class ListWidgets {
     return res;
   }
 
-  Row newRequestRow(ListFilterNotifier futureListNotifier, BuildContext context, Request _data) {
+  Row newRequestRow(ListFilterNotifier futureListNotifier, BuildContext context,
+      Request _data) {
     return Row(
       // ряд с тремя кнопками
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         rejectButton(_data, futureListNotifier),
-        acceptButton(_data, futureListNotifier),
+        acceptButton(context, _data, futureListNotifier),
         moreInfoIcon(context, _data),
       ],
     );
   }
 
-  Row currentRequestRow(ListFilterNotifier futureListNotifier, BuildContext context, Request _data) {
+  Row currentRequestRow(ListFilterNotifier futureListNotifier,
+      BuildContext context, Request _data) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -299,7 +273,8 @@ class ListWidgets {
     );
   }
 
-  OutlinedButton rejectButton(Request data, ListFilterNotifier futureListNotifier) {
+  OutlinedButton rejectButton(
+      Request data, ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.orange,
@@ -310,7 +285,8 @@ class ListWidgets {
           backgroundColor: Colors.orange[50]),
       onPressed: () async {
         await vm.rejectRequest(data.id!, LocalUserProvider.user.id!);
-        futureListNotifier.value = vm.getRequests(RType.news); // обновление списка
+        futureListNotifier.value =
+            vm.getRequests(RType.news); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -321,7 +297,8 @@ class ListWidgets {
     );
   }
 
-  OutlinedButton acceptButton(Request data, ListFilterNotifier futureListNotifier) {
+  OutlinedButton acceptButton(BuildContext context, Request data,
+      ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
           primary: Colors.lightGreen[800],
@@ -331,9 +308,37 @@ class ListWidgets {
           minimumSize: Size(150, 30),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () async {
-        await vm.acceptRequest(data.id!);
-        await vm.addRequestToUser(data.id!, LocalUserProvider.user.id!);
-        futureListNotifier.value = vm.getRequests(RType.news); // обновление списка
+        await vm
+            .addRequestToUser(data.id!, LocalUserProvider.user.id!)
+            .catchError((error) {
+          // todo типо должно появляться если сервер вернул плохой код
+          if (error is RequestAcceptConflictException) {
+            showDialog<bool>(
+              context: context,
+              builder: (c) => AlertDialog(
+                title: Text('Невозможно принять заявку',
+                    style: TextStyle(
+                        color: Colors.green[800],
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500)),
+                content: Text(
+                    'Заявка уже занята другим пользователем. Обновите страницу.',
+                    style: TextStyle(color: Colors.green[800], fontSize: 22)),
+                actions: [
+                  OutlinedButton(
+                    child: Text('Ок',
+                        style:
+                            TextStyle(color: Colors.green[800], fontSize: 20)),
+                    onPressed: () => Navigator.pop(c, true),
+                  ),
+                ],
+              ),
+            );
+          }
+        });
+        await vm.acceptRequest(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value =
+            vm.getRequests(RType.news); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -356,7 +361,8 @@ class ListWidgets {
     );
   }
 
-  OutlinedButton doneButton(Request data, ListFilterNotifier futureListNotifier) {
+  OutlinedButton doneButton(
+      Request data, ListFilterNotifier futureListNotifier) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -367,8 +373,9 @@ class ListWidgets {
         primary: Colors.lightGreen[800],
       ),
       onPressed: () async {
-        await vm.completeRequest(data.id!);
-        futureListNotifier.value = vm.getRequests(RType.current); // обновление списка
+        await vm.completeRequest(data.id!, LocalUserProvider.user.id!);
+        futureListNotifier.value =
+            vm.getRequests(RType.current); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),
@@ -408,7 +415,12 @@ class ListWidgets {
                   name: 'Маршрут:',
                   value: '${_data.source} - ${_data.destination}'),
               InfoDialogItem(name: 'Вес товара:', value: '${_data.weight} кг'),
-              InfoDialogItem(name: 'Описание:', value: '${_data.description}'),
+              InfoDialogItem(
+                  name: 'Описание:',
+                  value: (_data.description == null ||
+                          _data.description?.length == 0)
+                      ? 'Комментарий отсутствует'
+                      : '${_data.description}'),
               // style: TextStyle(color: Colors.green[800], fontSize: 20),
             ],
           );

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/RType.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
-import '../ListFilterNotifier.dart';
+import '../RType.dart';
+import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
-import '../service/RequestService.dart';
+import '../notifier/ListFilterNotifier.dart';
 import 'ListWidgets.dart';
 
 class ArchiveRequestPage extends StatefulWidget {
@@ -14,16 +13,16 @@ class ArchiveRequestPage extends StatefulWidget {
 
 class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   final ServiceViewModel vm = ServiceViewModel();
-  late Future<List<Request>> futureList;
 
-  List<Request> list = [];
+  List<Request> _list = [];
 
   late ListFilterNotifier _futureListNotifier;
 
   @override
   void initState() {
     super.initState();
-    _futureListNotifier = ListFilterNotifier(value: vm.getRequests(RType.archive));
+    _futureListNotifier =
+        ListFilterNotifier(value: vm.getRequests(RType.archive));
   }
 
   @override
@@ -46,11 +45,11 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                list = snapshot.data!;
+                                _list = snapshot.data!;
 
                                 return Column(children: <Widget>[
                                   ListWidgets.pageHeader(
-                                      context, _futureListNotifier, list, 2),
+                                      context, _futureListNotifier, _list, 2),
                                   Visibility(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -65,8 +64,8 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
                                         width: double.infinity,
                                         child: TextButton(
                                             onPressed: (() {
-                                              _futureListNotifier
-                                                  .reset(vm.getRequests(RType.archive));
+                                              _futureListNotifier.reset(vm
+                                                  .getRequests(RType.archive));
                                             }),
                                             child: Text('Сбросить фильтры',
                                                 style: TextStyle(
@@ -97,10 +96,10 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
         onRefresh: (() => vm.refreshList(RType.archive, _futureListNotifier)),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: list.length,
+          itemCount: _list.length,
           itemBuilder: (context, index) {
-            return ListWidgets().requestContainer(list[index],
-                ListWidgets().archiveRequestRow(context, list[index]));
+            return ListWidgets().requestContainer(_list[index],
+                ListWidgets().archiveRequestRow(context, _list[index]));
           },
         ));
   }

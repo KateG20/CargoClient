@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/RType.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
 
-import '../ListFilterNotifier.dart';
+import '../RType.dart';
+import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
-import '../service/RequestService.dart';
+import '../notifier/ListFilterNotifier.dart';
 import 'ListWidgets.dart';
 
 class NewRequestPage extends StatefulWidget {
@@ -13,12 +12,8 @@ class NewRequestPage extends StatefulWidget {
 }
 
 class _NewRequestPageState extends State<NewRequestPage> {
-  // final RequestService service = RequestService();
   final ServiceViewModel vm = ServiceViewModel();
-  late Future<List<Request>> futureList;
-
-  List<Request> list = [];
-
+  List<Request> _list = [];
   late ListFilterNotifier _futureListNotifier;
 
   @override
@@ -47,11 +42,11 @@ class _NewRequestPageState extends State<NewRequestPage> {
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
-                                list = snapshot.data!;
+                                _list = snapshot.data!;
 
                                 return Column(children: <Widget>[
                                   ListWidgets.pageHeader(
-                                      context, _futureListNotifier, list, 0),
+                                      context, _futureListNotifier, _list, 0),
                                   Visibility(
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -66,13 +61,13 @@ class _NewRequestPageState extends State<NewRequestPage> {
                                         width: double.infinity,
                                         child: TextButton(
                                             onPressed: (() {
-                                              _futureListNotifier
-                                                  .reset(vm.getRequests(RType.news));
+                                              _futureListNotifier.reset(
+                                                  vm.getRequests(RType.news));
                                             }),
                                             child: Text('Сбросить фильтры',
                                                 style: TextStyle(
                                                     color:
-                                                    Colors.lightGreen[800],
+                                                        Colors.lightGreen[800],
                                                     fontSize: 20,
                                                     decoration: TextDecoration
                                                         .underline))),
@@ -93,55 +88,18 @@ class _NewRequestPageState extends State<NewRequestPage> {
                     onWillPop: () async => false))));
   }
 
-  // Future<bool> _willPopCallback() async {
-  //   showDialog<bool>(
-  //     context: context,
-  //     builder: (c) => AlertDialog(
-  //       // title: Text('Warning'),
-  //       content: Text('Выйти из приложения?'),
-  //       actions: [
-  //         OutlinedButton(
-  //           child: Text('Да'),
-  //           onPressed: () => Navigator.pop(c, true),
-  //         ),
-  //         OutlinedButton(
-  //           child: Text('Нет'),
-  //           onPressed: () => Navigator.pop(c, false),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  //   // then
-  //   return true; // return true if the route to be popped
-  // }
-
-  // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
     return RefreshIndicator(
         onRefresh: (() => vm.refreshList(RType.news, _futureListNotifier)),
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: list.length,
+          itemCount: _list.length,
           itemBuilder: (context, index) {
             return ListWidgets().requestContainer(
-                list[index],
+                _list[index],
                 ListWidgets()
-                    .newRequestRow(_futureListNotifier, context, list[index]));
+                    .newRequestRow(_futureListNotifier, context, _list[index]));
           },
         ));
   }
-
-  // Future<void> _pullRefresh() async {
-  //   if (_futureListNotifier.filtered) return;
-  //   Future<List<Request>> newList = service.getNewRequests();
-  //   setState(() {
-  //     _futureListNotifier.value = newList;
-  //   });
-  //   // why use newList var? https://stackoverflow.com/a/52992836/2301224
-  //   await Future.delayed(Duration(seconds: 1));
-  // }
-
-  // Future<List<Request>> _getRequests() async {
-  //   return await service.getNewRequests();
-  // }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
+import '../ViewModel/ServiceViewModel.dart';
 
-import '../LocalUserProvider.dart';
+import '../provider/LocalUserProvider.dart';
 import 'NewRequestPage.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -12,16 +12,13 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
 
-  // String? login;
-  String? _pwd1 = "";
+  String _pwd1 = "";
   bool _obscureText1 = true;
   bool _obscureText2 = true;
   bool _warning = false;
   var _loginCtrl = TextEditingController();
   var _pwdCtrl = TextEditingController();
 
-  // var requestService = RequestService();
-  // var userService = UserService();
   final ServiceViewModel vm = ServiceViewModel();
 
   void _showPwd1() {
@@ -113,9 +110,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
         validator: (val) {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Логин\"";
-            // todo проверять логин в базе
-            // } else if (LocalUserProvider.user.login == null) {
-            //   return "Такой логин уже существует";
+          } else if (val.length < 6) {
+            return "Логин слишком короткий";
+          } else if (val.length > 50) {
+            return "Логин слишком длинный";
           } else {
             return null;
           }
@@ -158,9 +156,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
         validator: (val) {
           if (val == null || val.isEmpty) {
             return "Заполните поле \"Пароль\"";
-            // todo проверять пользователя в базе
-            // } else if (false) {
-            //   return "Неверный логин или пароль";
+          } else if (val.length < 6) {
+            return "Пароль слишком короткий";
+          } else if (val.length > 50) {
+            return "Пароль слишком длинный";
           } else {
             return null;
           }
@@ -220,10 +219,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
-
           // todo посмотреть, какой код будет с одинаковыми логинами
-          await vm.createUser(_loginCtrl.text, _pwdCtrl.text)
-              .then((value) {
+          await vm.createUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
             LocalUserProvider.setUser(value);
           }).catchError((error) {
             setState(() {

@@ -10,8 +10,8 @@ class Request {
   String? destination;
   int? weight;
   String? description;
-  int? status;
 
+  // todo удалить
   Request(
       [this.price,
       this.shipper,
@@ -22,8 +22,7 @@ class Request {
       this.source,
       this.destination,
       this.weight,
-      this.description,
-      this.status]);
+      this.description]);
 
   Request.withId(
       this.id,
@@ -37,19 +36,7 @@ class Request {
       this.destination,
       this.weight,
       this.description,
-      this.status);
-
-  Request.optional(
-      {this.price,
-      this.shipper,
-      this.receiver,
-      this.date,
-      this.duration,
-      this.distance,
-      this.source,
-      this.destination,
-      this.weight,
-      this.description});
+      );
 
   factory Request.fromJson(Map<String, dynamic> json) {
     return Request.withId(
@@ -59,14 +46,11 @@ class Request {
         json['receiver'],
         DateTime.fromMillisecondsSinceEpoch(
             json['date'] + DateTime(2020).millisecondsSinceEpoch),
-        // millisecondsSinceEpoch
         Duration(minutes: json['duration']),
-        // milliseconds
         json['distance'],
         json['source'],
         json['destination'],
         json['weight'],
-        json['description'],
-        json['status']);
+        json['description']);
   }
 }

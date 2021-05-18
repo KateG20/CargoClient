@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/ViewModel/ServiceViewModel.dart';
-import 'package:flutter1/exception/NoKeyFoundException.dart';
 
+import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Key.dart' as my;
 import '../entity/User.dart';
-import '../service/RequestService.dart';
-import '../service/UserService.dart';
+import '../exception/NoKeyFoundException.dart';
+import '../provider/LocalUserProvider.dart';
 import 'RegistrationPage.dart';
 
 class VerificationPage extends StatefulWidget {
@@ -16,19 +14,14 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final _formKey = GlobalKey<FormState>();
-  // var requestService = RequestService();
-  // var userService = UserService();
   final ServiceViewModel vm = ServiceViewModel();
-
-  my.Key? key;
-  bool keyFound = false;
+  my.Key? _key;
   String? _errorMsg;
   var _keyCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -59,14 +52,14 @@ class _VerificationPageState extends State<VerificationPage> {
                                   padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
                                 ),
                                 Padding(padding: EdgeInsets.only(top: 20.0)),
-                                keyField(),
+                                _keyField(),
                                 Padding(padding: EdgeInsets.only(top: 15.0)),
-                                verifyButton(),
+                                _verifyButton(),
                               ])),
                             )))))));
   }
 
-  TextFormField keyField() {
+  TextFormField _keyField() {
     return TextFormField(
       controller: _keyCtrl,
       style: TextStyle(color: Colors.grey[600], fontSize: 20),
@@ -88,14 +81,10 @@ class _VerificationPageState extends State<VerificationPage> {
       ),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          key = my.Key(
-              value: 'key',
-              name: 'name',
-              licensePlate: 'lp',
-              company: 'company');
+          return 'Заполните поле \"Ключ\"';
         }
         // Если не нашелся, то не нашелся
-        else if (key == null)
+        else if (_key == null)
           return _errorMsg;
         else {
           return null;
@@ -104,7 +93,7 @@ class _VerificationPageState extends State<VerificationPage> {
     );
   }
 
-  Widget verifyButton() {
+  Widget _verifyButton() {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         shape: const RoundedRectangleBorder(
@@ -113,18 +102,18 @@ class _VerificationPageState extends State<VerificationPage> {
       ),
       onPressed: () async {
         await vm.checkKey(_keyCtrl.text).then((value) {
-          key = value;
+          _key = value;
         }).catchError((e) {
           if (e is NoKeyFoundException)
             _errorMsg = 'Такого ключа нет в базе';
           else
             _errorMsg = 'Ошибка проверки ключа';
-          key = null;
+          _key = null;
         });
 
         if (_formKey.currentState!.validate()) {
           var user = User.unregistered(
-              key!.name, key!.licensePlate, key!.company, key!.value);
+              _key!.name, _key!.licensePlate, _key!.company, _key!.value);
           LocalUserProvider.setUser(user);
           Navigator.push(
             context,

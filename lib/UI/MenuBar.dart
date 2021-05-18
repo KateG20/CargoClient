@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter1/LocalUserProvider.dart';
-import 'package:flutter1/service/UserService.dart';
+import '../provider/LocalUserProvider.dart';
+import '../service/UserService.dart';
 
 import 'ArchiveRequestPage.dart';
 import 'CurrentRequestPage.dart';
@@ -9,14 +9,13 @@ import 'EntryPage.dart';
 import 'NewRequestPage.dart';
 
 class MenuBar extends StatelessWidget {
-  final String name = LocalUserProvider.user.name!;
-  final String autoNumber = LocalUserProvider.user.licensePlate!;
-  final String company = LocalUserProvider.user.company!;
+  final String _name = LocalUserProvider.user.name!;
+  final String _autoNumber = LocalUserProvider.user.licensePlate!;
+  final String _company = LocalUserProvider.user.company!;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -35,7 +34,7 @@ class MenuBar extends StatelessWidget {
                                     padding:
                                         EdgeInsets.fromLTRB(5, 17, 5, 10),
                                     child: Text(
-                                      '$name',
+                                      '$_name',
                                       style: TextStyle(
                                           // color: Colors.brown[900],
                                           color: Colors.green[800],
@@ -52,7 +51,7 @@ class MenuBar extends StatelessWidget {
                                 Padding(
                                     padding: EdgeInsets.all(5),
                                     child: Text(
-                                      'Номер ТС: $autoNumber',
+                                      'Номер ТС: $_autoNumber',
                                       style: TextStyle(
                                           color: Colors.green[800],
                                           // color: Colors.lime[900],
@@ -66,7 +65,7 @@ class MenuBar extends StatelessWidget {
                                     //     left: 10, bottom: 5, right: 20),
                                     padding: EdgeInsets.fromLTRB(10, 5, 10, 15),
                                     child: Text(
-                                      '$company',
+                                      '$_company',
                                       style: TextStyle(
                                           color: Colors.green[800],
                                           // color: Colors.lime[900],
@@ -108,7 +107,7 @@ class MenuBar extends StatelessWidget {
                                   Icons.settings_backup_restore_rounded,
                                   size: 30,
                                   color: Colors.green[800]),
-                              title: Text('Заявки на выполнении',
+                              title: Text('Текущие заявки',
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.green[800])),
                               onTap: () {
@@ -123,7 +122,7 @@ class MenuBar extends StatelessWidget {
                             ListTile(
                               leading: Icon(Icons.done_outline_rounded,
                                   size: 30, color: Colors.green[800]),
-                              title: Text('Выполненные заявки',
+                              title: Text('Архивные заявки',
                                   style: TextStyle(
                                       fontSize: 20, color: Colors.green[800])),
                               onTap: () {
@@ -135,14 +134,14 @@ class MenuBar extends StatelessWidget {
                                 );
                               }, //{Navigator.of(context).pop()},
                             ),
-                            ListTile(
-                              leading: Icon(Icons.settings_outlined,
-                                  size: 30, color: Colors.green[800]),
-                              title: Text('Настройки',
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.green[800])),
-                              onTap: () => {}, //{Navigator.of(context).pop()},
-                            ),
+                            // ListTile(
+                            //   leading: Icon(Icons.settings_outlined,
+                            //       size: 30, color: Colors.green[800]),
+                            //   title: Text('Настройки',
+                            //       style: TextStyle(
+                            //           fontSize: 20, color: Colors.green[800])),
+                            //   onTap: () => {}, //{Navigator.of(context).pop()},
+                            // ),
                             ListTile(
                               leading: Icon(Icons.exit_to_app_rounded,
                                   size: 30, color: Colors.green[800]),
