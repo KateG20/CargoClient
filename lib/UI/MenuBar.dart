@@ -152,20 +152,23 @@ class MenuBar extends StatelessWidget {
                                                             Colors.green[800],
                                                         fontSize: 24))),
                                             children: [
-                                              Center(
+                                              Padding(
+                                                padding: EdgeInsets.all(10),
                                                   child: Text(
                                                       'В случае утери пароля необходимо обратиться к Вашему руководству.',
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.green[800],
-                                                          fontSize: 21))),
+                                                          fontSize: 20))),
                                               Center(
                                                   child: Text(
                                                       'В случае технических неполадок писать на почту example@cargo.com.',
+                                                      textAlign: TextAlign.center,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.green[800],
-                                                          fontSize: 21)))
+                                                          fontSize: 20)))
                                             ],
                                           );
                                         })

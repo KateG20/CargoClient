@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'package:crypto/crypto.dart';
 
-import '../provider/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -14,12 +12,11 @@ class UserService {
     var response = await http.get(Uri.http(url, 'logout'));
     if (response.statusCode < 200 && response.statusCode >= 400) {
       throw Exception('Failed to logout');
-    }
-    else print('logged out'); // todo убрать
+    } else
+      print('logged out'); // todo убрать
   }
 
   Future<List> loginUser(String login, String password) async {
-    // password = sha256.convert(utf8.encode(password)).toString(); // todo убрать
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$login:$password'));
 
     var queryParameters = {'login': login};
@@ -32,7 +29,8 @@ class UserService {
       if (rawCookie != null) {
         print(rawCookie);
         int index = rawCookie.indexOf(';');
-        String jSessionId = ((index == -1) ? rawCookie : rawCookie.substring(0, index));
+        String jSessionId =
+            ((index == -1) ? rawCookie : rawCookie.substring(0, index));
         return [User.fromJson(jsonDecode(response.body)), jSessionId];
       } else
         throw Exception('Failed to receive cookie');

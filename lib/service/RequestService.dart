@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../entity/Request.dart';
-import '../exception/NoKeyFoundException.dart';
 import '../exception/RequestAcceptConflictException.dart';
 import '../provider/LocalUserProvider.dart';
 

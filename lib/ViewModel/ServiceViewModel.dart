@@ -29,7 +29,7 @@ class ServiceViewModel {
   Future<void> refreshList(
       RType type, ListFilterNotifier futureListNotifier) async {
     if (futureListNotifier.filtered) return;
-    Future<List<Request>> newList = requestService.getNewRequests();
+    Future<List<Request>> newList = getRequests(type);
     // setState(() {
     futureListNotifier.value = newList;
     // });

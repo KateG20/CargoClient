@@ -99,6 +99,14 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: _list.length,
           itemBuilder: (context, index) {
+            // if (_list.length == 0)
+            //   return Text(
+            //       'Нет таких заявок!',
+            //       textAlign: TextAlign.center,
+            //       style: TextStyle(
+            //           color:
+            //           Colors.green[800],
+            //           fontSize: 21));
             return ListWidgets().requestContainer(
                 _list[index], ListWidgets().currentRequestRow(_futureListNotifier, context, _list[index]));
           },
