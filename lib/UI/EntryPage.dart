@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter1/service/UserService.dart';
 
 import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
+import '../entity/User.dart';
 import '../provider/LocalUserProvider.dart';
 import '../service/RequestService.dart';
 import 'NewRequestPage.dart';
@@ -33,8 +35,8 @@ class _EntryPageState extends State<EntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    _loginCtrl.text = 'log2'; // TODO убрать
-    _pwdCtrl.text = 'pwd';
+    _loginCtrl.text = 'log222'; // TODO убрать
+    _pwdCtrl.text = 'pwd222';
 
     return MaterialApp(
         // debugShowCheckedModeBanner: false,
@@ -161,12 +163,34 @@ class _EntryPageState extends State<EntryPage> {
           side: BorderSide(color: Colors.lightGreen, width: 1.5),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () async {
-        await vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
+        // await vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
+        User user = User.nulled();
+        String jSessionId = "";
+        try {
+          var list = await vm.loginUser(_loginCtrl.text, _pwdCtrl.text);
+          user = list[0];
+          jSessionId = list[1];
           _incorrectData = false;
-          LocalUserProvider.user = value;
-        }).catchError((error) {
+          LocalUserProvider.user = user;
+          LocalUserProvider.jSessionId = jSessionId;
+        } catch (e) {
           _incorrectData = true;
-        });
+        }
+        // await UserService()
+        //     .loginUser(_loginCtrl.text, _pwdCtrl.text)
+        //     .then((value) {
+        //   _incorrectData = false;
+        //   LocalUserProvider.user = value;
+        // }).catchError((error) {
+        //   _incorrectData = true;
+        // }).then((value) {
+        //   if (_formKey.currentState!.validate()) {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(builder: (context) => NewRequestPage()),
+        //     );
+        //   }
+        // });
 
         if (_formKey.currentState!.validate()) {
           Navigator.push(
@@ -249,4 +273,3 @@ class _EntryPageState extends State<EntryPage> {
         ));
   }
 }
-

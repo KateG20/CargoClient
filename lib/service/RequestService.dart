@@ -11,11 +11,12 @@ class RequestService {
   final url = '10.0.2.2:8080';
 
   Future<List<Request>> getNewRequests() async {
+    print("JSESSIONID is ${LocalUserProvider.jSessionId}");
     var response = await http.get(
         Uri.http(url, 'requests/new/${LocalUserProvider.user.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
 
     if (response.statusCode == 200) {
@@ -23,10 +24,8 @@ class RequestService {
           .map((r) => Request.fromJson(r))
           .toList();
       return list;
-    } else if (response.statusCode == 404) {
-      throw NoKeyFoundException();
     } else {
-      throw Exception('Failed to check key');
+      throw Exception('Failed to load new requests');
     }
   }
 
@@ -35,7 +34,7 @@ class RequestService {
         Uri.http(url, 'requests/current/${LocalUserProvider.user.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
 
     if (response.statusCode == 200) {
@@ -52,7 +51,7 @@ class RequestService {
         Uri.http(url, 'requests/archive/${LocalUserProvider.user.id}'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
 
     if (response.statusCode == 200) {
@@ -70,7 +69,7 @@ class RequestService {
       Uri.http(url, 'request/create'),
       headers: <String, String>{
         'Content-Type': 'application/json',
-        'Cookie': LocalUserProvider.jSessionId!
+        'Cookie': LocalUserProvider.jSessionId
       },
       body: jsonEncode(<String, dynamic>{
         'price': request.price,
@@ -98,34 +97,39 @@ class RequestService {
         Uri.http(url, 'request/status/$id/$newStatus/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
+    if (newStatus == 1) {
+      if (response.statusCode == 304) {
+        throw RequestAcceptConflictException();
+      }
+    }
     if (response.statusCode != 200) {
       throw Exception('Failed to update status');
     }
   }
 
-  Future<void> addRequestToUser(int requestId, int userId) async {
-    final response = await http.put(
-        Uri.http(url, 'request/add/$requestId/$userId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
-        });
-    if (response.statusCode == 98798798789) {
-      // TODO код если не удалось привязать
-      throw RequestAcceptConflictException();
-    } else if (response.statusCode != 200) {
-      throw Exception('Failed to add request to user');
-    }
-  }
+  // Future<void> addRequestToUser(int requestId, int userId) async {
+  //   final response = await http.put(
+  //       Uri.http(url, 'request/add/$requestId/$userId'),
+  //       headers: <String, String>{
+  //         'Content-Type': 'application/json',
+  //         'Cookie': LocalUserProvider.instance.jSessionId
+  //       });
+  //   if (response.statusCode == 98798798789) {
+  //     // TODO код если не удалось привязать
+  //     throw RequestAcceptConflictException();
+  //   } else if (response.statusCode != 200) {
+  //     throw Exception('Failed to add request to user');
+  //   }
+  // }
 
   Future<void> rejectRequest(int requestId, int userId) async {
     final response = await http.put(
         Uri.http(url, 'request/reject/$requestId/$userId'),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
     if (response.statusCode != 200) {
       throw Exception('Failed to reject request');
@@ -163,7 +167,7 @@ class RequestService {
         Uri.http(url, 'requests/filter', queryParameters),
         headers: <String, String>{
           'Content-Type': 'application/json',
-          'Cookie': LocalUserProvider.jSessionId!
+          'Cookie': LocalUserProvider.jSessionId
         });
 
     if (response.statusCode == 200) {

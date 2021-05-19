@@ -36,55 +36,63 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // debugShowCheckedModeBanner: false,
+      // debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
-            builder: (context) => Material(
-                child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Form(
-                        key: _formKey,
-                        child: Container(
-                            color: Colors.yellow[50]?.withOpacity(0.2),
-                            padding: const EdgeInsets.all(30.0),
+            builder: (context) =>
+                Material(
+                    child: GestureDetector(
+                        onTap: () {
+                          FocusScope.of(context).unfocus();
+                        },
+                        child: Form(
+                            key: _formKey,
                             child: Container(
-                                child: Center(
-                                    child: Column(children: [
-                              Padding(padding: EdgeInsets.only(top: 40.0)),
-                              Text(
-                                'Придумайте логин и пароль, которые Вы будете использовать '
-                                'для входа в приложение',
-                                style: TextStyle(
-                                    // color: Color(0xff9ACD32), fontSize: 25.0),
-                                    color: Colors.lightGreen[700],
-                                    fontSize: 20.0),
-                                textAlign: TextAlign.center,
-                              ),
-                              //  Padding(padding: EdgeInsets.only(top: 20.0)),
-                              Padding(
-                                  padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Visibility(
-                                        child: Text(
-                                            'Не удалось создать пользователя. '
-                                            'Вероятно, такой логин уже занят.',
+                                color: Colors.yellow[50]?.withOpacity(0.2),
+                                padding: const EdgeInsets.all(30.0),
+                                child: Container(
+                                    child: Center(
+                                        child: Column(children: [
+                                          Padding(padding: EdgeInsets.only(
+                                              top: 40.0)),
+                                          Text(
+                                            'Придумайте логин и пароль, которые Вы будете использовать '
+                                                'для входа в приложение',
                                             style: TextStyle(
-                                                color: Colors.red[800],
-                                                fontSize: 19)),
-                                        visible: _warning),
-                                  )),
-                              Padding(padding: EdgeInsets.only(top: 20.0)),
-                              loginField(),
-                              Padding(padding: EdgeInsets.only(top: 15.0)),
-                              passwordField(),
-                              Padding(padding: EdgeInsets.only(top: 15.0)),
-                              repeatPasswordField(),
-                              Padding(padding: EdgeInsets.only(top: 15.0)),
-                              signUpButton(),
-                            ])))))))));
+                                              // color: Color(0xff9ACD32), fontSize: 25.0),
+                                                color: Colors.lightGreen[700],
+                                                fontSize: 20.0),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          //  Padding(padding: EdgeInsets.only(top: 20.0)),
+                                          Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  5, 20, 0, 0),
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Visibility(
+                                                    child: Text(
+                                                        'Не удалось создать пользователя. '
+                                                            'Вероятно, такой логин уже занят.',
+                                                        style: TextStyle(
+                                                            color: Colors
+                                                                .red[800],
+                                                            fontSize: 19)),
+                                                    visible: _warning),
+                                              )),
+                                          Padding(padding: EdgeInsets.only(
+                                              top: 20.0)),
+                                          loginField(),
+                                          Padding(padding: EdgeInsets.only(
+                                              top: 15.0)),
+                                          passwordField(),
+                                          Padding(padding: EdgeInsets.only(
+                                              top: 15.0)),
+                                          repeatPasswordField(),
+                                          Padding(padding: EdgeInsets.only(
+                                              top: 15.0)),
+                                          signUpButton(),
+                                        ])))))))));
   }
 
   TextFormField loginField() {
@@ -97,7 +105,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide:
-                  BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
+              BorderSide(color: Colors.grey.withOpacity(0.7), width: 1.7)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(color: Colors.lightGreen, width: 1.7)),
@@ -220,17 +228,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
           // todo посмотреть, какой код будет с одинаковыми логинами
-          await vm.createUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
-            LocalUserProvider.setUser(value);
-          }).catchError((error) {
+          try {
+            LocalUserProvider.user =
+            await vm.createUser(_loginCtrl.text, _pwdCtrl.text);
+          }
+          catch (e) {
             setState(() {
               _warning = true;
             });
-          }).then((value) {
-            vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) =>
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NewRequestPage())));
-          });
+          }
+
+          var list = await vm.loginUser(_loginCtrl.text, _pwdCtrl.text);
+          LocalUserProvider.user = list[0];
+          LocalUserProvider.jSessionId = list[1];
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NewRequestPage()));
+
+          // await vm.createUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
+          //   LocalUserProvider.user = (value);
+          // }).catchError((error) {
+          //   setState(() {
+          //     _warning = true;
+          //   });
+          // }).then((value) {
+          //   vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) =>
+          //       Navigator.push(context,
+          //           MaterialPageRoute(builder: (context) => NewRequestPage())));
+          // });
         }
       },
       child: Padding(

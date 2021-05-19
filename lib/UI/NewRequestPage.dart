@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/service/RequestService.dart';
 
 import '../RType.dart';
 import '../ViewModel/ServiceViewModel.dart';
@@ -20,6 +21,7 @@ class _NewRequestPageState extends State<NewRequestPage> {
   void initState() {
     super.initState();
     _futureListNotifier = ListFilterNotifier(value: vm.getRequests(RType.news));
+    // _futureListNotifier = ListFilterNotifier(value: RequestService().getNewRequests());
   }
 
   @override

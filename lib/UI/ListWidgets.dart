@@ -308,37 +308,103 @@ class ListWidgets {
           minimumSize: Size(150, 30),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () async {
-        await vm
-            .addRequestToUser(data.id!, LocalUserProvider.user.id!)
-            .catchError((error) {
-          // todo типо должно появляться если сервер вернул плохой код
-          if (error is RequestAcceptConflictException) {
-            showDialog<bool>(
-              context: context,
-              builder: (c) => AlertDialog(
-                title: Text('Невозможно принять заявку',
-                    style: TextStyle(
-                        color: Colors.green[800],
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500)),
-                content: Text(
-                    'Заявка уже занята другим пользователем. Обновите страницу.',
-                    style: TextStyle(color: Colors.green[800], fontSize: 22)),
-                actions: [
-                  OutlinedButton(
-                    child: Text('Ок',
-                        style:
-                            TextStyle(color: Colors.green[800], fontSize: 20)),
-                    onPressed: () => Navigator.pop(c, true),
-                  ),
-                ],
-              ),
-            );
-          }
-        });
-        await vm.acceptRequest(data.id!, LocalUserProvider.user.id!);
-        futureListNotifier.value =
-            vm.getRequests(RType.news); // обновление списка
+        try {
+          await vm.acceptRequest(data.id!, LocalUserProvider.user.id!);
+          futureListNotifier.value =
+              vm.getRequests(RType.news); // обновление списка
+        } on RequestAcceptConflictException {
+          showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: Text('Невозможно принять заявку',
+                  style: TextStyle(
+                      color: Colors.green[800],
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500)),
+              content: Text(
+                  'Заявка уже занята другим пользователем. Обновите страницу.',
+                  style: TextStyle(color: Colors.green[800], fontSize: 22)),
+              actions: [
+                OutlinedButton(
+                  child: Text('Ок',
+                      style: TextStyle(color: Colors.green[800], fontSize: 20)),
+                  onPressed: () => Navigator.pop(c, true),
+                ),
+              ],
+            ),
+          );
+        } catch (e) {
+          showDialog<bool>(
+            context: context,
+            builder: (c) => AlertDialog(
+              title: Text('Невозможно принять заявку',
+                  style: TextStyle(
+                      color: Colors.green[800],
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500)),
+              content: Text('Ошибка на сервере.',
+                  style: TextStyle(color: Colors.green[800], fontSize: 22)),
+              actions: [
+                OutlinedButton(
+                  child: Text('Ок',
+                      style: TextStyle(color: Colors.green[800], fontSize: 20)),
+                  onPressed: () => Navigator.pop(c, true),
+                ),
+              ],
+            ),
+          );
+        }
+        //     .catchError((error) {
+        //   // Ошибка, если заявка уже стала занята другим пользователем
+        //   if (error is RequestAcceptConflictException) {
+        //     showDialog<bool>(
+        //       context: context,
+        //       builder: (c) => AlertDialog(
+        //         title: Text('Невозможно принять заявку',
+        //             style: TextStyle(
+        //                 color: Colors.green[800],
+        //                 fontSize: 24,
+        //                 fontWeight: FontWeight.w500)),
+        //         content: Text(
+        //             'Заявка уже занята другим пользователем. Обновите страницу.',
+        //             style: TextStyle(color: Colors.green[800], fontSize: 22)),
+        //         actions: [
+        //           OutlinedButton(
+        //             child: Text('Ок',
+        //                 style:
+        //                     TextStyle(color: Colors.green[800], fontSize: 20)),
+        //             onPressed: () => Navigator.pop(c, true),
+        //           ),
+        //         ],
+        //       ),
+        //     );
+        //   } else {
+        //     showDialog<bool>(
+        //       context: context,
+        //       builder: (c) => AlertDialog(
+        //         title: Text('Невозможно принять заявку',
+        //             style: TextStyle(
+        //                 color: Colors.green[800],
+        //                 fontSize: 24,
+        //                 fontWeight: FontWeight.w500)),
+        //         content: Text(
+        //             'Ошибка на сервере.',
+        //             style: TextStyle(color: Colors.green[800], fontSize: 22)),
+        //         actions: [
+        //           OutlinedButton(
+        //             child: Text('Ок',
+        //                 style:
+        //                 TextStyle(color: Colors.green[800], fontSize: 20)),
+        //             onPressed: () => Navigator.pop(c, true),
+        //           ),
+        //         ],
+        //       ),
+        //     );
+        //   }
+        // });
+        // await vm.acceptRequest(data.id!, LocalUserProvider.user.id!);
+        // futureListNotifier.value =
+        //     vm.getRequests(RType.news); // обновление списка
       },
       child: Padding(
           padding: EdgeInsets.all(7),

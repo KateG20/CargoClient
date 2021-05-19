@@ -114,7 +114,7 @@ class _VerificationPageState extends State<VerificationPage> {
         if (_formKey.currentState!.validate()) {
           var user = User.unregistered(
               _key!.name, _key!.licensePlate, _key!.company, _key!.value);
-          LocalUserProvider.setUser(user);
+          LocalUserProvider.user = user;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => RegistrationPage()),

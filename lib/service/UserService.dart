@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
-import 'file:///C:/Users/Lenovo%20X1/IdeaProjects/flutter1/lib/provider/LocalUserProvider.dart';
+import '../provider/LocalUserProvider.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -17,7 +18,8 @@ class UserService {
     else print('logged out'); // todo убрать
   }
 
-  Future<User> loginUser(String login, String password) async {
+  Future<List> loginUser(String login, String password) async {
+    // password = sha256.convert(utf8.encode(password)).toString(); // todo убрать
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$login:$password'));
 
     var queryParameters = {'login': login};
@@ -30,9 +32,8 @@ class UserService {
       if (rawCookie != null) {
         print(rawCookie);
         int index = rawCookie.indexOf(';');
-        LocalUserProvider.jSessionId =
-            (index == -1) ? rawCookie : rawCookie.substring(0, index);
-        return User.fromJson(jsonDecode(response.body));
+        String jSessionId = ((index == -1) ? rawCookie : rawCookie.substring(0, index));
+        return [User.fromJson(jsonDecode(response.body)), jSessionId];
       } else
         throw Exception('Failed to receive cookie');
     } else {

@@ -7,6 +7,8 @@ class User {
   String? company;
   String? key;
 
+  User.nulled();
+
   User(this.id, this.login, this.name, this.licensePlate, this.company,
       this.key);
 

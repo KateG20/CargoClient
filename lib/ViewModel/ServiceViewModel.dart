@@ -49,9 +49,9 @@ class ServiceViewModel {
     await requestService.updateRequestStatus(requestId, 2, userId);
   }
 
-  Future<void> addRequestToUser(int requestId, int userId) async {
-    await requestService.addRequestToUser(requestId, userId);
-  }
+  // Future<void> addRequestToUser(int requestId, int userId) async {
+  //   await requestService.addRequestToUser(requestId, userId);
+  // }
 
   Future<List<Request>> filterRequests(
       int status,
@@ -87,7 +87,11 @@ class ServiceViewModel {
         .createUser(User.create(login, encodedPwd, LocalUserProvider.user));
   }
 
-  Future<User> loginUser(String login, String password) async {
+  Future<void> logout() async {
+    return await userService.logout();
+  }
+
+  Future<List> loginUser(String login, String password) async {
     String encodedPwd = sha256.convert(utf8.encode(password)).toString();
 
     return await userService.loginUser(login, encodedPwd);
