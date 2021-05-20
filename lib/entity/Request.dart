@@ -11,19 +11,6 @@ class Request {
   int? weight;
   String? description;
 
-  // todo удалить
-  Request(
-      [this.price,
-      this.shipper,
-      this.receiver,
-      this.date,
-      this.duration,
-      this.distance,
-      this.source,
-      this.destination,
-      this.weight,
-      this.description]);
-
   Request.withId(
       this.id,
       this.price,

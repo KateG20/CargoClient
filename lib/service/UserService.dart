@@ -12,8 +12,7 @@ class UserService {
     var response = await http.get(Uri.http(url, 'logout'));
     if (response.statusCode < 200 && response.statusCode >= 400) {
       throw Exception('Failed to logout');
-    } else
-      print('logged out'); // todo убрать
+    }
   }
 
   Future<List> loginUser(String login, String password) async {

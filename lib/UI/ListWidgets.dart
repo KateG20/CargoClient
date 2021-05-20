@@ -110,7 +110,6 @@ class ListWidgets {
                                       text: TextSpan(
                                           text:
                                               "${DateFormat('dd.MM.yyyy').format(_data.date!)}",
-                                          // тут везде были какие-то TODO-шки
                                           style: TextStyle(
                                             color: Colors.green[800],
                                             fontSize: 23,

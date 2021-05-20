@@ -283,11 +283,6 @@ class FilterDialog {
                     borderSide: BorderSide(color: Colors.grey),
                   ),
                   hintText: 'Макс.'),
-              // onChanged: (text) {
-              //   if (text.length > 0)
-              //     // todo валидация что число
-              //     _minWeight = int.parse(text);
-              // },
               validator: (val) {
                 if (val == null || val.isEmpty) {
                   _maxWeight = 100000;
@@ -358,11 +353,6 @@ class FilterDialog {
                     borderSide: BorderSide(color: Colors.grey),
                   ),
                   hintText: 'Макс.'),
-              // onChanged: (text) {
-              //   if (text.length > 0)
-              //     // todo валидация что число
-              //     _minWeight = int.parse(text);
-              // },
               validator: (val) {
                 if (val == null || val.isEmpty) {
                   _maxPrice = 1000000;
@@ -400,11 +390,6 @@ class FilterDialog {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         hintText: 'Мин.'),
-                    // onChanged: (text) {
-                    //   if (text.length > 0)
-                    //     // to do валидация что число
-                    //     _weight = int.parse(text);
-                    // },
                     // Валидация, что в поле вписано число
                     // В таком случае записывает это число в переменную,
                     // иначе записывает минимум - 0
@@ -433,11 +418,6 @@ class FilterDialog {
                     borderSide: BorderSide(color: Colors.grey),
                   ),
                   hintText: 'Макс.'),
-              // onChanged: (text) {
-              //   if (text.length > 0)
-              //     // todo валидация что число
-              //     _minWeight = int.parse(text);
-              // },
               validator: (val) {
                 if (val == null || val.isEmpty) {
                   _maxDist = 100000;

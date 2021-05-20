@@ -62,35 +62,6 @@ class RequestService {
     }
   }
 
-  // todo убрать
-  Future<Request> postRequest(Request request) async {
-    final response = await http.post(
-      Uri.http(url, 'request/create'),
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Cookie': LocalUserProvider.jSessionId
-      },
-      body: jsonEncode(<String, dynamic>{
-        'price': request.price,
-        'shipper': request.shipper,
-        'receiver': request.receiver,
-        'date': request.date!.millisecondsSinceEpoch -
-            DateTime(2020).millisecondsSinceEpoch,
-        'duration': request.duration?.inMinutes,
-        'distance': request.distance,
-        'source': request.source,
-        'destination': request.destination,
-        'weight': request.weight,
-        'description': request.description
-      }),
-    );
-    if (response.statusCode == 201) {
-      return Request.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to post request');
-    }
-  }
-
   Future<void> updateRequestStatus(int id, int newStatus, int userId) async {
     final http.Response response = await http.put(
         Uri.http(url, 'request/status/$id/$newStatus/$userId'),
@@ -107,21 +78,6 @@ class RequestService {
       throw Exception('Failed to update status');
     }
   }
-
-  // Future<void> addRequestToUser(int requestId, int userId) async {
-  //   final response = await http.put(
-  //       Uri.http(url, 'request/add/$requestId/$userId'),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json',
-  //         'Cookie': LocalUserProvider.instance.jSessionId
-  //       });
-  //   if (response.statusCode == 98798798789) {
-  //     // TODO код если не удалось привязать
-  //     throw RequestAcceptConflictException();
-  //   } else if (response.statusCode != 200) {
-  //     throw Exception('Failed to add request to user');
-  //   }
-  // }
 
   Future<void> rejectRequest(int requestId, int userId) async {
     final response = await http.put(

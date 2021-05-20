@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter1/service/UserService.dart';
 
 import '../ViewModel/ServiceViewModel.dart';
 import '../entity/Request.dart';
@@ -35,8 +34,6 @@ class _EntryPageState extends State<EntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    _loginCtrl.text = 'log222'; // TODO убрать
-    _pwdCtrl.text = 'pwd222';
 
     return MaterialApp(
         // debugShowCheckedModeBanner: false,
@@ -57,7 +54,11 @@ class _EntryPageState extends State<EntryPage> {
                                     child: Column(children: [
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Text(
-                                'Авторизация',
+                                'Авторизация\n'
+                                    '${DateTime.utc(2021, 6, 1).millisecondsSinceEpoch -
+                                    DateTime(2020).millisecondsSinceEpoch}\n'
+                                    '${DateTime.utc(2025, 6, 1).millisecondsSinceEpoch -
+                                    DateTime(2020).millisecondsSinceEpoch}',
                                 style: TextStyle(
                                     color: Colors.lightGreen[700],
                                     fontSize: 30.0),
@@ -72,13 +73,12 @@ class _EntryPageState extends State<EntryPage> {
                               Padding(padding: EdgeInsets.only(top: 15.0)),
                               _logInButton(),
                               _signUpButton(),
-                              generateButton()
                             ])))))))));
   }
 
   TextFormField _loginField() {
     return TextFormField(
-        controller: _loginCtrl, // TODO убрать
+        controller: _loginCtrl,
         style: TextStyle(color: Colors.grey[600], fontSize: 20),
         decoration: InputDecoration(
           labelText: "Логин",
@@ -244,32 +244,4 @@ class _EntryPageState extends State<EntryPage> {
     "Казань",
     "Уфа"
   ];
-
-  // todo удалить
-  OutlinedButton generateButton() {
-    return OutlinedButton(
-        style: OutlinedButton.styleFrom(
-            backgroundColor: Colors.lightGreen[600]?.withOpacity(0.8),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15.0)))),
-        onPressed: () {
-          cnt++;
-          RequestService().postRequest(Request(
-              rnd.nextInt(700) + 300,
-              "Shipper",
-              "Receiver",
-              DateTime.utc(rnd.nextInt(4) + 2020, rnd.nextInt(12) + 1,
-                  rnd.nextInt(31) + 1),
-              Duration(hours: rnd.nextInt(19), minutes: rnd.nextInt(60)),
-              rnd.nextInt(450) + 50,
-              cities[rnd.nextInt(7)],
-              cities[rnd.nextInt(7)],
-              rnd.nextInt(9900) + 100,
-              "Комментарий"));
-        },
-        child: Text(
-          "сгенерировать",
-          style: TextStyle(fontSize: 18.0, color: Colors.white),
-        ));
-  }
 }

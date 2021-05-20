@@ -153,10 +153,11 @@ class MenuBar extends StatelessWidget {
                                                         fontSize: 24))),
                                             children: [
                                               Padding(
-                                                padding: EdgeInsets.all(10),
+                                                  padding: EdgeInsets.all(10),
                                                   child: Text(
                                                       'В случае утери пароля необходимо обратиться к Вашему руководству.',
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.green[800],
@@ -164,7 +165,8 @@ class MenuBar extends StatelessWidget {
                                               Center(
                                                   child: Text(
                                                       'В случае технических неполадок писать на почту example@cargo.com.',
-                                                      textAlign: TextAlign.center,
+                                                      textAlign:
+                                                          TextAlign.center,
                                                       style: TextStyle(
                                                           color:
                                                               Colors.green[800],
@@ -175,21 +177,62 @@ class MenuBar extends StatelessWidget {
                                   },
                                 ),
                                 ListTile(
-                                  leading: Icon(Icons.exit_to_app_rounded,
-                                      size: 30, color: Colors.green[800]),
-                                  title: Text('Выйти',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.green[800])),
-                                  onTap: () async {
-                                    await vm.logout(); // todo ваще не работает
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EntryPage()),
-                                    );
-                                  },
-                                ),
+                                    leading: Icon(Icons.exit_to_app_rounded,
+                                        size: 30, color: Colors.green[800]),
+                                    title: Text('Выйти',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.green[800])),
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                                content: Text(
+                                                    "Вы уверены, что хотите выйти из аккаунта?",
+                                                    style: TextStyle(
+                                                        color:
+                                                        Colors.green[800],
+                                                        fontSize: 24)),
+                                                actions: <Widget>[
+                                                  OutlinedButton(
+                                                    child: Text("Да",
+                                                        style: TextStyle(
+                                                            color:
+                                                            Colors.green[800],
+                                                            fontSize: 21)),
+                                                    onPressed: () async {
+                                                      await vm.logout();
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                EntryPage()),
+                                                      );
+                                                    },
+                                                  ),
+                                                  OutlinedButton(
+                                                      child: Text("Отмена",
+                                                          style: TextStyle(
+                                                              color:
+                                                              Colors.green[800],
+                                                              fontSize: 21)),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      })
+                                                ]);
+                                          });
+                                    }
+                                    // onTap: () async {
+                                    //   await vm.logout();
+                                    //   Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) => EntryPage()),
+                                    //   );
+                                    // },
+                                    ),
                                 Divider(
                                   thickness: 3,
                                   indent: 10,

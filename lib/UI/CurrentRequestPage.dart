@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../RType.dart';
 import '../ViewModel/ServiceViewModel.dart';
-
-import '../notifier/ListFilterNotifier.dart';
 import '../entity/Request.dart';
-import '../service/RequestService.dart';
+import '../notifier/ListFilterNotifier.dart';
 import 'ListWidgets.dart';
 
 class CurrentRequestPage extends StatefulWidget {
@@ -22,7 +21,8 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
   @override
   void initState() {
     super.initState();
-    _futureListNotifier = ListFilterNotifier(value: vm.getRequests(RType.current));
+    _futureListNotifier =
+        ListFilterNotifier(value: vm.getRequests(RType.current));
   }
 
   @override
@@ -41,7 +41,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     child: ValueListenableBuilder(
                         valueListenable: _futureListNotifier,
                         builder: (context, value, child) => FutureBuilder<
-                            List<Request>>(
+                                List<Request>>(
                             future: _futureListNotifier.value,
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
@@ -64,13 +64,13 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                                         width: double.infinity,
                                         child: TextButton(
                                             onPressed: (() {
-                                              _futureListNotifier
-                                                  .reset(vm.getRequests(RType.current));
+                                              _futureListNotifier.reset(vm
+                                                  .getRequests(RType.current));
                                             }),
                                             child: Text('Сбросить фильтры',
                                                 style: TextStyle(
                                                     color:
-                                                    Colors.lightGreen[800],
+                                                        Colors.lightGreen[800],
                                                     fontSize: 20,
                                                     decoration: TextDecoration
                                                         .underline))),
@@ -91,25 +91,26 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                     onWillPop: () async => false))));
   }
 
+  // Widget noRequests() {
+  //   return Text('Нет таких заявок!',
+  //       textAlign: TextAlign.center,
+  //       style: TextStyle(color: Colors.green[800], fontSize: 21));
+  // }
+
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {
     return RefreshIndicator(
         onRefresh: (() => vm.refreshList(RType.current, _futureListNotifier)),
-        child: ListView.builder(
+        child:ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           itemCount: _list.length,
           itemBuilder: (context, index) {
-            // if (_list.length == 0)
-            //   return Text(
-            //       'Нет таких заявок!',
-            //       textAlign: TextAlign.center,
-            //       style: TextStyle(
-            //           color:
-            //           Colors.green[800],
-            //           fontSize: 21));
             return ListWidgets().requestContainer(
-                _list[index], ListWidgets().currentRequestRow(_futureListNotifier, context, _list[index]));
+                _list[index],
+                ListWidgets().currentRequestRow(
+                    _futureListNotifier, context, _list[index]));
           },
-        ));
+        )
+    );
   }
 }

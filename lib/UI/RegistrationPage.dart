@@ -208,10 +208,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
             return "Заполните поле \"Пароль\"";
           } else if (val != _pwd1) {
             return "Пароли не совпадают";
-            // }
-            // todo проверять пользователя в базе
-            // else if (false) {
-            //   return "Неверный логин или пароль";
           } else {
             return null;
           }
