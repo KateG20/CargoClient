@@ -7,9 +7,9 @@ import 'package:flutter1/entity/User.dart';
 import 'package:flutter1/service/RequestService.dart';
 import 'package:flutter1/service/UserService.dart';
 
+import '../RType.dart';
 import '../notifier/ListFilterNotifier.dart';
 import '../provider/LocalUserProvider.dart';
-import '../RType.dart';
 
 class ServiceViewModel {
   UserService userService = UserService();

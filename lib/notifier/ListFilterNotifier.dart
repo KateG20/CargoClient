@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../entity/Request.dart';
 
 class ListFilterNotifier extends ValueNotifier<Future<List<Request>>> {
-  ListFilterNotifier({Future<List<Request>>? value}) : super(value ?? Future.value([]));
+  ListFilterNotifier({Future<List<Request>>? value})
+      : super(value ?? Future.value([]));
   bool filtered = false;
 
   void filter(Future<List<Request>> list) {

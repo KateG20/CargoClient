@@ -5,6 +5,7 @@ import 'UI/EntryPage.dart';
 
 void main() {
   runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [GlobalMaterialLocalizations.delegate],
       supportedLocales: [const Locale('en'), const Locale('ru')],
       home: EntryPage()));

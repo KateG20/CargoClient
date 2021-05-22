@@ -12,18 +12,18 @@ class Request {
   String? description;
 
   Request.withId(
-      this.id,
-      this.price,
-      this.shipper,
-      this.receiver,
-      this.date,
-      this.duration,
-      this.distance,
-      this.source,
-      this.destination,
-      this.weight,
-      this.description,
-      );
+    this.id,
+    this.price,
+    this.shipper,
+    this.receiver,
+    this.date,
+    this.duration,
+    this.distance,
+    this.source,
+    this.destination,
+    this.weight,
+    this.description,
+  );
 
   factory Request.fromJson(Map<String, dynamic> json) {
     return Request.withId(

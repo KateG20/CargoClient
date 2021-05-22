@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter1/exception/NoKeyFoundException.dart';
 import 'package:http/http.dart' as http;
 
 import '../entity/Key.dart';
@@ -69,6 +70,8 @@ class UserService {
         body: jsonEncode(<String, String>{'value': keyValue}));
     if (response.statusCode == 200) {
       return Key.fromJson(jsonDecode(response.body));
+    } else if (response.statusCode == 404) {
+      throw NoKeyFoundException();
     } else {
       throw Exception('Failed to find key');
     }

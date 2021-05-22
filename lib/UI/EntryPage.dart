@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../ViewModel/ServiceViewModel.dart';
-import '../entity/Request.dart';
 import '../entity/User.dart';
 import '../provider/LocalUserProvider.dart';
-import '../service/RequestService.dart';
 import 'NewRequestPage.dart';
 import 'VerificationPage.dart';
 
@@ -34,9 +30,8 @@ class _EntryPageState extends State<EntryPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-        // debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -54,11 +49,7 @@ class _EntryPageState extends State<EntryPage> {
                                     child: Column(children: [
                               Padding(padding: EdgeInsets.only(top: 40.0)),
                               Text(
-                                'Авторизация\n'
-                                    '${DateTime.utc(2021, 6, 1).millisecondsSinceEpoch -
-                                    DateTime(2020).millisecondsSinceEpoch}\n'
-                                    '${DateTime.utc(2025, 6, 1).millisecondsSinceEpoch -
-                                    DateTime(2020).millisecondsSinceEpoch}',
+                                'Авторизация',
                                 style: TextStyle(
                                     color: Colors.lightGreen[700],
                                     fontSize: 30.0),
@@ -163,34 +154,20 @@ class _EntryPageState extends State<EntryPage> {
           side: BorderSide(color: Colors.lightGreen, width: 1.5),
           backgroundColor: Colors.lightGreen[50]),
       onPressed: () async {
-        // await vm.loginUser(_loginCtrl.text, _pwdCtrl.text).then((value) {
+        _incorrectData = false;
+        if (!_formKey.currentState!.validate()) return;
+
         User user = User.nulled();
         String jSessionId = "";
         try {
           var list = await vm.loginUser(_loginCtrl.text, _pwdCtrl.text);
           user = list[0];
           jSessionId = list[1];
-          _incorrectData = false;
           LocalUserProvider.user = user;
           LocalUserProvider.jSessionId = jSessionId;
         } catch (e) {
           _incorrectData = true;
         }
-        // await UserService()
-        //     .loginUser(_loginCtrl.text, _pwdCtrl.text)
-        //     .then((value) {
-        //   _incorrectData = false;
-        //   LocalUserProvider.user = value;
-        // }).catchError((error) {
-        //   _incorrectData = true;
-        // }).then((value) {
-        //   if (_formKey.currentState!.validate()) {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(builder: (context) => NewRequestPage()),
-        //     );
-        //   }
-        // });
 
         if (_formKey.currentState!.validate()) {
           Navigator.push(
@@ -232,16 +209,4 @@ class _EntryPageState extends State<EntryPage> {
           )),
     );
   }
-
-  int cnt = 0;
-  var rnd = new Random();
-  var cities = [
-    "ТЛЦ",
-    "Иркутск",
-    "Москва",
-    "Санкт-Петербург",
-    "Владивосток",
-    "Казань",
-    "Уфа"
-  ];
 }

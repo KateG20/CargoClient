@@ -22,6 +22,7 @@ class _VerificationPageState extends State<VerificationPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -32,22 +33,20 @@ class _VerificationPageState extends State<VerificationPage> {
                     child: Form(
                         key: _formKey,
                         child: Container(
-                            padding: const EdgeInsets.all(30.0),
-                            color: Colors.white,
+                            padding: EdgeInsets.all(30.0),
+                            color: Colors.yellow[50]?.withOpacity(0.2),
                             child: Container(
-                              color: Colors.yellow[50]?.withOpacity(0.2),
+                              // color: Colors.yellow[50]?.withOpacity(0.2),
                               child: Center(
                                   child: Column(children: [
                                 Padding(padding: EdgeInsets.only(top: 40.0)),
                                 Text(
                                   'Введите ключ, который вам предоставила ваша компания для входа',
                                   style: TextStyle(
-                                      // color: Color(0xff9ACD32), fontSize: 25.0),
                                       color: Colors.lightGreen[700],
                                       fontSize: 20.0),
                                   textAlign: TextAlign.center,
                                 ),
-                                //  Padding(padding: EdgeInsets.only(top: 20.0)),
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(5, 20, 0, 0),
                                 ),
@@ -101,15 +100,17 @@ class _VerificationPageState extends State<VerificationPage> {
         side: BorderSide(color: Colors.lightGreen, width: 1.5),
       ),
       onPressed: () async {
-        await vm.checkKey(_keyCtrl.text).then((value) {
+        my.Key value;
+        try {
+          value = await vm.checkKey(_keyCtrl.text);
           _key = value;
-        }).catchError((e) {
-          if (e is NoKeyFoundException)
-            _errorMsg = 'Такого ключа нет в базе';
-          else
-            _errorMsg = 'Ошибка проверки ключа';
+        } on NoKeyFoundException {
+          _errorMsg = 'Такого ключа нет в базе';
           _key = null;
-        });
+        } catch (e) {
+          _errorMsg = 'Ошибка проверки ключа';
+          _key = null;
+        }
 
         if (_formKey.currentState!.validate()) {
           var user = User.unregistered(

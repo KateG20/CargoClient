@@ -34,6 +34,7 @@ class _ArchiveRequestPageState extends State<ArchiveRequestPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(

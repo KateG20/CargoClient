@@ -34,6 +34,7 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "MyApp",
         home: Builder(
             builder: (context) => Material(
@@ -90,12 +91,6 @@ class _CurrentRequestPageState extends State<CurrentRequestPage> {
                             })),
                     onWillPop: () async => false))));
   }
-
-  // Widget noRequests() {
-  //   return Text('Нет таких заявок!',
-  //       textAlign: TextAlign.center,
-  //       style: TextStyle(color: Colors.green[800], fontSize: 21));
-  // }
 
   // Widget _myListView(BuildContext context, RequestListModel list) {
   Widget _myListView(BuildContext context) {

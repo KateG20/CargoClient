@@ -82,7 +82,7 @@ class FilterDialog {
                     child: SimpleDialog(
                         insetPadding: EdgeInsets.all(10),
                         title: Center(
-                            child: Text('Поиск заявок ${list.length}',
+                            child: Text('Поиск заявок',
                                 style: TextStyle(
                                     color: Colors.green[800], fontSize: 24))),
                         shape: RoundedRectangleBorder(
@@ -203,7 +203,7 @@ class FilterDialog {
                     dialogSetState(() {
                       _considerDateFrom = false;
                       _dateFromText = _emptyDate;
-                      _selectedDateFrom = DateTime.now();
+                      _selectedDateFrom = _selectedDateTo;
                     });
                   }),
             ],
@@ -224,7 +224,7 @@ class FilterDialog {
                   dialogSetState(() {
                     _dateToText = _emptyDate;
                     _considerDateTo = false;
-                    _selectedDateTo = DateTime.now();
+                    _selectedDateTo = _selectedDateFrom;
                   });
                 }),
           ])
@@ -250,11 +250,6 @@ class FilterDialog {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         hintText: 'Мин.'),
-                    // onChanged: (text) {
-                    //   if (text.length > 0)
-                    //     // to do валидация что число
-                    //     _weight = int.parse(text);
-                    // },
                     // Валидация, что в поле вписано число
                     // В таком случае записывает это число в переменную,
                     // иначе записывает минимум - 0
@@ -320,11 +315,6 @@ class FilterDialog {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                         hintText: 'Мин.'),
-                    // onChanged: (text) {
-                    //   if (text.length > 0)
-                    //     // to do валидация что число
-                    //     _weight = int.parse(text);
-                    // },
                     // Валидация, что в поле вписано число
                     // В таком случае записывает это число в переменную,
                     // иначе записывает минимум - 0
@@ -436,9 +426,6 @@ class FilterDialog {
         ]));
   }
 
-  // final ValueListenable<Future<List<Request>>> _futureListListenable;
-  // _futureListNotifier
-
   OutlinedButton filterButton(context, ListFilterNotifier futureListNotifier,
       dialogSetState, list, status) {
     return OutlinedButton(
@@ -451,6 +438,18 @@ class FilterDialog {
           minimumSize: Size(150, 30)),
       // backgroundColor: Colors.lightGreen[50]),
       onPressed: () {
+        _dateWarningVisibility = false;
+
+        // if (!_considerDateTo &&
+        //     !_considerDateFrom &&
+        //     (_source == null || _source!.isEmpty) &&
+        //     (_destination == null || _destination!.isEmpty) &&
+        //     (_minWeight == null || _minWeight == 0) &&
+        //     (_maxWeight == null || _maxWeight == 100000) &&
+        //     (_maxPrice == null || _maxPrice == 100000) &&
+        //     (_maxDist == null || _maxDist == 100000))
+        //   Navigator.pop(context, true);
+
         if (_selectedDateFrom!.isAfter(_selectedDateTo!)) {
           dialogSetState(() {
             _dateWarningVisibility = true;
@@ -481,7 +480,7 @@ class FilterDialog {
           if (_minPrice == null) _minPrice = 0;
           if (_minDist == null) _minDist = 0;
           if (_maxWeight == null) _maxWeight = 100000;
-          if (_maxPrice == null) _maxPrice = 1000000;
+          if (_maxPrice == null) _maxPrice = 100000;
           if (_maxDist == null) _maxDist = 100000;
 
           futureListNotifier.filter(vm.filterRequests(
@@ -499,7 +498,6 @@ class FilterDialog {
               _maxDist!));
           Navigator.pop(context, true);
         }
-        // list.filter(funcs);
       },
       child: Padding(
           padding: EdgeInsets.all(7),
